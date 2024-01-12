@@ -32,12 +32,9 @@
 
 #include "LimeLight.h"
 #include "LoggingLevel.h"
-#include "MTechArm.h"
-#include "Elevator.h"
-#include "Slide.h"
-#include "Claw.h"
+#include "Shooter.h"
+#include "Intake.h"
 #include "WaypointPoses.h"
-#include "AutoSelector.h"
 #include <units/pressure.h>
 
 
@@ -48,12 +45,8 @@ private:
   frc::XboxController driver{0};
   frc::XboxController codriver{1};
 
-  Slide m_slide{};
-  Elevator m_elevator{};
-  Arm m_arm{};
-  Claw m_claw{};
-
-  frc::Compressor m_compressor{1, frc::PneumaticsModuleType::REVPH};
+  Shooter m_Shooter{};
+  Intake m_Intake{};
 
   
 
@@ -76,8 +69,6 @@ private:
   Drivetrain m_swerve{config};
   bool headingControl;
 
-  LimeLight m_leftLL{"limelight-left"};
-  LimeLight m_rightLL{"limelight-right"};
   
 
   frc::Trajectory traj2Score1;
@@ -86,25 +77,22 @@ private:
   frc::Trajectory traj2Piece2;
   frc::Trajectory traj2Score3;
   frc::Trajectory trajSwitch;
-  bool takeSpeedBump;
   frc::Timer autoTimer;
   int autoState;
   waypoints::WaypointPoses waypointLib{};
   frc::SendableChooser<autoSelector::ScorePosition> Score0Chooser;
 
   enum AutoRoutine {
-      k2PieceCorridor,  
-      k2PieceCorridorSwitch,
-      kSimpleSwitch,
-      kSpeedBump,
+      kLeft,  
+      kMiddle,
+      kRight,
       kTest 
   } m_autoSelected;
 
   frc::SendableChooser<AutoRoutine> m_autoChooser;
-  const std::string a_2PieceCorridor = "2 Piece Corridor";
-  const std::string a_2PieceCorridorSwitch = "2 Piece Corridor and Switch";
-  const std::string a_SimpleSwitch = "1 Piece and Switch";
-  const std::string a_SpeedBump = "2 Piece Bump";
+  const std::string a_Left = "Left";
+  const std::string a_Middle = "Middle";
+  const std::string a_Right = "Right";
   const std::string a_Test = "Top Secret";
   
 
@@ -113,12 +101,12 @@ private:
   bool FuseLL();
   bool FuseLLNoHeading();
 
-  void Gen2PieceCorridor();
-  void Run2PieceCorridor();
-  void GenSimpleSwitch();
-  void RunSimpleSwitch();
-  void GenSpeedBump();
-  void RunSpeedBump();
+  void GenLeft();
+  void RunLeft();
+  void GenMiddle();
+  void RunMiddle();
+  void GenRight();
+  void RunRight();
   void GenTest();
   void RunTest();
 
@@ -126,13 +114,6 @@ private:
   void GenTraj();
 
   void TrackToGoal(frc::Pose2d goal);
-
-  void PickupPos();
-  void GroundPos();
-  void MidPos();
-  void HighPos();
-  void TuckPos();
-  void UpTuckPos();
 
  public:
 

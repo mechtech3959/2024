@@ -97,6 +97,3 @@ model {
         }
     }
 }
-nativeUtils.platformConfigs.named("linuxathena").configure {
-    it.cppCompiler.args.add('-Wno-deprecated-declarations')
-}

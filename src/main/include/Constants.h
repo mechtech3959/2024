@@ -22,22 +22,12 @@
 
 
 #include "SwerveModuleConstants.h"
-#include "MTechArmConstants.h"
 
 namespace constants{
 
   constexpr double NominalVoltage = 12.0;
 
   //ArmConstants the_armConstants;
-  namespace armConstants{
-    constexpr double TurnGearRatio = 100.0;
-    constexpr double TicksPerDegree = TurnGearRatio*(2048.0/360.0);
-
-    constexpr int MasterMotorID = 16;
-    constexpr int SlaveMotorID = 17;
-    constexpr int EncoderID = 9;
-    const std::string CANBus = "Can1";//"rio";
-  }
 
   namespace slideConstants{
     constexpr double MotorGearRatio = 9.0;
@@ -49,17 +39,7 @@ namespace constants{
     const std::string CANBus = "Can1";//"rio";
   }
 
-  namespace elevatorConstants{
-    constexpr double MotorGearRatio = 5.0;
-    constexpr double EncoderTicksPerInch = (MotorGearRatio *2048.0);
-    
-    constexpr int MasterMotorID = 19;
-    constexpr int SlaveMotorID = 20;
-    constexpr int EncoderID = 10;
 
-    const std::string CANBus = "Can1";//"rio";
-
-  }
 
   namespace clawConstants{
     constexpr int LeftMotorID = 1;

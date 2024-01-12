@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <frc/smartdashboard/SmartDashboard.h>
+#include "frc/smartdashboard/Smartdashboard.h"
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableInstance.h"
 #include "networktables/NetworkTableEntry.h"
@@ -13,7 +13,7 @@
 #include <units/length.h>
 #include "LoggingLevel.h"
 
-/*
+
 class LL3DPose{
 
 public:
@@ -34,7 +34,7 @@ public:
   };
 
   bool isVisable(){
-    if(pose3d.size()>=6){
+    if(pose3d.size()==6){
       return true;
     }else{
       return false;
@@ -44,24 +44,23 @@ public:
   std::vector<double> pose3d;
 
 };
-*/
 
 class LimeLight {
  
  
-  std::shared_ptr<nt::NetworkTable> m_limelight;
-  
+ std::shared_ptr<nt::NetworkTable> m_limelight = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+
 
 public:
-  LimeLight(std::string name);
+  LimeLight();
 
 
 
-  bool IsTargetVisible();
+  bool IsTargetVisable();
 
   frc::Pose2d GetRobotPose();
 
-  void SendData(std::string name, LoggingLevel verbose);
+  void SendData(LoggingLevel verbose);
 
   units::inch_t GetReflectiveTargetRange(double targetHight);
 

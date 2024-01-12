@@ -86,8 +86,6 @@ class Drivetrain : public wpi::Sendable {
   frc::Rotation2d GetHeading();
   void SetHeading(units::degree_t angle);
 
-  units::degree_t GetPitch(){return units::degree_t(m_gyro.GetPitch());};
-  units::degree_t GetRoll(){return units::degree_t(m_gyro.GetRoll());};
 
  
 };

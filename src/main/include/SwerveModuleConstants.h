@@ -33,7 +33,7 @@ class SwerveModuleConstants {
     m_encoderID = encoderID;
     m_canBus = bus;
     m_FramePeriod = framePeriod;
-    //m_angleOffset = angleOffset;
+    m_angleOffset = angleOffset;
 
     
 
