@@ -80,9 +80,9 @@ void LimeLight::SendData(std::string name, LoggingLevel verbose) {
   switch (verbose) {
   case LoggingLevel::Everything: // everything that is not in the cases below it
                                  // continue
-  case LoggingLevel::PID: // send PID (closed loop control) data
-                          // continue
-  case LoggingLevel::Basic: // minimal useful data to driver
+  case LoggingLevel::PID:        // send PID (closed loop control) data
+                                 // continue
+  case LoggingLevel::Basic:      // minimal useful data to driver
   {
     frc::Pose2d p = GetRobotPose();
     frc::SmartDashboard::PutBoolean(name + " visible", IsTargetVisible());

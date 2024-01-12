@@ -31,8 +31,9 @@ void Elevator::configDevices() {
 
   config.motionCruiseVelocity =
       (inchesPerSec / 10.0) *
-      (2048.0 * constants::elevatorConstants::MotorGearRatio); // inchs/100ms*ticks
-                                                               // per inch
+      (2048.0 *
+       constants::elevatorConstants::MotorGearRatio); // inchs/100ms*ticks
+                                                      // per inch
   config.motionAcceleration =
       5.0 *
       config.motionCruiseVelocity; // 1 sec for arm to achieve cruising velocity

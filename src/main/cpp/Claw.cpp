@@ -37,8 +37,8 @@ void Claw::SendData(LoggingLevel verbose) {
       frc::SmartDashboard::PutNumber("Claw right", m_motorRightIntake.Get());
       frc::SmartDashboard::PutNumber("Claw left", m_motorLeftIntake.Get());
     }
-  case LoggingLevel::PID: // send PID (closed loop control) data
-                          // continue
+  case LoggingLevel::PID:   // send PID (closed loop control) data
+                            // continue
   case LoggingLevel::Basic: // minimal useful data to driver
                             // continue
   default:
