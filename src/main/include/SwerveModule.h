@@ -60,7 +60,7 @@ class SwerveModule : public wpi::Sendable{
   TalonFX m_turnMotor;
   CANCoder m_turnEncoder;
 
-  frc::SimpleMotorFeedforward<units::meter> m_driveFeedForward; 
+  units::meter_t m_driveFeedforward; 
 
    
 

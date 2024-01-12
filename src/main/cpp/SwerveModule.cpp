@@ -17,7 +17,7 @@ SwerveModule::SwerveModule(std::string id, SwerveModuleConstants constants)
     : m_driveMotor(constants.m_driveMotorID, constants.m_canBus),
       m_turnMotor(constants.m_turnMotorID, constants.m_canBus),
       m_turnEncoder(constants.m_encoderID, constants.m_canBus),
-      m_driveFeedForward() 
+      m_driveFeedforward() 
 {
 
     m_id = id;
