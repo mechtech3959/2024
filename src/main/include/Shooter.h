@@ -8,7 +8,7 @@
 #include <wpi/sendable/Sendable.h>
 #include <ctre/Phoenix.h>
 #include <rev/CANSparkMax.h>
-#include <frc/smartdashboard/SmartDashboard.h
+#include <frc/smartdashboard/SmartDashboard.h>
 #include "Constants.h"
 
 class Shooter : public wpi::Sendable {

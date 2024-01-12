@@ -50,6 +50,18 @@ namespace constants{
     constexpr double FeedSpeed = -0.2;
   }
 
+  namespace ShooterConstants {
+    #warning "Replace with the actual IDs"
+    constexpr int MotorID = 1234;
+    constexpr int CANBus = 1234;
+    constexpr int EncoderID = 1234;
+  }
+  namespace IntakeConstants {
+    #warning "Replace with the actual IDs"
+    constexpr int MotorID = 1234;
+    constexpr int CANBus = 1234;
+  }
+
   namespace swerveConstants{
 
     constexpr int PigeonID = 32;

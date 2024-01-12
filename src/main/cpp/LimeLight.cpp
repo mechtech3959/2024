@@ -64,9 +64,9 @@ bool LimeLight::IsTargetVisable(){
 
 
       return units::inch_t(distanceFromLimelightToGoalInches);
-    }else{
-      return 0_in; GetEstimatedRangeToTarget();
-    }
+    }/*else{
+       return 0_in; GetEstimatedRangeToTarget();
+       }*/
     return 0_in;
   }
 

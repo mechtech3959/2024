@@ -17,7 +17,7 @@ void Intake::Init(){
 }
 
 void Intake::SetIntakeSpeed(double Speed){
-    sets intake motor speed
+  // sets intake motor speed
     m_motorIntake.Set(Speed);
 }
 

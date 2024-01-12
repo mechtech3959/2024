@@ -15,6 +15,7 @@ class SwerveModuleConstants {
   int m_driveMotorID;
   int m_turnMotorID;
   int m_encoderID;
+  double m_angleOffset;
 
   std::string m_canBus;
   units::millisecond_t m_FramePeriod;
@@ -22,8 +23,8 @@ class SwerveModuleConstants {
   ctre::phoenix::motorcontrol::can::TalonFXConfiguration m_driveMotorConfig;
   ctre::phoenix::motorcontrol::can::TalonFXConfiguration m_turnMotorConfig;
   ctre::phoenix::sensors::CANCoderConfiguration m_encoderConfig;
-
-  SwerveModuleConstants(int driveID, int turnID, int encoderID, std::string bus = "rio", units::millisecond_t framePeriod = 20_ms):
+  #warning "Set angleOffset to a real value"
+  SwerveModuleConstants(int driveID, int turnID, int encoderID, std::string bus = "rio", units::millisecond_t framePeriod = 20_ms, double angleOffset = 0):
     m_driveMotorConfig(),
     m_turnMotorConfig(),
     m_encoderConfig()
