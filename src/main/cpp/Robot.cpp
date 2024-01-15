@@ -92,7 +92,7 @@ void Robot::GenLeft(){
     //create waypoint list from scoring position to piece pickup position
     
   
-  else{
+  } else {
     heading = 179.9_deg;
     frc::Pose2d x = {m_swerve.GetPose().Translation(), heading};
   

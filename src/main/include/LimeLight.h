@@ -11,6 +11,7 @@
 #include "networktables/NetworkTableValue.h"
 #include <frc/geometry/Pose2d.h>
 #include <units/length.h>
+#include <units/base.h>
 #include "LoggingLevel.h"
 
 

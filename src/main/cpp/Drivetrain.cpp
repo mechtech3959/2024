@@ -100,7 +100,7 @@ units::radians_per_second_t Drivetrain::CalcRotationSpeed(units::degree_t target
     e = e + frc::Rotation2d(360_deg);
   }
   //1/2 degree error is ok for now. 
-  frc::Rotation2d e = frc::AngleModulus(targetAngle-GetPose().Rotation().Degrees());
+  e = frc::AngleModulus(targetAngle-GetPose().Rotation().Degrees());
   return m_rotGain*(e.Degrees()/180_deg)*constants::swerveConstants::MaxAngularVelocity;
 
   
