@@ -11,10 +11,9 @@
 #include "networktables/NetworkTableValue.h"
 #include <frc/geometry/Pose2d.h>
 #include <units/length.h>
-#include <units/base.h>
 #include "LoggingLevel.h"
 
-
+/*
 class LL3DPose{
 
 public:
@@ -35,7 +34,7 @@ public:
   };
 
   bool isVisable(){
-    if(pose3d.size()==6){
+    if(pose3d.size()>=6){
       return true;
     }else{
       return false;
@@ -45,23 +44,24 @@ public:
   std::vector<double> pose3d;
 
 };
+*/
 
 class LimeLight {
  
  
- std::shared_ptr<nt::NetworkTable> m_limelight = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
-
+  std::shared_ptr<nt::NetworkTable> m_limelight;
+  
 
 public:
-  LimeLight();
+  LimeLight(std::string name);
 
 
 
-  bool IsTargetVisable();
+  bool IsTargetVisible();
 
   frc::Pose2d GetRobotPose();
 
-  void SendData(LoggingLevel verbose);
+  void SendData(std::string name, LoggingLevel verbose);
 
   units::inch_t GetReflectiveTargetRange(double targetHight);
 

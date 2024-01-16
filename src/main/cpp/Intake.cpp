@@ -12,6 +12,14 @@ void Intake::Init(){
     //sets motors and encoders
     m_motorIntake.RestoreFactoryDefaults();
 
+    /*(int constants::IntakeConstants::MotorID,
+                       constants::IntakeConstants::CANBus)*/
+
+    /*(int constants::IntakeConstants::MotorID,
+                          constants::IntakeConstants::CANBus)*/
+
+    // initialize motors here or something
+
     bool dir = true;
     m_motorIntake.SetInverted(dir);
 }

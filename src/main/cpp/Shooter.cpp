@@ -8,6 +8,10 @@ Shooter::Shooter(){
     Init();
 }
 
+/*{constants::ShooterConstants::MotorID, constants::ShooterConstants::CANBus}*/
+/*{constants::ShooterConstants::EncoderID,
+ * constants::ShooterConstants::CANBus}*/
+
 void Shooter::Init(){
     //sets motors and encoders
     m_motorShooter.RestoreFactoryDefaults();

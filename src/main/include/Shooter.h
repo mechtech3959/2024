@@ -13,8 +13,8 @@
 
 class Shooter : public wpi::Sendable {
 
-TalonFX m_motor{constants::ShooterConstants::MotorID, constants::ShooterConstants::CANBus}; //declares motor
-CANCoder m_encoder{constants::ShooterConstants::EncoderID, constants::ShooterConstants::CANBus}; //declares encoder
+TalonFX m_motor; //declares motor
+CANCoder m_encoder; //declares encoder
 
 units::inch_t m_target;
 
