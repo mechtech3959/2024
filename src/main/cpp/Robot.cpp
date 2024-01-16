@@ -158,16 +158,24 @@ void Robot::RunLeft() {
   }
 }
 
+void Robot::RunMiddle() {}
+
+void Robot::GenMiddle() {}
+
+void Robot::RunRight() {}
+
+void Robot::GenRight() {}
+
 void Robot::GenSimpleSwitch() {
-  if (!FuseLL()) {
-    if (frc::DriverStation::GetAlliance() ==
-        frc::DriverStation::Alliance::kBlue) {
-      m_swerve.SetPose(
-          {waypoints::Blue7Right.Translation(), frc::Rotation2d(179.9_deg)});
-    } else {
-      m_swerve.SetPose(
-          {waypoints::Red2Left.Translation(), frc::Rotation2d(0_deg)});
-    }
+  // if (!FuseLL()) {
+  if (frc::DriverStation::GetAlliance() ==
+      frc::DriverStation::Alliance::kBlue) {
+    m_swerve.SetPose(
+        {waypoints::Blue7Right.Translation(), frc::Rotation2d(179.9_deg)});
+  } else {
+    m_swerve.SetPose(
+        {waypoints::Red2Left.Translation(), frc::Rotation2d(0_deg)});
+    // }
   }
 
   // VERY IMPORTANT!!!  Make sure the initial angle of the
@@ -270,9 +278,9 @@ void Robot::RunSimpleSwitch() {
     } else if (autoTimer.Get() < 2.5_s) {
       break;
     } else {
-      autoState++;       // Start timer for indexing into trajectory
+      autoState++; // Start timer for indexing into trajectory
       autoTimer.Reset();
-      break;// reset timer
+      break; // reset timer
       // m_claw.ClawClose();
     }
   case 2:
@@ -347,16 +355,16 @@ void Robot::RunSimpleSwitch() {
 }
 
 void Robot::GenSpeedBump() {
-  if (!FuseLL()) {
-    if (frc::DriverStation::GetAlliance() ==
-        frc::DriverStation::Alliance::kBlue) {
-      m_swerve.SetPose(
-          {waypoints::Blue8Left.Translation(), frc::Rotation2d(180_deg)});
-    } else {
-      m_swerve.SetPose(
-          {waypoints::Red1Right.Translation(), frc::Rotation2d(0_deg)});
-    }
+  // if (!FuseLL()) {
+  if (frc::DriverStation::GetAlliance() ==
+      frc::DriverStation::Alliance::kBlue) {
+    m_swerve.SetPose(
+        {waypoints::Blue8Left.Translation(), frc::Rotation2d(180_deg)});
+  } else {
+    m_swerve.SetPose(
+        {waypoints::Red1Right.Translation(), frc::Rotation2d(0_deg)});
   }
+  // }
 
   // VERY IMPORTANT!!!  Make sure the initial angle of the
   // start pose has the heading you wish to drive.  Failure
@@ -504,14 +512,14 @@ void Robot::GenTraj() {
 }
 
 void Robot::TrackToGoal(frc::Pose2d goal) {
-  if (m_leftLL.IsTargetVisible()) {
+  /*if (m_leftLL.IsTargetVisible()) {
     if ((units::math::abs(m_swerve.GetChassisSpeeds().vx) +
          units::math::abs(m_swerve.GetChassisSpeeds().vy)) < .05_mps) {
       m_swerve.SetPose(m_leftLL.GetRobotPose());
     }
 
     m_swerve.DrivePos(goal.X(), goal.Y(), goal.Rotation().Degrees());
-  }
+  }*/
 }
 
 void Robot::AutonomousInit() {
@@ -593,9 +601,8 @@ void Robot::TeleopPeriodic() {
     // m_claw.SetIntakeSpeed(codriver.GetRightTriggerAxis() * .2); // shoot
   } else if (codriver.GetLeftTriggerAxis() > 0.0) {
     // m_claw.SetIntakeSpeed(-codriver.GetLeftTriggerAxis() * .25); // feed
-    } /*else {
-        }*/
-  
+  } /*else {
+      }*/
 
   Drive();
 }

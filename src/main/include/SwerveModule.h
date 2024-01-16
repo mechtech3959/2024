@@ -4,52 +4,44 @@
 
 #pragma once
 
-
 #include <frc/controller/SimpleMotorFeedforward.h>
-#include <frc/kinematics/SwerveModuleState.h>
-#include <frc/kinematics/SwerveModulePosition.h>
 #include <frc/geometry/Rotation2d.h>
-#include <wpi/sendable/Sendable.h>
+#include <frc/kinematics/SwerveModulePosition.h>
+#include <frc/kinematics/SwerveModuleState.h>
 #include <units/math.h>
+#include <wpi/sendable/Sendable.h>
 
 #include "SwerveModuleConstants.h"
 
 #include <ctre/Phoenix.h>
 
-
-
-
-
-
-class SwerveModule : public wpi::Sendable{
- public:
+class SwerveModule : public wpi::Sendable {
+public:
   SwerveModule(std::string id, SwerveModuleConstants constants);
 
-  std::string GetID(){return m_id;};
+  std::string GetID() { return m_id; };
 
   units::degree_t GetOffsetAngle();
-  units::degree_t GetLastAngle(){return m_lastAngle;};
+  units::degree_t GetLastAngle() { return m_lastAngle; };
 
-  void SetDriveInverted(bool invert){m_driveMotor.SetInverted(invert);};
-  void SetTurnInverted(bool invert){m_turnMotor.SetInverted(invert);};
+  void SetDriveInverted(bool invert) { m_driveMotor.SetInverted(invert); };
+  void SetTurnInverted(bool invert) { m_turnMotor.SetInverted(invert); };
 
   void Set(frc::SwerveModuleState goal, bool optimize = true);
   frc::SwerveModuleState GetState();
   frc::SwerveModulePosition GetPose();
 
-  
   units::meters_per_second_t GetSpeedMPS();
   frc::Rotation2d GetAngle();
 
   void ResetDriveEncoder();
-  
 
-  void InitSendable(wpi::SendableBuilder& builder);
+  void InitSendable(wpi::SendableBuilder &builder);
   void SendData();
 
- private:
-  std::string     m_id;//module number
-  units::degree_t m_angleOffset;//for zeroing the turn angle
+private:
+  std::string m_id;              // module number
+  units::degree_t m_angleOffset; // for zeroing the turn angle
   units::degree_t m_lastAngle;
 
   double m_wheelDiameter;
@@ -60,8 +52,5 @@ class SwerveModule : public wpi::Sendable{
   TalonFX m_turnMotor;
   CANCoder m_turnEncoder;
 
-  units::meter_t m_driveFeedforward; 
-
-   
-
+  units::meter_t m_driveFeedforward;
 };

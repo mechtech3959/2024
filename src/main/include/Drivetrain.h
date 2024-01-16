@@ -8,9 +8,8 @@
 #include <frc/geometry/Translation2d.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <frc/kinematics/SwerveDriveOdometry.h>
-#include <numbers>
 #include <frc/smartdashboard/Field2d.h>
-
+#include <numbers>
 
 #include "Constants.h"
 #include "SwerveModule.h"
@@ -21,9 +20,7 @@
  * Represents a swerve drive style drivetrain.
  */
 class Drivetrain : public wpi::Sendable {
- private:
-  
-
+private:
   SwerveModule m_frontLeft;
   SwerveModule m_frontRight;
   SwerveModule m_backLeft;
@@ -38,44 +35,46 @@ class Drivetrain : public wpi::Sendable {
 
   frc::SwerveDriveOdometry<4> m_odometry;
 
-  units::meters_per_second_t m_vx_goal; //X velocity target
-  units::meters_per_second_t m_vy_goal; //Y velocity target
-  units::radians_per_second_t m_vw_goal; //rotational velocity target
+  units::meters_per_second_t m_vx_goal;  // X velocity target
+  units::meters_per_second_t m_vy_goal;  // Y velocity target
+  units::radians_per_second_t m_vw_goal; // rotational velocity target
 
   frc::Field2d m_field2d{};
 
   frc::Rotation2d GetGryoHeading();
 
- public:
+public:
   Drivetrain(constants::swerveConstants::SwerveConfig constants);
-  void InitSendable(wpi::SendableBuilder& builder);
+  void InitSendable(wpi::SendableBuilder &builder);
   void PutChildSendables();
   void SendData();
 
   void Drive(units::meters_per_second_t xSpeed,
-             units::meters_per_second_t ySpeed, 
-             units::radians_per_second_t rot,
+             units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
              bool fieldRelative = true);
   void DrivePos(units::meter_t x, units::meter_t y, units::degree_t heading);
 
   void DriveXY(units::meters_per_second_t xSpeed,
-               units::meters_per_second_t ySpeed,
-               units::degree_t heading){m_targetHeading = heading; DriveXY(xSpeed, ySpeed);};
+               units::meters_per_second_t ySpeed, units::degree_t heading) {
+    m_targetHeading = heading;
+    DriveXY(xSpeed, ySpeed);
+  };
 
   void DriveXY(units::meters_per_second_t xSpeed,
                units::meters_per_second_t ySpeed);
-  
-  units::radians_per_second_t CalcRotationSpeed(units::degree_t targetAngle, units::degree_t currentHeading);
-  
-  void SetTargetHeading(units::degree_t heading){m_targetHeading = heading;};
-  units::degree_t GetTargetHeading(){return m_targetHeading;};
-  
-  void SetRotationGain(double gain){m_rotGain = gain;};
-  double GetRotationGain(){return m_rotGain;}
+
+  units::radians_per_second_t CalcRotationSpeed(units::degree_t targetAngle,
+                                                units::degree_t currentHeading);
+
+  void SetTargetHeading(units::degree_t heading) { m_targetHeading = heading; };
+  units::degree_t GetTargetHeading() { return m_targetHeading; };
+
+  void SetRotationGain(double gain) { m_rotGain = gain; };
+  double GetRotationGain() { return m_rotGain; }
 
   void UpdateOdometry();
   void SetPose(frc::Pose2d pose);
-  frc::Pose2d GetPose(){return m_odometry.GetPose();}
+  frc::Pose2d GetPose() { return m_odometry.GetPose(); }
   frc::ChassisSpeeds GetChassisSpeeds();
 
   void SetDriveInverted(bool leftInvert, bool rightInvert);
@@ -86,8 +85,6 @@ class Drivetrain : public wpi::Sendable {
   frc::Rotation2d GetHeading();
   void SetHeading(units::degree_t angle);
 
-  units::degree_t GetPitch(){return units::degree_t(m_gyro.GetPitch());};
-  units::degree_t GetRoll(){return units::degree_t(m_gyro.GetRoll());};
-
- 
+  units::degree_t GetPitch() { return units::degree_t(m_gyro.GetPitch()); };
+  units::degree_t GetRoll() { return units::degree_t(m_gyro.GetRoll()); };
 };

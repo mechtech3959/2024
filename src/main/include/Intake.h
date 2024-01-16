@@ -13,8 +13,8 @@
 
 class Intake {
 
-    TalonFX m_intakemotor; // declares motor
-    TalonFX m_posmotor; // declares motor
+  TalonFX m_intakemotor; // declares motor
+  TalonFX m_posmotor;    // declares motor
 
 public:
   Intake();

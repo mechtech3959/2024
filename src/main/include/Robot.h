@@ -4,36 +4,26 @@
 
 #pragma once
 
-#include <frc/TimedRobot.h>
+#include "Constants.h"
+#include "Drivetrain.h"
+#include "Intake.h"
+#include "Shooter.h"
+#include "WaypointPoses.h"
 
+#include <frc/Compressor.h>
+#include <frc/DriverStation.h>
 #include <frc/MathUtil.h>
 #include <frc/TimedRobot.h>
 #include <frc/XboxController.h>
 #include <frc/filter/SlewRateLimiter.h>
 
+#include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
-#include <frc/Compressor.h>
-#include <frc/smartdashboard/SendableChooser.h>
 #include <frc/trajectory/Trajectory.h>
 #include <frc/trajectory/TrajectoryGenerator.h>
 
-// #include <chrono>
-#include <frc/MathUtil.h>
-// #include <thread>
 #include <units/math.h>
-
-#include <frc/DriverStation.h>
-
-#include "Constants.h"
-#include "Drivetrain.h"
-// #include "SwerveModule.h"
-
-#include "Intake.h"
-// #include "LimeLight.h"
-// #include "LoggingLevel.h"
-#include "Shooter.h"
-#include "WaypointPoses.h"
 #include <units/pressure.h>
 
 class Robot : public frc::TimedRobot {
@@ -42,8 +32,8 @@ private:
   frc::XboxController driver{0};
   frc::XboxController codriver{1};
 
-  Shooter m_Shooter{};
-  Intake m_Intake{};
+  // Shooter m_Shooter{};
+  // Intake m_Intake{};
 
   double m_speedScale;
 
@@ -68,7 +58,6 @@ private:
   frc::Timer autoTimer;
   int autoState;
   waypoints::WaypointPoses waypointLib{};
-  frc::SendableChooser<autoSelector::ScorePosition> Score0Chooser;
 
   enum AutoRoutine { kLeft, kMiddle, kRight, kTest } m_autoSelected;
 
