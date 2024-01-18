@@ -36,7 +36,7 @@ deploy {
 def deployArtifact = deploy.targets.roborio.artifacts.frcCpp
 
 // Set this to true to enable desktop support.
-def includeDesktopSupport = false
+def includeDesktopSupport = true
 
 // Set to true to run simulation in debug mode
 wpi.cpp.debugSimulation = false
@@ -97,7 +97,7 @@ model {
         }
     }
 }
-nativeUtils.platformConfigs.named("linuxathena").configure {
+nativeUtils.platformConfigs.named(wpi.platforms.roborio).configure {
     it.cppCompiler.args.add('-Wall')
     it.cppCompiler.args.add('-Wextra')
     it.cppCompiler.args.add('-Wpedantic')
