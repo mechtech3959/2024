@@ -1,0 +1,12 @@
+name: Team 3959 FRC Build
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Team 3171 FRC Build
+      uses: markebert/FRC-actions@v2.1
+      with:
+        build_mode: 'build'
