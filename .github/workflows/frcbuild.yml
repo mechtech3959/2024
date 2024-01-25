@@ -8,4 +8,4 @@ jobs:
     steps:
     - name: Build
     - uses: actions/checkout@v4
-      run: echo $PWD; tree; cd ~/ignore/mechtech/2024 && tree
+    - run: echo $PWD; tree; cd ~/ignore/mechtech/2024 && tree
