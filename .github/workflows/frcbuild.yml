@@ -4,5 +4,5 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: self-hosted
-    - name: Build debug and release targets using Gradle
-      run: ./gradlew build
+    name: Build debug and release targets using Gradle
+    run: ./gradlew build
