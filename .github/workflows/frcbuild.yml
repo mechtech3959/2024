@@ -7,4 +7,4 @@ jobs:
     name: Build debug and release targets using Gradle
     steps:
     - name: Build
-      run: tree
+      run: cd ~/ignore/mechtech/2024 && tree
