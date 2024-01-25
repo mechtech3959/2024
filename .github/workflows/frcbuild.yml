@@ -1,11 +1,8 @@
 name: Team 3959 FRC Build
 on: [push, pull_request]
-
 jobs:
   build:
     runs-on: self-hosted
-    name: Build debug and release targets using Gradle
     steps:
-    - name: Build
-    - uses: actions/checkout@v4
-    - run: echo $PWD; tree; cd ~/ignore/mechtech/2024 && tree
+      - uses: actions/checkout@v4
+      - run: ./gradlew build
