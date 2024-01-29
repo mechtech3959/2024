@@ -168,6 +168,9 @@ out/
 # Fleet
 .fleet
 
+# Emacs
+.#*
+
 # Simulation GUI and other tools window save file
 *-window.json
 
@@ -176,3 +179,13 @@ logs/
 
 # Folder that has CTRE Phoenix Sim device config storage
 ctre_sim/
+
+# Clang
+.cache/
+compile_commands.json
+
+# Ctags
+GTAGS
+GRTAGS
+GPATH
+ID
