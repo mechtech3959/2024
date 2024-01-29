@@ -1,8 +1,0 @@
-name: Team 3959 FRC Build
-on: [push, pull_request]
-jobs:
-  build:
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v4
-      - run: ./gradlew build
