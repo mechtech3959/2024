@@ -14,6 +14,14 @@
  * they are needed.
  */
 
+
+namespace constants {
+  constexpr double NominalVoltage = 12.0;
+
+  namespace DriveConstants {
+    int leftDriveFront = 1;
+    int leftDriveFollower = 2;
+  }
 namespace OperatorConstants {
 
 inline constexpr int kDriverControllerPort = 0;

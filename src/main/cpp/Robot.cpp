@@ -1,115 +1,80 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+#include "ctre/Phoenix.h"
+#include "frc/TimedRobot.h"
+#include "frc/XboxController.h"
+#include "frc/drive/DifferentialDrive.h"
 
-#include <frc/TimedRobot.h>
-#include <frc/Timer.h>
-#include <frc/Joystick.h>
-#include <frc/motorcontrol/PWMTalonSRX.h>
-#include <frc/drive/DifferentialDrive.h>
-#include <frc2/command/CommandScheduler.h>
-#include <ctre/Phoenix.h>
-class Robot : public frc::TimedRobot
-{
+using namespace frc;
+
+class Robot: public TimedRobot {
 public:
-  TalonSRX ML{1};
-  TalonSRX CL{2};
-  TalonSRX MR{3};
-  TalonSRX CR{4};
-  frc::Joystick DriverR{0};
-  frc::Joystick DriverL{1};
+	WPI_TalonSRX _driveRightFront{1};
+	WPI_TalonSRX _driveRightFollower{2};
+	WPI_TalonSRX _driveLeftFront{3};
+	WPI_TalonSRX _driveLeftFollower{4};
+	WPI_TalonSRX _launcherLeftFront{5};
+	WPI_TalonSRX _launcherLeftFollower{6};
+	WPI_TalonSRX _launcherRightFront{7};
+	WPI_TalonSRX _launcherRightFollower{8};
+	WPI_TalonSRX _intake{9};
+	WPI_TalonSRX _climber{10};
 
-  Robot() {}
+	DifferentialDrive _diffDrive{_driveLeftFront, _driveRightFront};
 
-  void RobotInit() override
-  {
-    MR.SetInverted(true);
-    CR.SetInverted(true);
-    //   double ML = frc::XboxController::GetLeftY;
+	frc::XboxController _controller{0};
 
-    // frc::MotorControllerGroup::MotorControllerGroup(ML,CL);
-  }
+	Faults _faults_L;
+	Faults _faults_R;
 
-  /**
-   * This function is called every 20 ms, no matter the mode. Use
-   * this for items like diagnostics that you want to run during disabled,
-   * autonomous, teleoperated and test.
-   *
-   * <p> This runs after the mode specific periodic functions, but before
-   * LiveWindow and SmartDashboard integrated updating.
-   */
-  void RobotPeriodic() override
-  {
+	void TeleopPeriodic() {
 
-    frc2::CommandScheduler::GetInstance().Run();
-  }
+		std::stringstream work;
 
-  /**
-   * This function is called once each time the robot enters Disabled mode. You
-   * can use it to reset any subsystem information you want to clear when the
-   * robot is disabled.
-   */
-  void DisabledInit() override {}
+		double forw = -_controller.GetLeftY();
+		double spin = _controller.GetLeftX();
+		double launcherSpeed = _controller.GetRightTriggerAxis();
+		bool launcherReverse = _controller.GetRightBumper();
+		bool intake = _controller.GetLeftBumper();
+		bool intakeReverse = _controller.GetAButton();
 
-  void DisabledPeriodic() override {}
+		if (fabs(forw) < 0.10) forw = 0;
+		if (fabs(spin) < 0.10) spin = 0;
 
-  /**
-   * This autonomous runs the autonomous command selected by your {@link
-   * RobotContainer} class.
-   */
-  void AutonomousInit() override
-  {
-    // m_autonomousCommand = m_container.GetAutonomousCommand();
+		_diffDrive.ArcadeDrive(forw, spin, false);
+		
+		if (launcherReverse) launcherSpeed = -launcherSpeed;
+		_launcherRightFront.Set(motorcontrol::TalonSRXControlMode::PercentOutput, launcherSpeed);
 
-    /*  if (m_autonomousCommand) {
-        m_autonomousCommand->Schedule();
-      }*/
-  }
+		if (intake) (intakeReverse) ? _intake.Set(motorcontrol::TalonSRXControlMode::PercentOutput, -100) : _intake.Set(motorcontrol::TalonSRXControlMode::PercentOutput, 100);
+	}
 
-  void AutonomousPeriodic() override {}
+	void RobotInit() {
+		_driveRightFront.ConfigFactoryDefault();
+		_driveRightFollower.ConfigFactoryDefault();
+		_driveLeftFront.ConfigFactoryDefault();
+		_driveLeftFollower.ConfigFactoryDefault();
+		_launcherLeftFront.ConfigFactoryDefault();
+		_launcherLeftFollower.ConfigFactoryDefault();
+		_launcherRightFront.ConfigFactoryDefault();
+		_launcherRightFront.ConfigFactoryDefault();
 
-  void TeleopInit() override
-  {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.      Robot(){}
+		_driveRightFollower.Follow(_driveRightFront);
+		_driveLeftFollower.Follow(_driveLeftFront);
+		_launcherLeftFollower.Follow(_launcherLeftFront);
+		_launcherRightFollower.Follow(_launcherRightFront);
+		_launcherRightFront.Follow(_launcherLeftFront);
 
-    // if (m_autonomousCommand) {
-    // m_autonomousCommand->Cancel();
-    //  }
-  }
+		_driveRightFront.SetInverted(true);
+		_driveRightFollower.SetInverted(true);
+		_driveLeftFront.SetInverted(false);
+		_driveLeftFollower.SetInverted(false);
 
-  /**
-   * This function is called periodically during operator control.
-   */
-  void TeleopPeriodic() override
-  {
-    ML.Set(ctre::phoenix::motorcontrol::TalonSRXControlMode::PercentOutput, DriverL.GetY());
-    CL.Set(ctre::phoenix::motorcontrol::TalonSRXControlMode::PercentOutput, DriverL.GetY());
-    MR.Set(ctre::phoenix::motorcontrol::TalonSRXControlMode::PercentOutput, DriverR.GetY());
-    CR.Set(ctre::phoenix::motorcontrol::TalonSRXControlMode::PercentOutput, DriverR.GetY());
-  }
+		_driveRightFront.SetSensorPhase(true);
+		_driveLeftFront.SetSensorPhase(true);
+	}
 
-  /**
-   * This function is called periodically during test mode.
-   */
-  void TestPeriodic() override {}
-
-  /**
-   * This function is called once when the robot is first started up.
-   */
-  void SimulationInit() override {}
-
-  /**
-   * This function is called periodically whilst in simulation.
-   */
-  void SimulationPeriodic() override {}
+private:
 };
-#ifndef RUNNING_FRC_TESTS
 
-int main()
-{
-  return frc::StartRobot<Robot>();
-}
+#ifndef RUNNING_FRC_TESTS
+int main() { return frc::StartRobot<Robot>(); }
 #endif
