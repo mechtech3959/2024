@@ -14,16 +14,24 @@
  * they are needed.
  */
 
-
 namespace constants {
   constexpr double NominalVoltage = 12.0;
 
   namespace DriveConstants {
-    int leftDriveFront = 1;
-    int leftDriveFollower = 2;
+    constexpr int _driveRightFront = 1;
+    constexpr int _driveRightFollower = 2;
+    constexpr int _driveLeftFront = 3;
+    constexpr int _driveLeftFollower = 4;
+    constexpr int _launcherLeftFront = 5;
+    constexpr int _launcherLeftFollower = 6;
+    constexpr int _launcherRightFront = 7;
+    constexpr int _launcherRightFollower = 8;
+    constexpr int _intake = 9;
+    constexpr int _climber = 10;
   }
-namespace OperatorConstants {
+  namespace OperatorConstants {
 
-inline constexpr int kDriverControllerPort = 0;
+    inline constexpr int kDriverControllerPort = 0;
 
-}  // namespace OperatorConstants
+  } // namespace OperatorConstants
+} // namespace constants
