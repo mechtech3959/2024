@@ -22,6 +22,7 @@
 // #include "wpi/span.h"
 #include "wpi/SpanExtras.h"
 // #include "Shooter.h"
+#include "LimelightHelpers.h"
 class Robot : public frc::TimedRobot
 {
 public:
@@ -35,12 +36,20 @@ public:
   frc::PWMTalonSRX CL{4};
   frc::XboxController drive{0};
   frc::Field2d m_field;
-
+  nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
+  std::shared_ptr<nt::NetworkTable> table = inst.GetTable("datatable");
   std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
   double targetOffsetAngle_Horizontal = table->GetNumber("tx", 0.0);
   double targetOffsetAngle_Vertical = table->GetNumber("ty", 0.0);
   double targetArea = table->GetNumber("ta", 0.0);
   double targetSkew = table->GetNumber("ts", 0.0);
+   //nt::NetworkTableInstance::GetDefault().GetTable("limelight")->GetNumber("<variablename>",0.0);
+ // nt::NetworkTableInstance::GetDefault().GetTable("limelight")->GetNumberArray("<variablename>",std::vector<double>(6));
+
+
+
+
+
   frc::DifferentialDrive DD{ML, MR};
   // Do this in either robot periodic or subsystem periodic
 
@@ -51,8 +60,7 @@ public:
     ML.SetInverted(true);
     CL.SetInverted(true);
     // SFollow();
-    frc::SmartDashboard::PutData("Field", &m_field); // IDRK WHAT THIS DOES TBH
-    ML.AddFollower(CL);
+     ML.AddFollower(CL);
     MR.AddFollower(CR);
   }
 
@@ -66,7 +74,7 @@ public:
    */
   void RobotPeriodic() override
   {
-
+    frc::SmartDashboard::PutData("Field", &m_field); // IDRK WHAT THIS DOES TBH
     frc2::CommandScheduler::GetInstance().Run();
   }
 
@@ -110,9 +118,32 @@ public:
    */
   void TeleopPeriodic() override
   {
-
-    double forw = drive.GetLeftY();
+     double forw = drive.GetLeftY();
     double spin = drive.GetLeftX();
+    float Kp = -0.1f;
+float min_command = 0.05f;
+  std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+ float tx = table->GetNumber("tx",0.0);
+
+if (drive.GetRawButton(9))
+{
+    float heading_error = -tx;
+    float steering_adjust = 0.0f;
+    if (abs(heading_error) > 1.0) //    if (Math.abs(heading_error) > 1.0) 
+
+    {
+        if (heading_error < 0) 
+        {
+            steering_adjust = Kp*heading_error + min_command;
+        } 
+        else 
+        {
+            steering_adjust = Kp*heading_error - min_command;
+        }
+    }
+    forw += steering_adjust;
+    spin -= steering_adjust;
+}
 
     // ML.Set(ctre::phoenix::motorcontrol::TalonSRXControlMode::PercentOutput,drive.GetLeftY());
     // MR.Set(ctre::phoenix::motorcontrol::TalonSRXControlMode::PercentOutput,drive.GetRightX());
