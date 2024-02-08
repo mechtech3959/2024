@@ -15,6 +15,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/CommandScheduler.h>
 // #include "frc/smartdashboard/Smartdashboard.h"
+#include "ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h"
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableEntry.h"
 #include "networktables/NetworkTableInstance.h"
@@ -23,25 +24,24 @@
 // #include "wpi/SpanExtras.h"
 // #include "Shooter.h"
 // #include "LimelightHelpers.h"
-class Robot : public frc::TimedRobot {
+
 // #include "LimelightHelpers.h"
-class Robot : public frc::TimedRobot
-{
+class Robot : public frc::TimedRobot {
 public:
   // TalonSRX ML{1};
   // TalonSRX CL{2};
   // TalonSRX MR{3};
   // TalonSRX CR{4};
-  frc::PWMTalonSRX MR{1};
-  frc::PWMTalonSRX CR{2};
-  frc::PWMTalonSRX ML{3};
-  frc::PWMTalonSRX CL{4};
+  WPI_TalonSRX MR{1};
+  WPI_TalonSRX CR{2};
+  WPI_TalonSRX ML{3};
+  WPI_TalonSRX CL{4};
   frc::XboxController drive{0};
   frc::Field2d m_field;
- // nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
-  //std::shared_ptr<nt::NetworkTable> table = inst.GetTable("datatable");
-  // std::shared_ptr<nt::NetworkTable> table =
-  // nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+  // nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
+  // std::shared_ptr<nt::NetworkTable> table = inst.GetTable("datatable");
+  std::shared_ptr<nt::NetworkTable> table =
+  nt::NetworkTableInstance::GetDefault().GetTable("limelight");
   double targetOffsetAngle_Horizontal = table->GetNumber("tx", 0.0);
   double targetOffsetAngle_Vertical = table->GetNumber("ty", 0.0);
   double targetArea = table->GetNumber("ta", 0.0);
@@ -58,8 +58,8 @@ public:
     ML.SetInverted(true);
     CL.SetInverted(true);
     // SFollow();
-    ML.AddFollower(CL);
-    MR.AddFollower(CR);
+    CL.Follow(ML);
+    CR.Follow(MR);
   }
 
   /**
@@ -71,14 +71,15 @@ public:
    * LiveWindow and SmartDashboard integrated updating.
    */
   void RobotPeriodic() override {
-    frc::SmartDashboard::PutData("Field", &m_field); // IDRK WHAT THIS DOES TBH
+    frc::SmartDashboard::PutData("Field",
+                                 &m_field); // IDRK WHAT THIS DOES TBH
     frc2::CommandScheduler::GetInstance().Run();
   }
 
   /**
-   * This function is called once each time the robot enters Disabled mode. You
-   * can use it to reset any subsystem information you want to clear when the
-   * robot is disabled.
+   * This function is called once each time the robot enters Disabled mode.
+   * You can use it to reset any subsystem information you want to clear when
+   * the robot is disabled.
    */
   void DisabledInit() override {}
 
@@ -119,7 +120,7 @@ public:
     float Kp = -0.1f;
     float min_command = 0.05f;
     // std::shared_ptr<nt::NetworkTable> table =
-        nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+    nt::NetworkTableInstance::GetDefault().GetTable("limelight");
     float tx = table->GetNumber("tx", 0.0);
 
     if (drive.GetRawButton(9)) {
