@@ -2,6 +2,8 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+#include <iostream>
+
 #include <ctre/Phoenix.h>
 #include <ctre/phoenix/motorcontrol/can/WPI_TalonFX.h>
 #include <frc/TimedRobot.h>
@@ -69,13 +71,17 @@ public:
    * This function is called periodically during operator control.
    */
   void TeleopPeriodic() override {
+
     double forw = drive.GetLeftY();
     double spin = drive.GetLeftX();
+
     float Kp = -0.1f;
     float min_command = 0.05f;
-    // std::shared_ptr<nt::NetworkTable> table =
+
     nt::NetworkTableInstance::GetDefault().GetTable("limelight");
     float tx = table->GetNumber("tx", 0.0);
+
+    std::cout << tx;
 
     if (drive.GetRawButton(9)) {
       float heading_error = -tx;
