@@ -14,15 +14,15 @@
 #include <frc/smartdashboard/Field2d.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <ctre/phoenix/motorcontrol/can/WPI_TalonFX.h>
-#include "frc/smartdashboard/Smartdashboard.h"
+// #include "frc/smartdashboard/Smartdashboard.h"
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableInstance.h"
 #include "networktables/NetworkTableEntry.h"
-#include "networktables/NetworkTableValue.h"
+// #include "networktables/NetworkTableValue.h"
 // #include "wpi/span.h"
-#include "wpi/SpanExtras.h"
+// #include "wpi/SpanExtras.h"
 // #include "Shooter.h"
-#include "LimelightHelpers.h"
+// #include "LimelightHelpers.h"
 class Robot : public frc::TimedRobot
 {
 public:
@@ -38,7 +38,7 @@ public:
   frc::Field2d m_field;
   nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
   std::shared_ptr<nt::NetworkTable> table = inst.GetTable("datatable");
-  std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+  // std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
   double targetOffsetAngle_Horizontal = table->GetNumber("tx", 0.0);
   double targetOffsetAngle_Vertical = table->GetNumber("ty", 0.0);
   double targetArea = table->GetNumber("ta", 0.0);
