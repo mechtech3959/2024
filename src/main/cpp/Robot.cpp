@@ -22,7 +22,7 @@
 // #include "wpi/span.h"
 #include "wpi/SpanExtras.h"
 // #include "Shooter.h"
-#include "LimelightHelpers.h"
+// #include "LimelightHelpers.h"
 class Robot : public frc::TimedRobot
 {
 public:
@@ -36,8 +36,8 @@ public:
   frc::PWMTalonSRX CL{4};
   frc::XboxController drive{0};
   frc::Field2d m_field;
-  nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
-  std::shared_ptr<nt::NetworkTable> table = inst.GetTable("datatable");
+ // nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
+  //std::shared_ptr<nt::NetworkTable> table = inst.GetTable("datatable");
   std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
   double targetOffsetAngle_Horizontal = table->GetNumber("tx", 0.0);
   double targetOffsetAngle_Vertical = table->GetNumber("ty", 0.0);
@@ -122,7 +122,7 @@ public:
     double spin = drive.GetLeftX();
     float Kp = -0.1f;
 float min_command = 0.05f;
-  std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+  // std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
  float tx = table->GetNumber("tx",0.0);
 
 if (drive.GetRawButton(9))
