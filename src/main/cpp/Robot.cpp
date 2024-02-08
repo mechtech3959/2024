@@ -81,10 +81,11 @@ public:
     nt::NetworkTableInstance::GetDefault().GetTable("limelight");
     float tx = table->GetNumber("tx", 0.0);
 
-    std::cout << tx;
+    std::cout << "tx is" << tx;
 
-    if (drive.GetRawButton(9)) {
+    if (drive.GetAButton()) {
       float heading_error = -tx;
+      std::cout << "heading error is" << heading_error;
       float steering_adjust = 0.0f;
       if (abs(heading_error) > 1.0) {
         if (heading_error < 0) {
