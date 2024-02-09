@@ -42,7 +42,7 @@ public:
 
     if (launcherReverse)
       launcherSpeed = -launcherSpeed;
-    _launcherRightFront.Set(motorcontrol::TalonSRXControlMode::PercentOutput,
+    _launcherLeftFront.Set(motorcontrol::TalonSRXControlMode::PercentOutput,
                             launcherSpeed);
 
     if (intake)
