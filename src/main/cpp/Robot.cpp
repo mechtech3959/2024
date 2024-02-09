@@ -1,4 +1,4 @@
-#include "Robot.h"
+//#include "Robot.h"
 #include <iostream>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <networktables/NetworkTable.h>
@@ -13,7 +13,7 @@
 #include <frc/XboxController.h>
 #include <frc/drive/DifferentialDrive.h>
 
-class Robot : public frc::TimedRobot
+class Robot:public frc::TimedRobot
 {
 public:
 
@@ -22,14 +22,13 @@ public:
   const std::string kAutoNameCustom = "My Auto";
   std::string m_autoSelected;
 
-  WPI_TalonSRX m_Left0[1];
-  WPI_TalonSRX m_Left1[2];
-  WPI_TalonSRX m_Right0[3];
-  WPI_TalonSRX m_Right1[4];
-
-
-  frc::DifferentialDrive m_Drive{m_Left0, m_Right0};
-  frc::XboxController m_Controller;
+  WPI_TalonSRX m_Left0{1};
+  WPI_TalonSRX m_Left1{2};
+  WPI_TalonSRX m_Right0{3};
+  WPI_TalonSRX m_Right1{4};
+ 
+  frc::DifferentialDrive m_Drive {m_Left0, m_Right0};
+  frc::XboxController m_Controller{0};
 
   bool m_LimelightHasTarget;
   double m_LimelightTurnCmd;
@@ -43,30 +42,31 @@ double clamp(double in, double minval, double maxval)
   if (in < minval)
     return minval;
   return in;
-}
+};
+
+Robot(){}
 
 
-
-void RobotInit()
+void RobotInit()   override
 {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 }
 
-void RobotPeriodic() {}
+void RobotPeriodic()   override{}
 
-void AutonomousInit() {}
+void AutonomousInit()   override{}
 
-void AutonomousPeriodic() {}
+void AutonomousPeriodic()   override{}
 
-void TeleopInit() {}
+void TeleopInit()   override{}
 
-void TeleopPeriodic()
+void TeleopPeriodic()   override
 {
   Update_Limelight_Tracking();
-
-  bool do_limelight = m_Controller.GetAButton();
+if(m_Controller.GetAButton()){
+  bool do_limelight = true;   
   if (do_limelight)
   {
     if (m_LimelightHasTarget)
@@ -90,12 +90,12 @@ void TeleopPeriodic()
     double turn = m_Controller.GetLeftX();
     turn *= 0.7f;
     m_Drive.ArcadeDrive(fwd, turn);
-  }
+  }};
 }
 
-void TestPeriodic() {}
+void TestPeriodic()  override {}
 
-void Update_Limelight_Tracking()
+void Update_Limelight_Tracking()    
 {
   // Proportional Steering Constant:
   // If your robot doesn't turn fast enough toward the target, make this number bigger
@@ -115,6 +115,8 @@ void Update_Limelight_Tracking()
   double ty = table->GetNumber("ty", 0.0);
   double ta = table->GetNumber("ta", 0.0);
   double tv = table->GetNumber("tv", 0.0);
+  frc::SmartDashboard::PutBoolean("TV", tv);
+ 
 
   if (tv < 1.0)
   {
