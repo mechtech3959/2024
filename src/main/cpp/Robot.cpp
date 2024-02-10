@@ -3,16 +3,16 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <networktables/NetworkTable.h>
 #include <networktables/NetworkTableInstance.h>
-
+#include <frc/motorcontrol/MotorController.h>
 #include <string>
-
+#include <frc/motorcontrol/PWMTalonSRX.h>
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <ctre/Phoenix.h>
 // #include <frc/SpeedControllerGroup.h>
 #include <frc/XboxController.h>
 #include <frc/drive/DifferentialDrive.h>
-
+ 
 class Robot:public frc::TimedRobot
 {
 public:
@@ -26,11 +26,11 @@ public:
   WPI_TalonSRX m_Left1{2};
   WPI_TalonSRX m_Right0{3};
   WPI_TalonSRX m_Right1{4};
- //m_Left0
- //m_Left1
-// m_Right0
-// m_Right1
-  frc::DifferentialDrive m_Drive {m_Left0, m_Right0};
+ 
+ 
+std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+//println("{}",table);
+   frc::DifferentialDrive m_Drive {m_Left0, m_Right0};
   frc::XboxController m_Controller{0};
 
   bool m_LimelightHasTarget;
@@ -48,8 +48,7 @@ double clamp(double in, double minval, double maxval)
 };
 
 Robot(){}
-void Update_Limelight_Tracking()    
-{
+ void Update_Limelight_Tracking(){
   // Proportional Steering Constant:
   // If your robot doesn't turn fast enough toward the target, make this number bigger
   // If your robot oscillates (swings back and forth past the target) make this smaller
@@ -63,12 +62,11 @@ void Update_Limelight_Tracking()
   const double MAX_DRIVE = 0.65;
   const double MAX_STEER = 1.0f;
 
-  std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
-  double tx = table->GetNumber("tx", 0.0);
+   double tx = table->GetNumber("tx", 0.0);
   double ty = table->GetNumber("ty", 0.0);
   double ta = table->GetNumber("ta", 0.0);
   double tv = table->GetNumber("tv", 0.0);
-  frc::SmartDashboard::PutBoolean("TV", tv);
+  //frc::SmartDashboard::PutData("TV", tv);
  
 
   if (tv < 1.0)
@@ -77,8 +75,8 @@ void Update_Limelight_Tracking()
     m_LimelightDriveCmd = 0.0;
     m_LimelightTurnCmd = 0.0;
   }
-  else
-  {
+  else{
+  
     m_LimelightHasTarget = true;
 
     // Proportional steering
@@ -86,14 +84,19 @@ void Update_Limelight_Tracking()
     m_LimelightTurnCmd = clamp(m_LimelightTurnCmd, -MAX_STEER, MAX_STEER);
 
     // drive forward until the target area reaches our desired area
-    m_LimelightDriveCmd = (DESIRED_TARGET_AREA - ta) * DRIVE_K;
+   m_LimelightDriveCmd = (DESIRED_TARGET_AREA - ta) * DRIVE_K;
     m_LimelightDriveCmd = clamp(m_LimelightDriveCmd, -MAX_DRIVE, MAX_DRIVE);
-  }
-}
+  
+}}
 
 void RobotInit()   override
 { 
-  
+  m_Right0.SetInverted(true);
+  m_Right1.SetInverted(true);
+
+  m_Left0.Follow(m_Left1);
+  m_Right0.Follow(m_Right1);
+
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
@@ -109,21 +112,25 @@ void TeleopInit()   override{}
 
 void TeleopPeriodic()   override
 {
-  Update_Limelight_Tracking();
+   double fwd = -m_Controller.GetLeftY();
+    double turn = m_Controller.GetLeftX();
+    turn *= 0.7f;
+    m_Drive.ArcadeDrive(fwd, turn);
+  
+Update_Limelight_Tracking();
 if(m_Controller.GetAButton()){
-    if (m_LimelightHasTarget)
-    {
+    if (m_LimelightHasTarget){
+    // Proportional steering
+    
       m_Drive.ArcadeDrive(m_LimelightDriveCmd, m_LimelightTurnCmd);
     }
-    else
+    /*else
     {
       m_Drive.ArcadeDrive(0.0, 0.0);
-    }
-  }
-  else
-  {
+    }*/}
+  else{
     // Tank Drive
-    // double left = -m_Controller.GetY(frc::GenericHID::JoystickHand::kLeftHand);
+    // double left = -m_Cont roller.GetY(frc::GenericHID::JoystickHand::kLeftHand);
     // double right = -m_Controller.GetY(frc::GenericHID::JoystickHand::kRightHand);
     // m_Drive.TankDrive(left,right);
 
