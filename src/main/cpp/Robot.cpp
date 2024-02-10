@@ -28,7 +28,8 @@
 #include <frc/geometry/Rotation2d.h>
 #include <frc/geometry/Rotation3d.h>*/
 
-class Robot : public frc::TimedRobot {
+class Robot : public frc::TimedRobot
+{
 public:
   WPI_TalonSRX MR{1};
   WPI_TalonSRX CR{2};
@@ -38,7 +39,7 @@ public:
   frc::Field2d m_field;
   // nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
   // std::shared_ptr<nt::NetworkTable> table = inst.GetTable("datatable");
-  std::shared_ptr<nt::NetworkTable> table =nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+  std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
   double targetOffsetAngle_Horizontal = table->GetNumber("tx", 0.0);
   double targetOffsetAngle_Vertical = table->GetNumber("ty", 0.0);
   double targetArea = table->GetNumber("ta", 0.0);
@@ -50,7 +51,8 @@ public:
 
   Robot() {}
 
-  void RobotInit() override {
+  void RobotInit() override
+  {
     ML.SetInverted(true);
     CL.SetInverted(true);
 
@@ -66,7 +68,8 @@ public:
    * <p> This runs after the mode specific periodic functions, but before
    * LiveWindow and SmartDashboard integrated updating.
    */
-  void RobotPeriodic() override {
+  void RobotPeriodic() override
+  {
     frc::SmartDashboard::PutData("Field",
                                  &m_field); // IDRK WHAT THIS DOES TBH
     frc2::CommandScheduler::GetInstance().Run();
@@ -75,7 +78,8 @@ public:
   /**
    * This function is called periodically during operator control.
    */
-  void TeleopPeriodic() override {
+  void TeleopPeriodic() override
+  {
 
     double forw = drive.GetLeftY();
     double spin = drive.GetLeftX();
@@ -83,29 +87,33 @@ public:
     float Kp = -0.1f;
     float min_command = 0.05f;
 
-   nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+    nt::NetworkTableInstance::GetDefault().GetTable("limelight");
     float tx = table->GetNumber("tx", 0.0);
 
     std::cout << "tx is" << tx;
 
-    if (drive.GetAButton()) {
+    if (drive.GetAButton())
+    {
       float heading_error = -targetOffsetAngle_Horizontal;
-      std::cout << "heading error is" << heading_error;
+      // std::cout << "heading error is" << heading_error;
       float steering_adjust = 0.0f;
-          steering_adjust = Kp * targetOffsetAngle_Horizontal;
-      if (abs(heading_error) > 1.0) {
-        if (heading_error < 0) {
+      steering_adjust = Kp * targetOffsetAngle_Horizontal;
+      if (abs(heading_error) > 1.0)
+      {
+        if (heading_error < 0)
+        {
           steering_adjust = Kp * heading_error + min_command;
-                    std::cout << steering_adjust;
-
-        } else {
+          // std::cout << steering_adjust;
+        }
+        else
+        {
           steering_adjust = Kp * heading_error - min_command;
-          std::cout << steering_adjust;
+          // std::cout << steering_adjust;
         }
       }
-     // forw += steering_adjust;
-    //spin -= steering_adjust;
-     //DD.ArcadeDrive(forw += steering_adjust,spin -= steering_adjust);
+      forw += steering_adjust;
+      spin -= steering_adjust;
+      DD.ArcadeDrive(forw, spin, false);
     }
     DD.ArcadeDrive(forw, spin, true);
   }
