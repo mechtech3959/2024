@@ -11,11 +11,10 @@ public:
   WPI_TalonSRX _driveRightFollower{2};
   WPI_TalonSRX _driveLeftFront{3};
   WPI_TalonSRX _driveLeftFollower{4};
-  WPI_TalonSRX _launcherLeftFront{5};
-  WPI_TalonSRX _launcherLeftFollower{6};
-  WPI_TalonSRX _launcherRightFront{7};
-  WPI_TalonSRX _launcherRightFollower{8};
-  WPI_TalonSRX _intake{9};
+  WPI_TalonSRX _launcherFront{5};
+  WPI_TalonSRX _launcherFollower{6};
+  WPI_TalonSRX _intake{7};
+
   WPI_TalonSRX _climber{10};
 
   DifferentialDrive _diffDrive{_driveLeftFront, _driveRightFront};
@@ -42,7 +41,7 @@ public:
 
     if (launcherReverse)
       launcherSpeed = -launcherSpeed;
-    _launcherRightFront.Set(motorcontrol::TalonSRXControlMode::PercentOutput,
+    _launcherFront.Set(motorcontrol::TalonSRXControlMode::PercentOutput,
                             launcherSpeed);
 
     if (intake)
@@ -57,17 +56,13 @@ public:
     _driveRightFollower.ConfigFactoryDefault();
     _driveLeftFront.ConfigFactoryDefault();
     _driveLeftFollower.ConfigFactoryDefault();
-    _launcherLeftFront.ConfigFactoryDefault();
-    _launcherLeftFollower.ConfigFactoryDefault();
-    _launcherRightFront.ConfigFactoryDefault();
-    _launcherRightFront.ConfigFactoryDefault();
+    _launcherFront.ConfigFactoryDefault();
+    _launcherFollower.ConfigFactoryDefault();
 
     // Set up followers
     _driveRightFollower.Follow(_driveRightFront);
     _driveLeftFollower.Follow(_driveLeftFront);
-    _launcherLeftFollower.Follow(_launcherLeftFront);
-    _launcherRightFollower.Follow(_launcherRightFront);
-    _launcherRightFront.Follow(_launcherLeftFront);
+    _launcherFollower.Follow(_launcherFront);
 
     // Invert the right side motors
     _driveRightFront.SetInverted(true);
