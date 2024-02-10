@@ -8,12 +8,41 @@
 
 #include <frc/TimedRobot.h>
 #include <frc2/command/CommandPtr.h>
+#include <frc/TimedRobot.h>
+
+#include <frc/MathUtil.h>
+#include <frc/TimedRobot.h>
+#include <frc/XboxController.h>
+#include <frc/filter/SlewRateLimiter.h>
+
+#include <frc/smartdashboard/SmartDashboard.h>
+
+#include <frc/trajectory/Trajectory.h>
+#include <frc/trajectory/TrajectoryGenerator.h>
+#include <frc/smartdashboard/SendableChooser.h>
+#include <frc/Compressor.h>
+
+#include <frc/MathUtil.h>
+#include <units/math.h>
+#include <chrono>
+#include <thread>
+
+
+#include <frc/DriverStation.h>
+
+#include "LimeLight.h"
+#include "LimelightHelpers.h"
+#include "LoggingLevel.h"
+#include <units/pressure.h>
 
 //#include "RobotContainer.h"
 
-class Robot : public frc::TimedRobot {
- public:
-  void RobotInit() override;
+//class Robot : public frc::TimedRobot {}
+  
+  
+  
+  
+ /* void RobotInit() override;
   void RobotPeriodic() override;
   void DisabledInit() override;
   void DisabledPeriodic() override;
@@ -24,11 +53,7 @@ class Robot : public frc::TimedRobot {
   void TestPeriodic() override;
   void SimulationInit() override;
   void SimulationPeriodic() override;
-
- private:
-  // Have it empty by default so that if testing teleop it
-  // doesn't have undefined behavior and potentially crash.
-  std::optional<frc2::CommandPtr> m_autonomousCommand;
+*/  
 
   // RobotContainer m_container;
-};
+
