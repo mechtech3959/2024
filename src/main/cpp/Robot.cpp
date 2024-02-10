@@ -16,11 +16,17 @@
 #include <frc/smartdashboard/Field2d.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/CommandScheduler.h>
-
+// #include "LimelightHelpers.h"
 #include "ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h"
-#include "networktables/NetworkTable.h"
-#include "networktables/NetworkTableEntry.h"
 #include "networktables/NetworkTableInstance.h"
+#include "networktables/NetworkTableEntry.h"
+#include "networktables/NetworkTableValue.h"
+/*#include <wpinet/PortForwarder.h>
+#include "wpi/json.h"
+#include <frc/geometry/Pose2d.h>
+#include <frc/geometry/Pose3d.h>
+#include <frc/geometry/Rotation2d.h>
+#include <frc/geometry/Rotation3d.h>*/
 
 class Robot : public frc::TimedRobot {
 public:
@@ -32,8 +38,7 @@ public:
   frc::Field2d m_field;
   // nt::NetworkTableInstance inst = nt::NetworkTableInstance::GetDefault();
   // std::shared_ptr<nt::NetworkTable> table = inst.GetTable("datatable");
-  std::shared_ptr<nt::NetworkTable> table =
-      nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+  std::shared_ptr<nt::NetworkTable> table =nt::NetworkTableInstance::GetDefault().GetTable("limelight");
   double targetOffsetAngle_Horizontal = table->GetNumber("tx", 0.0);
   double targetOffsetAngle_Vertical = table->GetNumber("ty", 0.0);
   double targetArea = table->GetNumber("ta", 0.0);
@@ -78,24 +83,29 @@ public:
     float Kp = -0.1f;
     float min_command = 0.05f;
 
-    nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+   nt::NetworkTableInstance::GetDefault().GetTable("limelight");
     float tx = table->GetNumber("tx", 0.0);
 
     std::cout << "tx is" << tx;
 
     if (drive.GetAButton()) {
-      float heading_error = -tx;
+      float heading_error = -targetOffsetAngle_Horizontal;
       std::cout << "heading error is" << heading_error;
       float steering_adjust = 0.0f;
+          steering_adjust = Kp * targetOffsetAngle_Horizontal;
       if (abs(heading_error) > 1.0) {
         if (heading_error < 0) {
           steering_adjust = Kp * heading_error + min_command;
+                    std::cout << steering_adjust;
+
         } else {
           steering_adjust = Kp * heading_error - min_command;
+          std::cout << steering_adjust;
         }
       }
-      forw += steering_adjust;
-      spin -= steering_adjust;
+     // forw += steering_adjust;
+    //spin -= steering_adjust;
+     //DD.ArcadeDrive(forw += steering_adjust,spin -= steering_adjust);
     }
     DD.ArcadeDrive(forw, spin, true);
   }
