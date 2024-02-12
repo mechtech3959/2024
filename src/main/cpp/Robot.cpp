@@ -66,35 +66,44 @@ class Robot : public frc::TimedRobot{
     const double DESIRED_TARGET_AREA = 13.0;
     const double MAX_DRIVE = 0.65;
     const double MAX_STEER = 1.0f;
-    double tx = LimelightHelpers::getTX("limelight-greenie");
+    /*
+    double tx = LimelightHelpers::getTX("tx");
     double ty = LimelightHelpers::getTY("m_limelight");
     double ta = LimelightHelpers::getTA("");
     double tv = LimelightHelpers::getTV("billy");
     double tt = table->GetNumber("tx", 0.0);
-      std::cout << tx << "\n";
+    */
+   std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
+   double tx = LimelightHelpers::getTX("limelight-greenie");
+   double ty = LimelightHelpers::getTY("greenie");
+
+
+    double targetOffsetAngle_Horizontal = table->GetNumber("tx",0.0);
+    double targetOffsetAngle_Vertical = table->GetNumber("ty",0.0);
+    double targetArea = table->GetNumber("ta",0.0);
+    double targetSkew = table->GetNumber("ts",0.0);
+      std::cout << "tx" << tx << "\n";
       std::cout << ty << "\n";
-      std::cout <<"f: "<< tt << "\n";
+      //std::cout <<"f: "<< targetArea << "\n";
       std::cout << "hello";
-    if (tv < 1.0)
+    if (tx < 1.0)
     {
       m_LimelightHasTarget = false;
       m_LimelightDriveCmd = 0.0;
       m_LimelightTurnCmd = 0.0;
-      std::cout << tv << "\n";
-      std::cout << tt << "\n";
-    }
+      //std::cout << targetSkew << "\n";
+     }
     else
     {
 
       m_LimelightHasTarget = true;
-      std::cout << "more" << "\n";
-
+ 
       // Proportional steering
       m_LimelightTurnCmd = tx * STEER_K;
       m_LimelightTurnCmd = clamp(m_LimelightTurnCmd, -MAX_STEER, MAX_STEER);
 
       // drive forward until the target area reaches our desired area
-      m_LimelightDriveCmd = (DESIRED_TARGET_AREA - ta) * DRIVE_K;
+      m_LimelightDriveCmd = (DESIRED_TARGET_AREA - targetArea) * DRIVE_K;
       m_LimelightDriveCmd = clamp(m_LimelightDriveCmd, -MAX_DRIVE, MAX_DRIVE);
     }
   }
@@ -113,6 +122,7 @@ class Robot : public frc::TimedRobot{
     m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
     m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
     frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
+    
   }
 
   void RobotPeriodic() override {}
@@ -125,7 +135,7 @@ class Robot : public frc::TimedRobot{
 
   void TeleopPeriodic() override
   {
-    double fwd = -m_Controller.GetLeftY();
+    double fwd = m_Controller.GetLeftY();
     double turn = m_Controller.GetLeftX();
     turn *= 0.7f;
     m_Drive.ArcadeDrive(fwd, turn);
@@ -136,9 +146,7 @@ class Robot : public frc::TimedRobot{
       if (m_LimelightHasTarget)
       {
          // Proportional steering
-      float TR = m_LimelightDriveCmd * 100;
-      float CR =  m_LimelightTurnCmd * 100;
-        m_Drive.ArcadeDrive(TR, CR);
+         m_Drive.ArcadeDrive(m_LimelightDriveCmd, m_LimelightTurnCmd);
       }
     /*else
     {

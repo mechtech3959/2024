@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "LimeLight.h"
+#include <string>
 
 LimeLight::LimeLight(std::string name) {
    m_limelight = nt::NetworkTableInstance::GetDefault().GetTable(name);
@@ -26,6 +27,7 @@ bool LimeLight::IsTargetVisible(){
     //create storage vector for bot pose from limelight
     std::vector<double> data = m_limelight->GetNumberArray("botpose_wpiblue",std::array<double, 7>{} );
     //get 3d pose from limelight
+    
     if(IsTargetVisible()){
       //translate 3d pose to 2d pose
       units::meter_t x{data.at(0)};
