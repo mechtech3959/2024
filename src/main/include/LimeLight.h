@@ -4,15 +4,12 @@
 
 #pragma once
 
-#include "frc/smartdashboard/Smartdashboard.h"
+#include "LoggingLevel.h"
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableInstance.h"
-#include "networktables/NetworkTableEntry.h"
-#include "networktables/NetworkTableValue.h"
 #include <frc/geometry/Pose2d.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <units/length.h>
-#include "LoggingLevel.h"
-
 
 /*
 class LL3DPose{
@@ -41,22 +38,18 @@ public:
       return false;
     }
   };
-  
+
   std::vector<double> pose3d;
 
 };
 */
 
 class LimeLight {
- 
- 
+
   std::shared_ptr<nt::NetworkTable> m_limelight;
-  
 
 public:
   LimeLight(std::string name);
-
-
 
   bool IsTargetVisible();
 
@@ -65,6 +58,4 @@ public:
   void SendData(std::string name, LoggingLevel verbose);
 
   units::inch_t GetReflectiveTargetRange(double targetHight);
-
-
 };

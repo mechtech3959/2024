@@ -4,11 +4,8 @@
 
 #pragma once
 
-#include <optional>
-
 #include <frc/TimedRobot.h>
 #include <frc2/command/CommandPtr.h>
-#include <frc/TimedRobot.h>
 
 #include <frc/MathUtil.h>
 #include <frc/TimedRobot.h>
@@ -17,43 +14,38 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
+#include <frc/Compressor.h>
+#include <frc/smartdashboard/SendableChooser.h>
 #include <frc/trajectory/Trajectory.h>
 #include <frc/trajectory/TrajectoryGenerator.h>
-#include <frc/smartdashboard/SendableChooser.h>
-#include <frc/Compressor.h>
 
 #include <frc/MathUtil.h>
 #include <units/math.h>
-#include <chrono>
-#include <thread>
 
+#include <ctre/Phoenix.h>
+#include <frc/drive/DifferentialDrive.h>
 
 #include <frc/DriverStation.h>
 
 #include "LimeLight.h"
 #include "LimelightHelpers.h"
-#include "LoggingLevel.h"
 #include <units/pressure.h>
 
-//#include "RobotContainer.h"
+// #include "RobotContainer.h"
 
-//class Robot : public frc::TimedRobot {}
-  
-  
-  
-  
- /* void RobotInit() override;
-  void RobotPeriodic() override;
-  void DisabledInit() override;
-  void DisabledPeriodic() override;
-  void AutonomousInit() override;
-  void AutonomousPeriodic() override;
-  void TeleopInit() override;
-  void TeleopPeriodic() override;
-  void TestPeriodic() override;
-  void SimulationInit() override;
-  void SimulationPeriodic() override;
-*/  
+// class Robot : public frc::TimedRobot {}
 
-  // RobotContainer m_container;
+/* void RobotInit() override;
+ void RobotPeriodic() override;
+ void DisabledInit() override;
+ void DisabledPeriodic() override;
+ void AutonomousInit() override;
+ void AutonomousPeriodic() override;
+ void TeleopInit() override;
+ void TeleopPeriodic() override;
+ void TestPeriodic() override;
+ void SimulationInit() override;
+ void SimulationPeriodic() override;
+*/
 
+// RobotContainer m_container;
