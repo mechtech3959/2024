@@ -32,7 +32,7 @@ class Robot : public frc::TimedRobot{
   WPI_TalonSRX m_Right0{3};
   WPI_TalonSRX m_Right1{4};
 
- // std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
+ std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
   // println("{}",table);
   /*frc::SmartDashboard::*/
   frc::DifferentialDrive m_Drive{m_Left0, m_Right0};
@@ -70,9 +70,10 @@ class Robot : public frc::TimedRobot{
     double ty = LimelightHelpers::getTY("m_limelight");
     double ta = LimelightHelpers::getTA("");
     double tv = LimelightHelpers::getTV("billy");
-    double tt = LimeLight->GetNumber("tx", 0.0);
+    double tt = table->GetNumber("tx", 0.0);
       std::cout << tx << "\n";
       std::cout << ty << "\n";
+      std::cout <<"f: "<< tt << "\n";
       std::cout << "hello";
     if (tv < 1.0)
     {
