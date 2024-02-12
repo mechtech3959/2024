@@ -84,11 +84,7 @@ public:
 
   void AutonomousInit() override {}
 
-  void AutonomousPeriodic() override {}
-
-  void TeleopInit() override {}
-
-  void TeleopPeriodic() override {
+  void AutonomousPeriodic() override {
     // double fwd = m_Controller.GetLeftY();
     // double turn = m_Controller.GetLeftX();
     // turn *= 0.7f;
@@ -115,7 +111,11 @@ public:
       turn *= 0.7f;
       m_Drive.ArcadeDrive(fwd, turn);
     }
-  };
+  }
+
+  void TeleopInit() override {}
+
+  void TeleopPeriodic() override {};
 
   void TestPeriodic() override {}
 };
