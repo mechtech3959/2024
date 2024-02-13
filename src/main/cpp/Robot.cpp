@@ -20,7 +20,8 @@ public:
 
   WPI_TalonSRX _climber{9};
 
-  DifferentialDrive _diffDrive{_driveLeftFront, _driveRightFront};
+// Switch _driveRightFront and _driveLeftFront if steering is inverted
+  DifferentialDrive _diffDrive{_driveRightFront, _driveLeftFront};
 
   frc::XboxController _controller{0};
 
@@ -81,14 +82,14 @@ public:
 
   void AutonomousPeriodic() override {
     Update_Limelight_Tracking();
-    if (_controller.GetAButton()) {
+    //if (_controller.GetAButton()) {
       if (m_LimelightHasTarget) {
         // Proportional steering
-        _diffDrive.ArcadeDrive(m_LimelightDriveCmd, -m_LimelightTurnCmd, true);
+        _diffDrive.ArcadeDrive(m_LimelightDriveCmd, m_LimelightTurnCmd, true);
       } else {
         _diffDrive.ArcadeDrive(0.0, 0.0);
       }
-    } else {
+    /*} else {
       // Tank Drive
       // double left = -m_Cont
       // roller.GetY(frc::GenericHID::JoystickHand::kLeftHand); double right =
@@ -100,7 +101,7 @@ public:
       double turn = _controller.GetLeftX();
       turn *= 0.7f;
       _diffDrive.ArcadeDrive(fwd, turn);
-    }
+    }*/
   }
 
   void TeleopInit() override {}
@@ -150,14 +151,14 @@ public:
     // If your robot doesn't turn fast enough toward the target, make this
     // number bigger If your robot oscillates (swings back and forth past the
     // target) make this smaller
-    const double STEER_K = 0.05;
+    const double STEER_K = 0.03;
 
     // Proportional Drive constant: bigger = faster drive
     const double DRIVE_K = 0.26;
 
     // Area of the target when your robot has reached the goal
-    const double DESIRED_TARGET_AREA = -2.0;
-    const double MAX_DRIVE = 0.62;
+    const double DESIRED_TARGET_AREA = 2.0;
+    const double MAX_DRIVE = 1.0;
     const double MAX_STEER = 1.0f;
 
     double tx = LimelightHelpers::getTX("limelight-greenie");
