@@ -4,8 +4,7 @@
 
 using namespace frc;
 
-class Robot : public TimedRobot
-{
+class Robot : public TimedRobot {
 private:
   LimeLight billy{"limelight-greenie"};
 
@@ -39,8 +38,7 @@ public:
   double m_LimelightTurnCmd;
   double m_LimelightDriveCmd;
 
-  double clamp(double in, double minval, double maxval)
-  {
+  double clamp(double in, double minval, double maxval) {
     if (in > maxval)
       return maxval;
     if (in < minval)
@@ -48,8 +46,7 @@ public:
     return in;
   };
 
-  void RobotInit()
-  {
+  void RobotInit() {
     m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
     m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
     frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
@@ -80,22 +77,16 @@ public:
     _driveLeftFront.SetSensorPhase(true);
   }
 
-  void RobotPeriodic() override
-  {
+  void RobotPeriodic() override {
     // frc::SmartDashboard::PutNumber("tv", tv);
   }
-  void DisabledPeriodic() override
-  {
-    autotimer.Reset();
-  }
+  void DisabledPeriodic() override { autotimer.Reset(); }
 
   void AutonomousInit() override {}
 
-  void AutonomousPeriodic() override
-  {
+  void AutonomousPeriodic() override {
     autotimer.Start();
-    if (autotimer.Get() < 0.5_s)
-    {
+    if (autotimer.Get() < 0.5_s) {
       _diffDrive.ArcadeDrive(0.0, 0.0);
     };
 
@@ -103,14 +94,11 @@ public:
 
     // if (_controller.GetAButton()) {
 
-    if (m_LimelightHasTarget)
-    {
+    if (m_LimelightHasTarget) {
       _diffDrive.ArcadeDrive(m_LimelightDriveCmd, m_LimelightTurnCmd, true);
 
       // Proportional steering
-    }
-    else
-    {
+    } else {
       _diffDrive.ArcadeDrive(0.0, 0.0);
     }
   }
@@ -123,8 +111,7 @@ public:
 
   void TeleopInit() override {}
 
-  void TeleopPeriodic()
-  {
+  void TeleopPeriodic() {
 
     double forw = -_controller.GetLeftY();
     double spin = _controller.GetLeftX();
@@ -146,15 +133,11 @@ public:
       launcherSpeed = -launcherSpeed;
     _launcherFront.Set(ControlMode::PercentOutput, launcherSpeed);
 
-    if (intake)
-    {
-      if (intakeReverse)
-      {
+    if (intake) {
+      if (intakeReverse) {
         _intakeFront.Set(ControlMode::PercentOutput, -100);
         _intakeRear.Set(ControlMode::PercentOutput, -50);
-      }
-      else
-      {
+      } else {
         _intakeFront.Set(ControlMode::PercentOutput, 100);
         _intakeRear.Set(ControlMode::PercentOutput, 50);
       }
@@ -168,8 +151,7 @@ public:
 
   void TestPeriodic() override {}
 
-  void Update_Limelight_Tracking()
-  {
+  void Update_Limelight_Tracking() {
 
     // Proportional Steering Constant:
     // If your robot doesn't turn fast enough toward the target, make this
@@ -191,17 +173,12 @@ public:
     double tv = LimelightHelpers::getTV("limelight-greenie");
     double ID = LimelightHelpers::getFiducialID("limelight-greenie");
 
-    if (tv < 1.0)
-    {
+    if (tv < 1.0) {
       m_LimelightHasTarget = false;
       m_LimelightDriveCmd = 0.0;
       m_LimelightTurnCmd = 0.0;
-    }
-    else
-    {
-      (ID == 2)
-          ? m_LimelightHasTarget = true
-          : m_LimelightHasTarget = false;
+    } else {
+      (ID == 2) ? m_LimelightHasTarget = true : m_LimelightHasTarget = false;
 
       // Proportional steering
       m_LimelightTurnCmd = tx * STEER_K;
