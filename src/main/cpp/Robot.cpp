@@ -53,7 +53,6 @@ public:
     m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
     m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
     frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
-
     // Set all motors to factory defaults
     _driveRightFront.ConfigFactoryDefault();
     _driveRightFollower.ConfigFactoryDefault();
@@ -81,37 +80,46 @@ public:
     _driveLeftFront.SetSensorPhase(true);
   }
 
-  void RobotPeriodic() override {}
+  void RobotPeriodic() override
+  {
+    // frc::SmartDashboard::PutNumber("tv", tv);
+  }
+  void DisabledPeriodic() override
+  {
+    autotimer.Reset();
+  }
 
   void AutonomousInit() override {}
 
   void AutonomousPeriodic() override
   {
+    autotimer.Start();
+    if (autotimer.Get() < 0.5_s)
+    {
+      _diffDrive.ArcadeDrive(0.0, 0.0);
+    };
+
     Update_Limelight_Tracking();
+
     // if (_controller.GetAButton()) {
+
     if (m_LimelightHasTarget)
     {
-      // Proportional steering
       _diffDrive.ArcadeDrive(m_LimelightDriveCmd, m_LimelightTurnCmd, true);
+
+      // Proportional steering
     }
     else
     {
       _diffDrive.ArcadeDrive(0.0, 0.0);
     }
-    /*} else {
-      // Tank Drive
-      // double left = -m_Cont
-      // roller.GetY(frc::GenericHID::JoystickHand::kLeftHand); double right =
-      // -_controller.GetY(frc::GenericHID::JoystickHand::kRightHand);
-      // _diffDrive.TankDrive(left,right);
-
-      // Arcade Drive
-      double fwd = -_controller.GetLeftY();
-      double turn = _controller.GetLeftX();
-      turn *= 0.7f;
-      _diffDrive.ArcadeDrive(fwd, turn);
-    }*/
   }
+  /*void RunMiddleAuto() {
+    autotimer.Reset();
+    if(autotimer.Get() < 0.5_s){
+      _diffDrive.ArcadeDrive(0.5, 0.0);
+    }
+  }*/
 
   void TeleopInit() override {}
 
@@ -162,6 +170,7 @@ public:
 
   void Update_Limelight_Tracking()
   {
+
     // Proportional Steering Constant:
     // If your robot doesn't turn fast enough toward the target, make this
     // number bigger If your robot oscillates (swings back and forth past the
@@ -180,6 +189,7 @@ public:
     double ty = LimelightHelpers::getTY("limelight-greenie");
     double ta = LimelightHelpers::getTA("limelight-greenie");
     double tv = LimelightHelpers::getTV("limelight-greenie");
+    double ID = LimelightHelpers::getFiducialID("limelight-greenie");
 
     if (tv < 1.0)
     {
@@ -189,7 +199,9 @@ public:
     }
     else
     {
-      m_LimelightHasTarget = true;
+      (ID == 2)
+          ? m_LimelightHasTarget = true
+          : m_LimelightHasTarget = false;
 
       // Proportional steering
       m_LimelightTurnCmd = tx * STEER_K;
