@@ -21,10 +21,10 @@ public:
   WPI_TalonSRX _climber{9};
 
   // Standard drive
-  // DifferentialDrive _diffDrive{_driveLeftFront, _driveRightFront};
+  DifferentialDrive _diffDrive{_driveLeftFront, _driveRightFront};
 
   // Inverted drive
-  DifferentialDrive _diffDrive{_driveRightFront, _driveLeftFront};
+  // DifferentialDrive _diffDrive{_driveRightFront, _driveLeftFront};
 
   frc::XboxController _controller{0};
 
@@ -75,6 +75,8 @@ public:
     _driveRightFollower.SetInverted(true);
     _driveLeftFront.SetInverted(false);
     _driveLeftFollower.SetInverted(false);
+    _intakeFront.SetInverted(false);
+    _intakeRear.SetInverted(true);
 
     // Set TalonSRX LEDs to be the correct colors
     _driveRightFront.SetSensorPhase(true);
@@ -142,14 +144,17 @@ public:
     {
       if (intakeReverse)
       {
-        _intakeFront.Set(ControlMode::PercentOutput, -100);
-        _intakeRear.Set(ControlMode::PercentOutput, -50);
+        _intakeFront.Set(ControlMode::PercentOutput, -1);
+        _intakeRear.Set(ControlMode::PercentOutput, -1);
       }
       else
       {
-        _intakeFront.Set(ControlMode::PercentOutput, 100);
-        _intakeRear.Set(ControlMode::PercentOutput, 50);
+        _intakeFront.Set(ControlMode::PercentOutput, 1);
+        _intakeRear.Set(ControlMode::PercentOutput, 1);
       }
+    } else {
+      _intakeFront.Set(ControlMode::PercentOutput, 0);
+        _intakeRear.Set(ControlMode::PercentOutput, 0);
     }
 
     if (climbUp)
