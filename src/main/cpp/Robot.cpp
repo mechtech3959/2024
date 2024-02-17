@@ -1,15 +1,11 @@
 #include "Robot.h"
 #include "ctre/phoenix/motorcontrol/ControlMode.h"
-#include "ctre/phoenix/motorcontrol/can/WPI_TalonFX.h"
-#include <rev/CANSparkMax.h>
 
 using namespace frc;
 
 class Robot : public TimedRobot {
-private:
-  LimeLight billy{"limelight-greenie"};
-
 public:
+  // Initialize motors
   WPI_TalonSRX _driveRightFront{1};
   WPI_TalonSRX _driveRightFollower{2};
   WPI_TalonSRX _driveLeftFront{3};
@@ -20,10 +16,14 @@ public:
   rev::CANSparkMax _intakeRear{8, rev::CANSparkMax::MotorType::kBrushless};
   WPI_TalonSRX _climber{9};
 
+  // Initialize the differential drive
   DifferentialDrive _diffDrive{_driveLeftFront, _driveRightFront};
 
+  // Initialize the controller
   frc::XboxController _controller{0};
 
+  // Everything from here until the next comment is auto stuff
+  // I have no idea how it works, ask Zac
   SendableChooser<std::string> m_chooser;
   const std::string kAutoNameDefault = "Default";
   const std::string kAutoNameCustom = "My Auto";
@@ -63,8 +63,9 @@ public:
     _driveRightFollower.Follow(_driveRightFront);
     _driveLeftFollower.Follow(_driveLeftFront);
     _launcherFollower.Follow(_launcherFront);
+    _intakeRear.Follow(_intakeFront);
 
-    // Invert the right side motors
+    // Set motors to go the correct direction
     _driveRightFront.SetInverted(false);
     _driveRightFollower.SetInverted(false);
     _driveLeftFront.SetInverted(true);
@@ -81,75 +82,92 @@ public:
 
   void AutonomousInit() override {}
 
+  // More weird auto stuff
   void AutonomousPeriodic() override {
     Update_Limelight_Tracking();
-    // if (_controller.GetAButton()) {
-    if (m_LimelightHasTarget) {
-      // Proportional steering
-      _diffDrive.ArcadeDrive(m_LimelightDriveCmd, m_LimelightTurnCmd, true);
-    } else {
-      _diffDrive.ArcadeDrive(0.0, 0.0);
-    }
-    /*} else {
-      // Tank Drive
-      // double left = -m_Cont
-      // roller.GetY(frc::GenericHID::JoystickHand::kLeftHand); double right =
-      // -_controller.GetY(frc::GenericHID::JoystickHand::kRightHand);
-      // _diffDrive.TankDrive(left,right);
-
-      // Arcade Drive
-      double fwd = -_controller.GetLeftY();
-      double turn = _controller.GetLeftX();
-      turn *= 0.7f;
-      _diffDrive.ArcadeDrive(fwd, turn);
-    }*/
+    (m_LimelightHasTarget)
+        ? _diffDrive.ArcadeDrive(m_LimelightDriveCmd, m_LimelightTurnCmd, true)
+        : _diffDrive.ArcadeDrive(0.0, 0.0);
   }
 
   void TeleopInit() override {}
 
-  void TeleopPeriodic() {
-
+  void TeleopPeriodic() override {
+    // Get inputs/controller mapping
     double forw = -_controller.GetLeftY();
-    double spin = _controller.GetLeftX();
-    double launcherSpeed = _controller.GetRightTriggerAxis();
-    bool launcherReverse = _controller.GetRightBumper();
-    bool intake = _controller.GetLeftBumper();
-    bool intakeReverse = _controller.GetAButton();
+    double spin = _controller.GetRightX();
+    bool loadFromIntake = _controller.GetRightBumper();
+    bool loadFromFront = _controller.GetLeftBumper();
     bool climbUp = _controller.GetXButton();
     bool climbDown = _controller.GetYButton();
+    bool forward = _controller.GetAButton();
+    bool reverse = _controller.GetBButton();
+    // Once we actually have a limit switch this will need to be fixed
+    bool noteDetected = false;
 
+    // Deadzone the joysticks
     if (fabs(forw) < 0.10)
       forw = 0;
     if (fabs(spin) < 0.10)
       spin = 0;
 
-    _diffDrive.ArcadeDrive(forw, spin, false);
-
-    if (launcherReverse)
-      launcherSpeed = -launcherSpeed;
-    _launcherFront.Set(ControlMode::PercentOutput, launcherSpeed);
-
-    if (intake) {
-      if (intakeReverse) {
-        _intakeFront.Set(-1);
-        _intakeRear.Set(-1);
-      } else {
-        _intakeFront.Set(1);
-        _intakeRear.Set(1);
-      }
-    } else {
-      _intakeFront.Set(0);
-      _intakeRear.Set(0);
+    // Run the shooter at 25% for the amp and feed the note in
+    if (_controller.GetLeftTriggerAxis() > 0.10) {
+      _launcherFront.Set(0.25);
+      _intakeRear.Set(1);
     }
 
+    // Run the shooter at 100% for the speaker and feed the note in
+    if (_controller.GetRightTriggerAxis() > 0.10) {
+      _launcherFront.Set(1);
+      _intakeRear.Set(1);
+    }
+
+    // Set the differential drive to the commanded speed
+    _diffDrive.ArcadeDrive(forw, spin, true);
+
+    if (loadFromFront) {
+      if (!noteDetected) {
+        _launcherFront.Set(-1);
+        _intakeRear.Set(-1);
+      } else {
+        _launcherFront.Set(0);
+        _intakeRear.Set(0);
+      }
+    }
+    if (loadFromIntake) {
+      (!noteDetected) ? _intakeFront.Set(1) : _intakeFront.Set(0);
+    }
+
+    // Run everything forward if the button is pressed
+    if (forward) {
+      _launcherFront.Set(1);
+      _intakeFront.Set(1);
+    }
+
+    // Reverse everything if the button is pressed
+    if (reverse) {
+      _launcherFront.Set(-1);
+      _intakeFront.Set(-1);
+    }
+
+    // Set the climber motor speed
     if (climbUp)
-      _climber.Set(ControlMode::PercentOutput, 100);
+      _climber.Set(1);
     if (climbDown)
-      _climber.Set(ControlMode::PercentOutput, 100);
+      _climber.Set(1);
+
+    // If nothing is commanded stop the motors
+    if (!forward && !reverse && !loadFromIntake && loadFromFront) {
+      _launcherFront.Set(0);
+      _intakeFront.Set(0);
+    }
   }
 
   void TestPeriodic() override {}
 
+  // This entire function is weird limelight stuff
+  // Still no clue how it works, ask Zac
   void Update_Limelight_Tracking() {
     // Proportional Steering Constant:
     // If your robot doesn't turn fast enough toward the target, make this

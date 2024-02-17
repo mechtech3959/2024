@@ -40,7 +40,7 @@ frc::Pose2d LimeLight::GetRobotPose() {
   }
 }
 
-units::inch_t LimeLight::GetReflectiveTargetRange(double targetHight) {
+units::inch_t LimeLight::GetReflectiveTargetRange(double targetHeight) {
   /*
   double targetOffsetAngle_Horizontal = m_limelight->GetNumber("tx",0.0);
   double targetOffsetAngle_Vertical = m_limelight->GetNumber("ty",0.0);
@@ -59,7 +59,7 @@ units::inch_t LimeLight::GetReflectiveTargetRange(double targetHight) {
     double limelightHeightInches = 20.0;
 
     // distance from the target to the floor
-    double goalHeightInches = targetHight;
+    double goalHeightInches = targetHeight;
 
     double angleToGoalDegrees = limelightMountAngleDegrees +
   targetOffsetAngle_Vertical; double angleToGoalRadians = angleToGoalDegrees *
@@ -82,9 +82,9 @@ void LimeLight::SendData(std::string name, LoggingLevel verbose) {
   switch (verbose) {
   case LoggingLevel::Everything: // everything that is not in the cases below it
                                  // continue
-  case LoggingLevel::PID: // send PID (closed loop control) data
-                          // continue
-  case LoggingLevel::Basic: // minimal useful data to driver
+  case LoggingLevel::PID:        // send PID (closed loop control) data
+                                 // continue
+  case LoggingLevel::Basic:      // minimal useful data to driver
   {
     frc::Pose2d p = GetRobotPose();
     frc::SmartDashboard::PutBoolean(name + " visible", IsTargetVisible());
