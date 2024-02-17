@@ -23,6 +23,7 @@
 #include <units/math.h>
 
 #include <ctre/Phoenix.h>
+#include <rev/CANSparkMax.h>
 #include <frc/drive/DifferentialDrive.h>
 
 #include <frc/DriverStation.h>
