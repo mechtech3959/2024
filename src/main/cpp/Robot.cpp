@@ -1,6 +1,7 @@
 #include "Robot.h"
 #include "ctre/phoenix/motorcontrol/ControlMode.h"
 #include "ctre/phoenix/motorcontrol/can/WPI_TalonFX.h"
+#include <rev/CANSparkMax.h>
 
 using namespace frc;
 
@@ -16,8 +17,8 @@ public:
   WPI_TalonSRX _driveLeftFollower{4};
   WPI_TalonSRX _launcherFront{5};
   WPI_TalonSRX _launcherFollower{6};
-  WPI_TalonFX _intakeFront{7};
-  WPI_TalonFX _intakeRear{8};
+  rev::CANSparkMax _intakeFront{7, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax _intakeRear{8, rev::CANSparkMax::MotorType::kBrushless};
   WPI_TalonSRX _climber{9};
 
   // Standard drive
@@ -61,8 +62,8 @@ public:
     _driveLeftFollower.ConfigFactoryDefault();
     _launcherFront.ConfigFactoryDefault();
     _launcherFollower.ConfigFactoryDefault();
-    _intakeFront.ConfigFactoryDefault();
-    _intakeRear.ConfigFactoryDefault();
+    _intakeFront.RestoreFactoryDefaults();
+    _intakeRear.RestoreFactoryDefaults();
     _climber.ConfigFactoryDefault();
 
     // Set up followers
@@ -71,10 +72,10 @@ public:
     _launcherFollower.Follow(_launcherFront);
 
     // Invert the right side motors
-    _driveRightFront.SetInverted(true);
-    _driveRightFollower.SetInverted(true);
-    _driveLeftFront.SetInverted(false);
-    _driveLeftFollower.SetInverted(false);
+    _driveRightFront.SetInverted(false);
+    _driveRightFollower.SetInverted(false);
+    _driveLeftFront.SetInverted(true);
+    _driveLeftFollower.SetInverted(true);
     _intakeFront.SetInverted(false);
     _intakeRear.SetInverted(true);
 
@@ -144,17 +145,17 @@ public:
     {
       if (intakeReverse)
       {
-        _intakeFront.Set(ControlMode::PercentOutput, -1);
-        _intakeRear.Set(ControlMode::PercentOutput, -1);
+        _intakeFront.Set(-100);
+        _intakeRear.Set(-100);
       }
       else
       {
-        _intakeFront.Set(ControlMode::PercentOutput, 1);
-        _intakeRear.Set(ControlMode::PercentOutput, 1);
+        _intakeFront.Set(100);
+        _intakeRear.Set(100);
       }
     } else {
-      _intakeFront.Set(ControlMode::PercentOutput, 0);
-        _intakeRear.Set(ControlMode::PercentOutput, 0);
+      _intakeFront.Set(0);
+        _intakeRear.Set(0);
     }
 
     if (climbUp)
