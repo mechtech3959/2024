@@ -63,7 +63,7 @@ public:
     _driveRightFollower.Follow(_driveRightFront);
     _driveLeftFollower.Follow(_driveLeftFront);
     _launcherFollower.Follow(_launcherFront);
-    _intakeRear.Follow(_intakeFront);
+    // _intakeRear.Follow(_intakeFront);
 
     // Set motors to go the correct direction
     _driveRightFront.SetInverted(false);
@@ -112,14 +112,16 @@ public:
       spin = 0;
 
     // Run the shooter at 25% for the amp and feed the note in
-    if (_controller.GetLeftTriggerAxis() > 0.10) {
-      _launcherFront.Set(0.25);
+    if (_controller.GetLeftTriggerAxis() > 0) {
+      _launcherFront.Set(ControlMode::PercentOutput, 0.50);
+      _intakeFront.Set(1);
       _intakeRear.Set(1);
     }
 
     // Run the shooter at 100% for the speaker and feed the note in
-    if (_controller.GetRightTriggerAxis() > 0.10) {
-      _launcherFront.Set(1);
+    if (_controller.GetRightTriggerAxis() > 0) {
+      _launcherFront.Set(ControlMode::PercentOutput, 100);
+      _intakeFront.Set(1);
       _intakeRear.Set(1);
     }
 
@@ -128,27 +130,38 @@ public:
 
     if (loadFromFront) {
       if (!noteDetected) {
-        _launcherFront.Set(-1);
+        _launcherFront.Set(ControlMode::PercentOutput, -100);
+        _intakeFront.Set(-1);
         _intakeRear.Set(-1);
       } else {
-        _launcherFront.Set(0);
+        _launcherFront.Set(ControlMode::PercentOutput, 0);
+        _intakeFront.Set(0);
         _intakeRear.Set(0);
       }
     }
     if (loadFromIntake) {
-      (!noteDetected) ? _intakeFront.Set(1) : _intakeFront.Set(0);
+      if (!noteDetected) {
+        _launcherFront.Set(ControlMode::PercentOutput, 0);
+        _intakeFront.Set(1);
+        _intakeRear.Set(1);
+       } else {
+        _intakeFront.Set(0);
+        _intakeRear.Set(0);
+       }
     }
 
     // Run everything forward if the button is pressed
     if (forward) {
-      _launcherFront.Set(1);
+      _launcherFront.Set(ControlMode::PercentOutput, 100);
       _intakeFront.Set(1);
+      _intakeRear.Set(1);
     }
 
     // Reverse everything if the button is pressed
     if (reverse) {
-      _launcherFront.Set(-1);
+      _launcherFront.Set(ControlMode::PercentOutput, -100);
       _intakeFront.Set(-1);
+      _intakeRear.Set(-1);
     }
 
     // Set the climber motor speed
@@ -158,9 +171,10 @@ public:
       _climber.Set(1);
 
     // If nothing is commanded stop the motors
-    if (!forward && !reverse && !loadFromIntake && loadFromFront) {
-      _launcherFront.Set(0);
+    if (_controller.GetXButton()) {
+      _launcherFront.Set(ControlMode::PercentOutput, 0);
       _intakeFront.Set(0);
+      _intakeRear.Set(0);
     }
   }
 
