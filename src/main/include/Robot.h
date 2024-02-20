@@ -52,3 +52,4 @@
 // RobotContainer m_container;
 frc::Timer autotimer;
 void RunMiddleAuto();
+void AmpAuto();
