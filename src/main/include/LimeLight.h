@@ -9,6 +9,7 @@
 #include "networktables/NetworkTableInstance.h"
 #include <frc/geometry/Pose2d.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <string>
 #include <units/length.h>
 
 /*
