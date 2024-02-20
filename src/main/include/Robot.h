@@ -1,6 +1,10 @@
 #pragma once
 
 #include "LimelightHelpers.h"
+#include "Constants.h"
+#include "Shooter.h"
+#include "Intake.h"
+
 #include <ctre/Phoenix.h>
 #include <frc/TimedRobot.h>
 #include <frc/XboxController.h>
@@ -27,22 +31,19 @@
 class Robot : public frc::TimedRobot {
 private:
   // Initialize motors
-  WPI_TalonSRX _driveRightFront{1};
-  WPI_TalonSRX _driveRightFollower{2};
-  WPI_TalonSRX _driveLeftFront{3};
-  WPI_TalonSRX _driveLeftFollower{4};
-  WPI_TalonSRX _launcherFront{5};
-  WPI_TalonSRX _launcherFollower{6};
-  rev::CANSparkMax _intakeFront{7, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax _intakeRear{8, rev::CANSparkMax::MotorType::kBrushless};
-  // Commented out to prevent errors until we actually have a climber
-  // WPI_TalonSRX _climber{9};
+  WPI_TalonSRX _driveRightFront{constants::drive::rightFrontMotorID};
+  WPI_TalonSRX _driveRightFollower{constants::drive::rightRearMotorID};
+  WPI_TalonSRX _driveLeftFront{constants::drive::leftFrontMotorID};
+  WPI_TalonSRX _driveLeftFollower{constants::drive::leftRearMotorID};
 
   // Initialize the differential drive
   frc::DifferentialDrive _diffDrive{_driveLeftFront, _driveRightFront};
 
   // Initialize the controller
   frc::XboxController _controller{0};
+
+  Shooter shooter{};
+  Intake intake{};
 
   // Everything from here until the public block is auto stuff
   // I have no idea how it works, ask Zac

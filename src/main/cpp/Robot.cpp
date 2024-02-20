@@ -11,25 +11,16 @@ void Robot::RobotInit() {
   _driveRightFollower.ConfigFactoryDefault();
   _driveLeftFront.ConfigFactoryDefault();
   _driveLeftFollower.ConfigFactoryDefault();
-  _launcherFront.ConfigFactoryDefault();
-  _launcherFollower.ConfigFactoryDefault();
-  _intakeFront.RestoreFactoryDefaults();
-  _intakeRear.RestoreFactoryDefaults();
-  // Commented out until we have a climber
-  // _climber.ConfigFactoryDefault();
 
   // Set up followers
   _driveRightFollower.Follow(_driveRightFront);
   _driveLeftFollower.Follow(_driveLeftFront);
-  _launcherFollower.Follow(_launcherFront);
 
   // Set motors to go the correct direction
   _driveRightFront.SetInverted(false);
   _driveRightFollower.SetInverted(false);
   _driveLeftFront.SetInverted(true);
   _driveLeftFollower.SetInverted(true);
-  _intakeFront.SetInverted(false);
-  _intakeRear.SetInverted(true);
 
   // Set TalonSRX LEDs to be the correct colors
   _driveRightFront.SetSensorPhase(true);
@@ -65,16 +56,14 @@ void Robot::TeleopPeriodic() {
 
   // Run the shooter at 50% for the amp and feed the note in
   if (_controller.GetLeftTriggerAxis() > 0) {
-    _launcherFront.Set(ControlMode::PercentOutput, 0.50);
-    _intakeFront.Set(1);
-    _intakeRear.Set(1);
+    shooter.ShootAmp();
+    intake.Forward();
   }
 
   // Run the shooter at 100% for the speaker and feed the note in
   if (_controller.GetRightTriggerAxis() > 0) {
-    _launcherFront.Set(ControlMode::PercentOutput, 100);
-    _intakeFront.Set(1);
-    _intakeRear.Set(1);
+    shooter.ShootSpeaker();
+    intake.Forward();
   }
 
   // Set the differential drive to the commanded speed
@@ -83,40 +72,35 @@ void Robot::TeleopPeriodic() {
   // Load the note in from the front
   if (loadFromFront) {
     if (!noteDetected) {
-      _launcherFront.Set(ControlMode::PercentOutput, -100);
-      _intakeFront.Set(-1);
-      _intakeRear.Set(-1);
+      shooter.Reverse();
+      intake.Reverse();
     } else {
-      _launcherFront.Set(ControlMode::PercentOutput, 0);
-      _intakeFront.Set(0);
-      _intakeRear.Set(0);
+      shooter.Stop();
+      intake.Stop();
     }
   }
 
   // Load the note in from the intake
   if (loadFromIntake) {
     if (!noteDetected) {
-      _launcherFront.Set(ControlMode::PercentOutput, 0);
-      _intakeFront.Set(1);
-      _intakeRear.Set(1);
+      shooter.Reverse();
+      intake.Reverse();
     } else {
-      _intakeFront.Set(0);
-      _intakeRear.Set(0);
+      shooter.Stop();
+      intake.Stop();
     }
   }
 
   // Run everything forward if the button is pressed
   if (forward) {
-    _launcherFront.Set(ControlMode::PercentOutput, 100);
-    _intakeFront.Set(1);
-    _intakeRear.Set(1);
+    shooter.Forward();
+    intake.Forward();
   }
 
   // Reverse everything if the button is pressed
   if (reverse) {
-    _launcherFront.Set(ControlMode::PercentOutput, -100);
-    _intakeFront.Set(-1);
-    _intakeRear.Set(-1);
+    shooter.Reverse();
+    intake.Reverse();
   }
 
   // Set the climber motor speed
@@ -130,9 +114,8 @@ void Robot::TeleopPeriodic() {
 
   // If nothing is commanded stop the motors
   if (_controller.GetXButton()) {
-    _launcherFront.Set(ControlMode::PercentOutput, 0);
-    _intakeFront.Set(0);
-    _intakeRear.Set(0);
+    shooter.Stop();
+    intake.Stop();
   }
 }
 

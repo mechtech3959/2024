@@ -36,7 +36,7 @@ deploy {
 def deployArtifact = deploy.targets.roborio.artifacts.frcCpp
 
 // Set this to true to enable desktop support.
-def includeDesktopSupport = true
+def includeDesktopSupport = false
 
 // Set to true to run simulation in debug mode
 wpi.cpp.debugSimulation = false
@@ -99,7 +99,7 @@ model {
 }
 nativeUtils.platformConfigs.named("linuxathena").configure {
     it.cppCompiler.args.add('-Wno-deprecated-declarations')
-/*    it.cppCompiler.args.add('-Wall')
+    it.cppCompiler.args.add('-Wall')
     it.cppCompiler.args.add('-Wextra')
     it.cppCompiler.args.add('-Wpedantic')
     it.cppCompiler.args.add('-Wfloat-equal')
@@ -115,5 +115,4 @@ nativeUtils.platformConfigs.named("linuxathena").configure {
     it.cppCompiler.args.add('-Wswitch-enum')
     it.cppCompiler.args.add('-Wconversion')
     it.cppCompiler.args.add('-Wunreachable-code')
-*/
  }
