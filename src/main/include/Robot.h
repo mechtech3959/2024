@@ -1,10 +1,10 @@
 #pragma once
 
-#include "LimelightHelpers.h"
 #include "Constants.h"
-#include "Shooter.h"
 #include "Intake.h"
-
+#include "LimeLight.h"
+#include "LimelightHelpers.h"
+#include "Shooter.h"
 #include <ctre/Phoenix.h>
 #include <frc/TimedRobot.h>
 #include <frc/XboxController.h>
@@ -12,6 +12,8 @@
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <rev/CANSparkMax.h>
+#include <units/pressure.h>
+#include <units/time.h>
 
 // Unneeded headers
 // Leaving them here for future use
@@ -65,6 +67,9 @@ private:
       return minval;
     return in;
   };
+  frc::Timer autotimer;
+  void RunMiddleAuto();
+  void AmpAuto();
 
 public:
   void RobotInit() override;

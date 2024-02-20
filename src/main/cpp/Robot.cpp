@@ -27,12 +27,41 @@ void Robot::RobotInit() {
   _driveLeftFront.SetSensorPhase(true);
 }
 
-// More weird auto stuff
-void Robot::AutonomousPeriodic() {
+/*void Robot::AutonomousPeriodic() {
   Update_Limelight_Tracking();
   (m_LimelightHasTarget)
       ? _diffDrive.ArcadeDrive(m_LimelightDriveCmd, m_LimelightTurnCmd, true)
       : _diffDrive.ArcadeDrive(0.0, 0.0);
+      }*/
+void Robot::AutonomousPeriodic() {
+  /* autotimer.Start();
+   if (autotimer.Get() < 0.5_s) {
+     _diffDrive.ArcadeDrive(0.0, 0.0);
+   };*/
+
+  Update_Limelight_Tracking();
+
+  // if (_controller.GetAButton()) {
+
+  /*  if (m_LimelightHasTarget) {
+      _diffDrive.ArcadeDrive(m_LimelightDriveCmd, m_LimelightTurnCmd,
+  true);
+
+      // Proportional steering
+    } else {
+      _diffDrive.ArcadeDrive(0.0, 0.0);
+    }
+  }*/
+  /*void RunMiddleAuto() {
+    autotimer.Reset();
+    if(autotimer.Get() < 0.5_s){
+      _diffDrive.ArcadeDrive(0.5, 0.0);
+
+    }
+
+  */
+  AmpAuto();
+  autotimer.Stop();
 }
 
 void Robot::TeleopPeriodic() {
@@ -59,7 +88,6 @@ void Robot::TeleopPeriodic() {
     shooter.ShootAmp();
     intake.Forward();
   }
-
   // Run the shooter at 100% for the speaker and feed the note in
   if (_controller.GetRightTriggerAxis() > 0) {
     shooter.ShootSpeaker();
@@ -79,7 +107,6 @@ void Robot::TeleopPeriodic() {
       intake.Stop();
     }
   }
-
   // Load the note in from the intake
   if (loadFromIntake) {
     if (!noteDetected) {
@@ -119,22 +146,27 @@ void Robot::TeleopPeriodic() {
   }
 }
 
-void Robot::RobotPeriodic() {}
-void Robot::AutonomousInit() {}
-void Robot::TeleopInit() {}
-void Robot::DisabledInit(){};
-void Robot::DisabledPeriodic(){};
-void Robot::SimulationInit(){};
-void Robot::SimulationPeriodic(){};
-void Robot::TestPeriodic() {}
+void Robot::AmpAuto() {
+  autotimer.Start();
+  while (autotimer.Get() < 1.0_s) {
+    _diffDrive.ArcadeDrive(-0.6, 0.0);
+  }
+  while (autotimer.Get() < 1.7_s) {
+    _diffDrive.ArcadeDrive(0.0, 0.6);
+  }
+  while (autotimer.Get() < 15.0_s) {
+    Update_Limelight_Tracking();
+    _diffDrive.ArcadeDrive(0.4, m_LimelightTurnCmd);
+  }
+};
 
-// This entire function is weird limelight stuff
-// Still no clue how it works, ask Zac
+void Robot::DisabledPeriodic() { autotimer.Reset(); }
+
 void Robot::Update_Limelight_Tracking() {
   // Proportional Steering Constant:
-  // If your robot doesn't turn fast enough toward the target, make this
-  // number bigger If your robot oscillates (swings back and forth past the
-  // target) make this smaller
+  // If your robot doesn't turn fast enough toward the target, make
+  // this number bigger If your robot oscillates (swings back and
+  // forth past the target) make this smaller
   const double STEER_K = 0.03;
 
   // Proportional Drive constant: bigger = faster drive
@@ -166,6 +198,14 @@ void Robot::Update_Limelight_Tracking() {
     m_LimelightDriveCmd = clamp(m_LimelightDriveCmd, -MAX_DRIVE, MAX_DRIVE);
   }
 }
+
+void Robot::RobotPeriodic() {}
+void Robot::AutonomousInit() {}
+void Robot::TeleopInit() {}
+void Robot::DisabledInit(){};
+void Robot::SimulationInit(){};
+void Robot::SimulationPeriodic(){};
+void Robot::TestPeriodic() {}
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }
 #endif
