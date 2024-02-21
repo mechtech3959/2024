@@ -36,37 +36,36 @@
 // #include "LimeLight.h"
 // #include <units/pressure.h>
 
-class Robot : public frc::TimedRobot
-{
+class Robot : public frc::TimedRobot {
 private:
-    // Initialize the controller
-    frc::XboxController _controller{0};
+  // Initialize the controller
+  frc::XboxController _controller{0};
 
-    Shooter shooter{};
-    Intake intake{};
-    TankDrive drive{};
-    LimeLight limelight{"limelight-greenie"};
+  Shooter shooter{};
+  Intake intake{};
+  TankDrive drive{};
+  LimeLight limelight{"limelight-greenie"};
 
-    // Everything from here until the public block is auto stuff
-    // I have no idea how it works, ask Zac
-    frc::SendableChooser<std::string> m_chooser;
-    const std::string kAutoNameDefault = "Default";
-    const std::string kAutoNameCustom = "My Auto";
+  // Everything from here until the public block is auto stuff
+  // I have no idea how it works, ask Zac
+  frc::SendableChooser<std::string> m_chooser;
+  const std::string kAutoNameDefault = "Default";
+  const std::string kAutoNameCustom = "My Auto";
 
-    std::shared_ptr<nt::NetworkTable> table =
-        nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
+  std::shared_ptr<nt::NetworkTable> table =
+      nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
 
 public:
-    void RobotInit() override;
-    void RobotPeriodic() override;
-    void AutonomousInit() override;
-    void AutonomousPeriodic() override;
-    void TeleopInit() override;
-    void TeleopPeriodic() override;
-    void DisabledInit() override;
-    void DisabledPeriodic() override;
-    void TestPeriodic() override;
-    void SimulationInit() override;
-    void SimulationPeriodic() override;
-    int autoState;
+  void RobotInit() override;
+  void RobotPeriodic() override;
+  void AutonomousInit() override;
+  void AutonomousPeriodic() override;
+  void TeleopInit() override;
+  void TeleopPeriodic() override;
+  void DisabledInit() override;
+  void DisabledPeriodic() override;
+  void TestPeriodic() override;
+  void SimulationInit() override;
+  void SimulationPeriodic() override;
+  int autoState;
 };

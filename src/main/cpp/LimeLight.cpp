@@ -1,52 +1,42 @@
 #include "LimeLight.h"
 #include "Robot.h"
 
-LimeLight::LimeLight(std::string name)
-{
+LimeLight::LimeLight(std::string name) {
   m_limelight = nt::NetworkTableInstance::GetDefault().GetTable(name);
 }
 
-bool LimeLight::IsTargetVisible()
-{
+bool LimeLight::IsTargetVisible() {
 
   double tv = m_limelight->GetNumber("tv", 0.0);
-  if (tv == 0.0)
-  {
+  if (tv == 0.0) {
     return false;
-  }
-  else
-  {
+  } else {
     return true;
   }
 
   return false;
 }
 
-frc::Pose2d LimeLight::GetRobotPose()
-{
+frc::Pose2d LimeLight::GetRobotPose() {
 
   // create storage vector for bot pose from limelight
   std::vector<double> data =
       m_limelight->GetNumberArray("botpose_wpiblue", std::array<double, 7>{});
   // get 3d pose from limelight
 
-  if (IsTargetVisible())
-  {
+  if (IsTargetVisible()) {
     // translate 3d pose to 2d pose
     units::meter_t x{data.at(0)};
     units::meter_t y{data.at(1)};
     units::degree_t heading{data.at(5)};
 
     return frc::Pose2d(x, y, frc::Rotation2d(heading));
-  }
-  else
-  {
+  } else {
     return frc::Pose2d(0_m, 0_m, frc::Rotation2d(0_deg));
   }
 }
 
-units::inch_t LimeLight::GetReflectiveTargetRange(double targetHeight)
-{
+units::inch_t LimeLight::GetReflectiveTargetRange(double targetHeight) {
   /*
   double targetOffsetAngle_Horizontal = m_limelight->GetNumber("tx",0.0);
   double targetOffsetAngle_Vertical = m_limelight->GetNumber("ty",0.0);
@@ -84,10 +74,8 @@ units::inch_t LimeLight::GetReflectiveTargetRange(double targetHeight)
   return 0_in;
 }
 
-void LimeLight::SendData(std::string name, LoggingLevel verbose)
-{
-  switch (verbose)
-  {
+void LimeLight::SendData(std::string name, LoggingLevel verbose) {
+  switch (verbose) {
   case LoggingLevel::Everything: // everything that is not in the cases below it
                                  // continue
   case LoggingLevel::PID:        // send PID (closed loop control) data
@@ -108,8 +96,7 @@ void LimeLight::SendData(std::string name, LoggingLevel verbose)
     break; // make sure nothing else prints
   }
 }
-void LimeLight::Update_Limelight_Tracking()
-{
+void LimeLight::Update_Limelight_Tracking() {
   // Proportional Steering Constant:
   // If your robot doesn't turn fast enough toward the target, make
   // this number bigger If your robot oscillates (swings back and
@@ -129,14 +116,11 @@ void LimeLight::Update_Limelight_Tracking()
   double ta = LimelightHelpers::getTA("limelight-greenie");
   double tv = LimelightHelpers::getTV("limelight-greenie");
 
-  if (tv < 1.0)
-  {
+  if (tv < 1.0) {
     m_LimelightHasTarget = false;
     m_LimelightDriveCmd = 0.0;
     m_LimelightTurnCmd = 0.0;
-  }
-  else
-  {
+  } else {
     m_LimelightHasTarget = true;
 
     // Proportional steering
@@ -149,29 +133,22 @@ void LimeLight::Update_Limelight_Tracking()
   }
 }
 
-void LimeLight::AmpAuto()
-{
+void LimeLight::AmpAuto() {
   autotimer.Start();
   Update_Limelight_Tracking();
   double ID = LimelightHelpers::getFiducialID("limelight-greenie");
   int autoState = 0;
-  while (autoState <= 1)
-  {
-    switch (autoState)
-    {
+  while (autoState <= 1) {
+    switch (autoState) {
     case 0:
       autoState++;
       autotimer.Reset();
       break;
     case 1:
-      if (autotimer.Get() < 1_s)
-      {
+      if (autotimer.Get() < 1_s) {
         break;
-      }
-      else
-      {
-        while (autotimer.Get() < 5_s)
-        {
+      } else {
+        while (autotimer.Get() < 5_s) {
           Update_Limelight_Tracking();
           drive.diffDrive.ArcadeDrive(0.5, -m_LimelightTurnCmd);
           break;
@@ -179,7 +156,7 @@ void LimeLight::AmpAuto()
         autoState++;
       }
     default:
-      //drive.diffDrive.ArcadeDrive(0.0, 0.0);
+      // drive.diffDrive.ArcadeDrive(0.0, 0.0);
       break;
     }
   }

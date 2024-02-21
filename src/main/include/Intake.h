@@ -14,6 +14,8 @@ public:
   void Stop();
 
 private:
-  rev::CANSparkMax intakeFrontMotor{constants::intake::intakeFrontMotorID, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax intakeRearMotor{constants::intake::intakeRearMotorID, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax intakeFrontMotor{constants::intake::intakeFrontMotorID,
+                                    rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax intakeRearMotor{constants::intake::intakeRearMotorID,
+                                   rev::CANSparkMax::MotorType::kBrushless};
 };
