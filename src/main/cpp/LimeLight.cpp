@@ -1,4 +1,5 @@
 #include "LimeLight.h"
+#include "LimelightHelpers.h"
 
 LimeLight::LimeLight(std::string name) {
   m_limelight = nt::NetworkTableInstance::GetDefault().GetTable(name);
@@ -114,6 +115,7 @@ void LimeLight::Update_Limelight_Tracking() {
   double ty = LimelightHelpers::getTY("limelight-greenie");
   double ta = LimelightHelpers::getTA("limelight-greenie");
   double tv = LimelightHelpers::getTV("limelight-greenie");
+  m_aprilTagID = LimelightHelpers::getFiducialID("limelight-greenie");
 
   if (tv < 1.0) {
     m_LimelightHasTarget = false;
@@ -149,14 +151,4 @@ void LimeLight::AmpAuto() {
     }
   }
   autotimer.Stop();
-  /*while (autotimer.Get() < 1.0_s) {
-  drive.diffDrive.ArcadeDrive(-0.6, 0.0);
-}
-while (autotimer.Get() < 1.7_s) {
-  drive.diffDrive.ArcadeDrive(0.0, 0.6);
-}
-while (autotimer.Get() < 15.0_s) {
-  Update_Limelight_Tracking();
-  drive.diffDrive.ArcadeDrive(0.4, m_LimelightTurnCmd);
-}*/
 }

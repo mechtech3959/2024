@@ -68,6 +68,7 @@ private:
   bool m_LimelightHasTarget;
   double m_LimelightTurnCmd;
   double m_LimelightDriveCmd;
+  double m_aprilTagID;
 
   double clamp(double in, double minval, double maxval) {
     if (in > maxval)
