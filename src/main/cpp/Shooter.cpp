@@ -1,5 +1,4 @@
 #include "Shooter.h"
-#include "ctre/phoenix/motorcontrol/ControlMode.h"
 
 Shooter::Shooter() { Init(); }
 

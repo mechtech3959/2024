@@ -4,7 +4,13 @@
 #include "Intake.h"
 #include "LimeLight.h"
 #include "LimelightHelpers.h"
+#include "networktables/NetworkTable.h"
+#include "networktables/NetworkTableEntry.h"
+#include "networktables/NetworkTableInstance.h"
+#include "networktables/NetworkTableValue.h"
+
 #include "Shooter.h"
+#include "TankDrive.h"
 #include <ctre/Phoenix.h>
 #include <frc/TimedRobot.h>
 #include <frc/XboxController.h>
@@ -32,20 +38,13 @@
 
 class Robot : public frc::TimedRobot {
 private:
-  // Initialize motors
-  WPI_TalonSRX _driveRightFront{constants::drive::rightFrontMotorID};
-  WPI_TalonSRX _driveRightFollower{constants::drive::rightRearMotorID};
-  WPI_TalonSRX _driveLeftFront{constants::drive::leftFrontMotorID};
-  WPI_TalonSRX _driveLeftFollower{constants::drive::leftRearMotorID};
-
-  // Initialize the differential drive
-  frc::DifferentialDrive _diffDrive{_driveLeftFront, _driveRightFront};
-
   // Initialize the controller
   frc::XboxController _controller{0};
 
   Shooter shooter{};
   Intake intake{};
+  TankDrive drive{};
+  LimeLight limelight{"limelight-greenie"};
 
   // Everything from here until the public block is auto stuff
   // I have no idea how it works, ask Zac
@@ -55,21 +54,6 @@ private:
 
   std::shared_ptr<nt::NetworkTable> table =
       nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
-
-  bool m_LimelightHasTarget;
-  double m_LimelightTurnCmd;
-  double m_LimelightDriveCmd;
-
-  double clamp(double in, double minval, double maxval) {
-    if (in > maxval)
-      return maxval;
-    if (in < minval)
-      return minval;
-    return in;
-  };
-  frc::Timer autotimer;
-  void RunMiddleAuto();
-  void AmpAuto();
 
 public:
   void RobotInit() override;
@@ -83,5 +67,4 @@ public:
   void TestPeriodic() override;
   void SimulationInit() override;
   void SimulationPeriodic() override;
-  void Update_Limelight_Tracking();
 };

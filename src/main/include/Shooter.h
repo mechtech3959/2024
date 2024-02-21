@@ -7,7 +7,6 @@
 class Shooter {
 public:
   Shooter();
-  void Init();
   void Forward();
   void Reverse();
   void ShootSpeaker();
@@ -15,6 +14,8 @@ public:
   void Stop();
 
 private:
+  void Init();
+
   WPI_TalonSRX shooterMotorOne{constants::shooter::shooterMotorOneID};
   WPI_TalonSRX shooterMotorTwo{constants::shooter::shooterMotorTwoID};
 };

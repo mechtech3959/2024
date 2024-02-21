@@ -95,3 +95,68 @@ void LimeLight::SendData(std::string name, LoggingLevel verbose) {
     break; // make sure nothing else prints
   }
 }
+void LimeLight::Update_Limelight_Tracking() {
+  // Proportional Steering Constant:
+  // If your robot doesn't turn fast enough toward the target, make
+  // this number bigger If your robot oscillates (swings back and
+  // forth past the target) make this smaller
+  const double STEER_K = 0.04;
+
+  // Proportional Drive constant: bigger = faster drive
+  const double DRIVE_K = 0.26;
+
+  // Area of the target when your robot has reached the goal
+  const double DESIRED_TARGET_AREA = 4;
+  const double MAX_DRIVE = 1.0;
+  const double MAX_STEER = 0.5f;
+
+  double tx = LimelightHelpers::getTX("limelight-greenie");
+  double ty = LimelightHelpers::getTY("limelight-greenie");
+  double ta = LimelightHelpers::getTA("limelight-greenie");
+  double tv = LimelightHelpers::getTV("limelight-greenie");
+
+  if (tv < 1.0) {
+    m_LimelightHasTarget = false;
+    m_LimelightDriveCmd = 0.0;
+    m_LimelightTurnCmd = 0.0;
+  } else {
+    m_LimelightHasTarget = true;
+
+    // Proportional steering
+    m_LimelightTurnCmd = tx * STEER_K;
+    m_LimelightTurnCmd = clamp(m_LimelightTurnCmd, -MAX_STEER, MAX_STEER);
+
+    // drive forward until the target area reaches our desired area
+    m_LimelightDriveCmd = (DESIRED_TARGET_AREA - ta) * DRIVE_K;
+    m_LimelightDriveCmd = clamp(m_LimelightDriveCmd, -MAX_DRIVE, MAX_DRIVE);
+  }
+}
+
+void LimeLight::AmpAuto() {
+  autotimer.Start();
+  Update_Limelight_Tracking();
+  double ID = LimelightHelpers::getFiducialID("limelight-greenie");
+  if (autotimer.Get() < 5_s) {
+    if (ID == 6 || ID == 5)
+      drive.diffDrive.ArcadeDrive(m_LimelightDriveCmd, m_LimelightTurnCmd);
+  } else {
+    if (autotimer.Get() < 9_s && autotimer.Get() > 5_s) {
+      drive.diffDrive.ArcadeDrive(0.0, 0.0);
+      // shoot l8r
+    }
+    if (autotimer.Get() > 10_s) {
+      drive.diffDrive.ArcadeDrive(-0.5, 0.6);
+    }
+  }
+  autotimer.Stop();
+  /*while (autotimer.Get() < 1.0_s) {
+  drive.diffDrive.ArcadeDrive(-0.6, 0.0);
+}
+while (autotimer.Get() < 1.7_s) {
+  drive.diffDrive.ArcadeDrive(0.0, 0.6);
+}
+while (autotimer.Get() < 15.0_s) {
+  Update_Limelight_Tracking();
+  drive.diffDrive.ArcadeDrive(0.4, m_LimelightTurnCmd);
+}*/
+}
