@@ -115,6 +115,7 @@ void LimeLight::Update_Limelight_Tracking() {
   double ty = LimelightHelpers::getTY("limelight-greenie");
   double ta = LimelightHelpers::getTA("limelight-greenie");
   double tv = LimelightHelpers::getTV("limelight-greenie");
+  m_aprilTagID = LimelightHelpers::getFiducialID("limelight-greenie");
 
   if (tv < 1.0) {
     m_LimelightHasTarget = false;
