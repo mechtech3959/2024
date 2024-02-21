@@ -148,7 +148,22 @@ void Robot::TeleopPeriodic() {
 
 void Robot::AmpAuto() {
   autotimer.Start();
-  while (autotimer.Get() < 1.0_s) {
+  double ID = LimelightHelpers::getFiducialID("limelight-greenie");
+  if(autotimer.Get() < 5_s){
+      if(ID == 6 || ID == 5){
+        _diffDrive.ArcadeDrive(m_LimelightDriveCmd, m_LimelightTurnCmd);
+      }
+    }else{
+      if(autotimer.Get() < 9_s and autotimer.Get() > 5_s){
+      _diffDrive.ArcadeDrive(0.0, 0.0);
+      //shoot l8r
+    }
+      if(autotimer.Get() > 10_s){
+      _diffDrive.ArcadeDrive(-0.5, 0.6);
+    }
+  }
+}
+  /*while (autotimer.Get() < 1.0_s) {
     _diffDrive.ArcadeDrive(-0.6, 0.0);
   }
   while (autotimer.Get() < 1.7_s) {
@@ -157,25 +172,24 @@ void Robot::AmpAuto() {
   while (autotimer.Get() < 15.0_s) {
     Update_Limelight_Tracking();
     _diffDrive.ArcadeDrive(0.4, m_LimelightTurnCmd);
-  }
-};
+  }*/
+;
 
 void Robot::DisabledPeriodic() { autotimer.Reset(); }
-
 void Robot::Update_Limelight_Tracking() {
   // Proportional Steering Constant:
   // If your robot doesn't turn fast enough toward the target, make
   // this number bigger If your robot oscillates (swings back and
   // forth past the target) make this smaller
-  const double STEER_K = 0.03;
+  const double STEER_K = 0.04;
 
   // Proportional Drive constant: bigger = faster drive
   const double DRIVE_K = 0.26;
 
   // Area of the target when your robot has reached the goal
-  const double DESIRED_TARGET_AREA = 2.0;
+  const double DESIRED_TARGET_AREA = 4;
   const double MAX_DRIVE = 1.0;
-  const double MAX_STEER = 1.0f;
+  const double MAX_STEER = 0.5f;
 
   double tx = LimelightHelpers::getTX("limelight-greenie");
   double ty = LimelightHelpers::getTY("limelight-greenie");
