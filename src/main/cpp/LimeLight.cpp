@@ -1,5 +1,4 @@
 #include "LimeLight.h"
-#include "Robot.h"
 
 LimeLight::LimeLight(std::string name) {
   m_limelight = nt::NetworkTableInstance::GetDefault().GetTable(name);
@@ -152,7 +151,6 @@ void LimeLight::AmpAuto() {
         while (autotimer.Get() < 5_s) {
           Update_Limelight_Tracking();
           drive.diffDrive.ArcadeDrive(0.5, -m_LimelightTurnCmd);
-          break;
         }
         autoState++;
       }

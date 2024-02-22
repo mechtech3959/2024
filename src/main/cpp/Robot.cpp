@@ -111,9 +111,9 @@ void Robot::DisabledPeriodic() { limelight.autotimer.Reset(); }
 void Robot::RobotPeriodic() {}
 void Robot::AutonomousInit() {}
 void Robot::TeleopInit() {}
-void Robot::DisabledInit(){};
-void Robot::SimulationInit(){};
-void Robot::SimulationPeriodic(){};
+void Robot::DisabledInit() {}
+void Robot::SimulationInit() {}
+void Robot::SimulationPeriodic() {}
 void Robot::TestPeriodic() {}
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }
