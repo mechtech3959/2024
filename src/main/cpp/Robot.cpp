@@ -1,27 +1,45 @@
 #include "Robot.h"
+#include "LimeLight.h"
 
-void Robot::RobotInit() {
-  // Auto stuff
-  m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
-  m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
-  frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
+void Robot::RobotInit() {}
+
+void Robot::AutonomousInit() {
+  limelight.autoTimer.Start();
+  while (limelight.autoTimer.Get() < 1.0_s) {
+    drive.diffDrive.ArcadeDrive(-0.6, 0.0);
+  }
+  while (limelight.autoTimer.Get() < 1.7_s) {
+    drive.diffDrive.ArcadeDrive(0.0, 0.6);
+  }
+  /*
+  while (limelight.autoTimer.Get() < 15.0_s) {
+    limelight.updateTracking();
+    drive.diffDrive.ArcadeDrive(0.4, limelight.m_LimelightTurnCmd);
+  }
+  */
+
+  limelight.updateTracking();
+  long long ID = llround(limelight.aprilTagID);
+  switch (ID) {
+  case 6:
+    limelight.ampAuto();
+    break;
+  default:
+    drive.diffDrive.ArcadeDrive(0.0, 0.0);
+    break;
+  }
 }
-
 void Robot::AutonomousPeriodic() {
-  limelight.AmpAuto();
-
-  /* autotimer.Start();
-   if (autotimer.Get() < 0.5_s) {
-     _diffDrive.ArcadeDrive(0.0, 0.0);
-   };*/
-  /*(m_LimelightHasTarget)
-      ? _diffDrive.ArcadeDrive(m_LimelightDriveCmd, m_LimelightTurnCmd, true)
-      : _diffDrive.ArcadeDrive(0.0, 0.0);*/
-  /*void RunMiddleAuto() {
-    autotimer.Reset();
-    if(autotimer.Get() < 0.5_s){
-      _diffDrive.ArcadeDrive(0.5, 0.0);
-    }*/
+  /*
+  limelight.autoTimer.Start();
+  if (limelight.autoTimer.Get() < 0.5_s) {
+    drive.diffDrive.ArcadeDrive(0.0, 0.0);
+  }
+  (limelight.m_LimelightHasTarget)
+      ? drive.diffDrive.ArcadeDrive(limelight.m_LimelightDriveCmd,
+                                    limelight.m_LimelightTurnCmd, true)
+      : drive.diffDrive.ArcadeDrive(0.0, 0.0);
+  */
 }
 
 void Robot::TeleopPeriodic() {
@@ -30,12 +48,13 @@ void Robot::TeleopPeriodic() {
   double spin = _controller.GetRightX();
   bool loadFromIntake = _controller.GetRightBumper();
   bool loadFromFront = _controller.GetLeftBumper();
-  // bool climbUp = _controller.GetXButton();
-  // bool climbDown = _controller.GetYButton();
   bool forward = _controller.GetAButton();
   bool reverse = _controller.GetBButton();
   // Once we actually have a limit switch this will need to be fixed
   bool noteDetected = false;
+  // Once we have a climber this will need to be fixed
+  // bool climbUp = _controller.GetXButton();
+  // bool climbDown = _controller.GetYButton();
 
   // Deadzone the joysticks
   if (fabs(forw) < 0.10)
@@ -106,12 +125,14 @@ void Robot::TeleopPeriodic() {
   }
 }
 
-void Robot::DisabledPeriodic() { limelight.autotimer.Reset(); }
+void Robot::DisabledInit() {
+  limelight.autoTimer.Stop();
+  limelight.autoTimer.Reset();
+}
 
 void Robot::RobotPeriodic() {}
-void Robot::AutonomousInit() {}
 void Robot::TeleopInit() {}
-void Robot::DisabledInit() {}
+void Robot::DisabledPeriodic() {}
 void Robot::SimulationInit() {}
 void Robot::SimulationPeriodic() {}
 void Robot::TestPeriodic() {}

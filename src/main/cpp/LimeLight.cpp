@@ -95,7 +95,7 @@ void LimeLight::SendData(std::string name, LoggingLevel verbose) {
     break; // make sure nothing else prints
   }
 }
-void LimeLight::Update_Limelight_Tracking() {
+void LimeLight::updateTracking() {
   // Proportional Steering Constant:
   // If your robot doesn't turn fast enough toward the target, make
   // this number bigger If your robot oscillates (swings back and
@@ -114,7 +114,7 @@ void LimeLight::Update_Limelight_Tracking() {
   double ty = LimelightHelpers::getTY("limelight-greenie");
   double ta = LimelightHelpers::getTA("limelight-greenie");
   double tv = LimelightHelpers::getTV("limelight-greenie");
-  m_aprilTagID = LimelightHelpers::getFiducialID("limelight-greenie");
+  aprilTagID = LimelightHelpers::getFiducialID("limelight-greenie");
 
   if (tv < 1.0) {
     m_LimelightHasTarget = false;
@@ -133,55 +133,25 @@ void LimeLight::Update_Limelight_Tracking() {
   }
 }
 
-void LimeLight::AmpAuto() {
-  autotimer.Start();
-  Update_Limelight_Tracking();
-  double ID = LimelightHelpers::getFiducialID("limelight-greenie");
-  int autoState = 0;
-  while (autoState <= 1) {
-    switch (autoState) {
-    case 0:
-      autoState++;
-      autotimer.Reset();
-      break;
-    case 1:
-      if (autotimer.Get() < 1_s) {
-        break;
-      } else {
-        while (autotimer.Get() < 5_s) {
-          Update_Limelight_Tracking();
-          drive.diffDrive.ArcadeDrive(0.5, -m_LimelightTurnCmd);
-        }
-        autoState++;
-      }
-    default:
-      // drive.diffDrive.ArcadeDrive(0.0, 0.0);
-      break;
-    }
+void LimeLight::ampAuto() {
+  if (autoTimer.Get() > 1_s && autoTimer.Get() < 5_s) {
+    updateTracking();
+    drive.diffDrive.ArcadeDrive(0.5, -m_LimelightTurnCmd);
   }
+}
 
-  /* if (autotimer.Get() < 5_s) {
-    // if (ID == 6 || ID == 5)
-       drive.diffDrive.ArcadeDrive(0.5, -m_LimelightTurnCmd);
+/*
+  if (autotimer.Get() < 5_s) {
+  // if (ID == 6 || ID == 5)
+     drive.diffDrive.ArcadeDrive(0.5, -m_LimelightTurnCmd);
+ }
+   if (autotimer.Get() < 9_s && autotimer.Get() > 5.5_s) {
+     drive.diffDrive.ArcadeDrive(0.0, 0.0);
+     // shoot l8r
    }
-     if (autotimer.Get() < 9_s && autotimer.Get() > 5.5_s) {
-       drive.diffDrive.ArcadeDrive(0.0, 0.0);
-       // shoot l8r
-     }
-     if (autotimer.Get() > 10_s) {
-       drive.diffDrive.ArcadeDrive(-0.5, 0.6);
-     }
+   if (autotimer.Get() > 10_s) {
+     drive.diffDrive.ArcadeDrive(-0.5, 0.6);
+   }
 
-   autotimer.Stop();
-   */
-  /*while (autotimer.Get() < 1.0_s) {
-  drive.diffDrive.ArcadeDrive(-0.6, 0.0);
-}
-while (autotimer.Get() < 1.7_s) {
-  drive.diffDrive.ArcadeDrive(0.0, 0.6);
-}
-while (autotimer.Get() < 15.0_s) {
-  Update_Limelight_Tracking();
-  drive.diffDrive.ArcadeDrive(0.4, m_LimelightTurnCmd);
-}*/
-}
+ autotimer.Stop();
+ */

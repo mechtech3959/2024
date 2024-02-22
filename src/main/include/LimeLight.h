@@ -12,9 +12,9 @@
 
 class LimeLight {
 public:
-  frc::Timer autotimer;
-  void RunMiddleAuto();
-  void AmpAuto();
+  frc::Timer autoTimer;
+  // void RunMiddleAuto();
+  void ampAuto();
 
   LimeLight(std::string name);
 
@@ -26,15 +26,18 @@ public:
 
   units::inch_t GetReflectiveTargetRange(double targetHeight);
 
-private:
-  TankDrive drive{};
+  void updateTracking();
 
-  std::shared_ptr<nt::NetworkTable> m_limelight;
+  double aprilTagID;
 
   bool m_LimelightHasTarget;
   double m_LimelightTurnCmd;
   double m_LimelightDriveCmd;
-  double m_aprilTagID;
+
+private:
+  TankDrive drive{};
+
+  std::shared_ptr<nt::NetworkTable> m_limelight;
 
   double clamp(double in, double minval, double maxval) {
     if (in > maxval)
@@ -43,8 +46,6 @@ private:
       return minval;
     return in;
   };
-
-  void Update_Limelight_Tracking();
 };
 
 /*
