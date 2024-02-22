@@ -3,13 +3,17 @@
 
 void Robot::RobotInit() {}
 
-void Robot::AutonomousInit() {
-  limelight.autoTimer.Start();
-  while (limelight.autoTimer.Get() < 1.0_s) {
+void Robot::AutonomousInit() { autoTimer.Start(); }
+void Robot::AutonomousPeriodic() {
+  if (autoTimer.Get() < 1.0_s) {
     drive.diffDrive.ArcadeDrive(-0.6, 0.0);
-  }
-  while (limelight.autoTimer.Get() < 1.7_s) {
+  } else if (autoTimer.Get() < 1.7_s) {
     drive.diffDrive.ArcadeDrive(0.0, 0.6);
+  } else if (autoTimer.Get() > 1.7_s && autoTimer.Get() < 2.7_s) {
+    limelight.updateTracking();
+    drive.diffDrive.ArcadeDrive(1, limelight.m_LimelightTurnCmd);
+  } else if (autoTimer.Get() > 5_s && autoTimer.Get() < 9_s) {
+    shooter.ShootAmp();
   }
   /*
   while (limelight.autoTimer.Get() < 15.0_s) {
@@ -17,7 +21,7 @@ void Robot::AutonomousInit() {
     drive.diffDrive.ArcadeDrive(0.4, limelight.m_LimelightTurnCmd);
   }
   */
-
+/*
   limelight.updateTracking();
   long long ID = llround(limelight.aprilTagID);
   switch (ID) {
@@ -28,8 +32,7 @@ void Robot::AutonomousInit() {
     drive.diffDrive.ArcadeDrive(0.0, 0.0);
     break;
   }
-}
-void Robot::AutonomousPeriodic() {
+*/
   /*
   limelight.autoTimer.Start();
   if (limelight.autoTimer.Get() < 0.5_s) {
@@ -126,8 +129,8 @@ void Robot::TeleopPeriodic() {
 }
 
 void Robot::DisabledInit() {
-  limelight.autoTimer.Stop();
-  limelight.autoTimer.Reset();
+  autoTimer.Stop();
+  autoTimer.Reset();
 }
 
 void Robot::RobotPeriodic() {}

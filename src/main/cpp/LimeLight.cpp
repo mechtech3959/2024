@@ -134,10 +134,7 @@ void LimeLight::updateTracking() {
 }
 
 void LimeLight::ampAuto() {
-  if (autoTimer.Get() > 1_s && autoTimer.Get() < 5_s) {
-    updateTracking();
-    drive.diffDrive.ArcadeDrive(0.5, -m_LimelightTurnCmd);
-  }
+
 }
 
 /*

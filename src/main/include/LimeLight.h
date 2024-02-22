@@ -12,7 +12,6 @@
 
 class LimeLight {
 public:
-  frc::Timer autoTimer;
   // void RunMiddleAuto();
   void ampAuto();
 

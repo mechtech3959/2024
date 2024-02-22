@@ -40,7 +40,7 @@ class Robot : public frc::TimedRobot {
 private:
   // Initialize the controller
   frc::XboxController _controller{0};
-
+  frc::Timer autoTimer;
   Shooter shooter{};
   Intake intake{};
   TankDrive drive{};
@@ -67,5 +67,4 @@ public:
   void TestPeriodic() override;
   void SimulationInit() override;
   void SimulationPeriodic() override;
-  int autoState;
 };
