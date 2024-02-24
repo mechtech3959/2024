@@ -46,18 +46,6 @@ constexpr double HoldSpeed = -0.03;
 constexpr double FeedSpeed = -0.2;
 } // namespace clawConstants
 
-namespace ShooterConstants {
-#warning "Replace with the actual IDs"
-constexpr int MotorID = 1234;
-constexpr int CANBus = 1234;
-constexpr int EncoderID = 1234;
-} // namespace ShooterConstants
-namespace IntakeConstants {
-#warning "Replace with the actual IDs"
-constexpr int MotorID = 12;
-constexpr int CANBus = 12;
-} // namespace IntakeConstants
-
 namespace swerveConstants {
 
 constexpr int PigeonID = 32;

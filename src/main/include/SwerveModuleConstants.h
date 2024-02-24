@@ -21,7 +21,7 @@ public:
   ctre::phoenix::motorcontrol::can::TalonFXConfiguration m_driveMotorConfig;
   ctre::phoenix::motorcontrol::can::TalonFXConfiguration m_turnMotorConfig;
   ctre::phoenix::sensors::CANCoderConfiguration m_encoderConfig;
-  #warning "Set angleOffset to a real value"
+
   SwerveModuleConstants(int driveID, int turnID, int encoderID,
                         std::string bus = "rio",
                         units::millisecond_t framePeriod = 20_ms,

@@ -6,9 +6,6 @@
 
 #include "Constants.h"
 #include "Drivetrain.h"
-#include "Intake.h"
-#include "Shooter.h"
-#include "WaypointPoses.h"
 
 #include <frc/Compressor.h>
 #include <frc/DriverStation.h>
@@ -57,7 +54,7 @@ private:
   frc::Trajectory trajSwitch;
   frc::Timer autoTimer;
   int autoState;
-  waypoints::WaypointPoses waypointLib{};
+  // waypoints::WaypointPoses waypointLib{};
 
   enum AutoRoutine { kLeft, kMiddle, kRight, kTest } m_autoSelected;
 
