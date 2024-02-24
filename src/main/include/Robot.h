@@ -1,25 +1,25 @@
 #pragma once
 
 #include "Constants.h"
-#include "Intake.h"
-#include "LimeLight.h"
-#include "LimelightHelpers.h"
-#include "networktables/NetworkTable.h"
-#include "networktables/NetworkTableEntry.h"
-#include "networktables/NetworkTableInstance.h"
-#include "networktables/NetworkTableValue.h"
+// #include "Intake.h"
+// #include "LimeLight.h"
+// #include "LimelightHelpers.h"
+// #include "networktables/NetworkTable.h"
+// #include "networktables/NetworkTableEntry.h"
+// #include "networktables/NetworkTableInstance.h"
+// #include "networktables/NetworkTableValue.h"
 
-#include "Shooter.h"
+// #include "Shooter.h"
 #include "TankDrive.h"
 #include <ctre/Phoenix.h>
 #include <frc/TimedRobot.h>
 #include <frc/XboxController.h>
 #include <frc/drive/DifferentialDrive.h>
-#include <frc/smartdashboard/SendableChooser.h>
-#include <frc/smartdashboard/SmartDashboard.h>
-#include <rev/CANSparkMax.h>
-#include <units/pressure.h>
-#include <units/time.h>
+// #include <frc/smartdashboard/SendableChooser.h>
+// #include <frc/smartdashboard/SmartDashboard.h>
+// #include <rev/CANSparkMax.h>
+// #include <units/pressure.h>
+// #include <units/time.h>
 
 // Unneeded headers
 // Leaving them here for future use
@@ -41,19 +41,19 @@ private:
   // Initialize the controller
   frc::XboxController _controller{0};
 
-  Shooter shooter{};
-  Intake intake{};
+  // Shooter shooter{};
+  // Intake intake{};
   TankDrive drive{};
-  LimeLight limelight{"limelight-greenie"};
+  // LimeLight limelight{"limelight-greenie"};
 
   // Everything from here until the public block is auto stuff
   // I have no idea how it works, ask Zac
-  frc::SendableChooser<std::string> m_chooser;
-  const std::string kAutoNameDefault = "Default";
-  const std::string kAutoNameCustom = "My Auto";
+  // frc::SendableChooser<std::string> m_chooser;
+  // const std::string kAutoNameDefault = "Default";
+  // const std::string kAutoNameCustom = "My Auto";
 
-  std::shared_ptr<nt::NetworkTable> table =
-      nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
+  // std::shared_ptr<nt::NetworkTable> table =
+  //     nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
 
 public:
   void RobotInit() override;
