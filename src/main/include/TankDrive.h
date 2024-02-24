@@ -23,10 +23,10 @@ private:
     rightRearMotor.Follow(rightFrontMotor);
 
     // Set motors to go the correct direction
-    rightFrontMotor.SetInverted(false);
-    rightRearMotor.SetInverted(false);
-    leftFrontMotor.SetInverted(true);
-    leftRearMotor.SetInverted(true);
+    rightFrontMotor.SetInverted(true);
+    rightRearMotor.SetInverted(true);
+    leftFrontMotor.SetInverted(false);
+    leftRearMotor.SetInverted(false);
 
     // Set TalonSRX LEDs to be the correct colors
     rightFrontMotor.SetSensorPhase(true);
