@@ -63,8 +63,7 @@ void Robot::TeleopPeriodic() {
   }
   // Load the note in from the intake
   if (loadFromIntake) {
-    shooter.Reverse();
-    intake.Reverse();
+    intake.Forward();
   }
 
   // Run everything forward if the button is pressed
