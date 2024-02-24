@@ -1,4 +1,5 @@
 #include "LimeLight.h"
+#include "Robot.h"
 
 LimeLight::LimeLight(std::string name) {
   m_limelight = nt::NetworkTableInstance::GetDefault().GetTable(name);
@@ -133,9 +134,6 @@ void LimeLight::updateTracking() {
   }
 }
 
-void LimeLight::ampAuto() {
-
-}
 
 /*
   if (autotimer.Get() < 5_s) {

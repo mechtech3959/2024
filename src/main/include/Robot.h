@@ -48,9 +48,16 @@ private:
 
   // Everything from here until the public block is auto stuff
   // I have no idea how it works, ask Zac
-  frc::SendableChooser<std::string> m_chooser;
-  const std::string kAutoNameDefault = "Default";
-  const std::string kAutoNameCustom = "My Auto";
+  /*  frc::SendableChooser<std::string> m_chooser;
+    const std::string kAutoNameDefault = "Default";
+    const std::string kAutoNameCustom = "My Auto"; */
+  // Auto selection
+  enum AutoRoutine { kAmpAuto, kMiddleAuto, kSideAuto } m_autoSelected;
+
+  frc::SendableChooser<AutoRoutine> m_autoChooser;
+  const std::string a_AmpAuto = "2 Piece Amp";
+  const std::string a_MiddleAuto = "2 Piece Middle";
+  const std::string a_SideAuto = "2 Piece Side";
 
   std::shared_ptr<nt::NetworkTable> table =
       nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
@@ -67,4 +74,9 @@ public:
   void TestPeriodic() override;
   void SimulationInit() override;
   void SimulationPeriodic() override;
+
+  // auto routines
+  void ampAuto();
+  void middleAuto();
+  void sideAuto();
 };

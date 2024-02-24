@@ -1,38 +1,105 @@
 #include "Robot.h"
 #include "LimeLight.h"
+#include <ctre/phoenix6/Orchestra.hpp>
+TalonFX MUSIC{12};
+void Robot::ampAuto() { // zac did this :)
+  limelight.updateTracking();
+  if (autoTimer.Get() < 3.0_s) {
+    drive.diffDrive.ArcadeDrive(0.6, limelight.m_LimelightTurnCmd);
+  } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 6.0_s) {
+    shooter.ShootAmp();
+  } else if (autoTimer.Get() > 6.0_s && autoTimer.Get() < 8_s) {
+    drive.diffDrive.ArcadeDrive(-0.6, -0.4);
+    intake.Forward();
+  } else if (autoTimer.Get() > 8.0_s && autoTimer.Get() < 10_s) {
+    drive.diffDrive.ArcadeDrive(0.6, 0.4);
+    intake.Forward();
+  } else if (autoTimer.Get() > 10.0_s && autoTimer.Get() < 15_s) {
+    shooter.ShootAmp();
+  }
+}
 
-void Robot::RobotInit() {}
+void Robot::middleAuto() { // callie did this :D
+  if (autoTimer.Get() < 3.0_s) {
+    shooter.ShootSpeaker();
+  } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
+    drive.diffDrive.ArcadeDrive(-0.5, 0.0);
+    intake.Forward();
+  } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 7.0_s) {
+    drive.diffDrive.ArcadeDrive(0.5, 0.0);
+  } else if (autoTimer.Get() > 7.0_s && autoTimer.Get() < 10.0_s) {
+    shooter.ShootSpeaker();
+  }
+}
+
+void Robot::sideAuto() { // do not delete jeron pls
+  if (autoTimer.Get() < 3.0_s) {
+    shooter.ShootSpeaker();
+  } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
+    drive.diffDrive.ArcadeDrive(-0.5, -0.5);
+    intake.Forward();
+  } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 7.0_s) {
+    drive.diffDrive.ArcadeDrive(0.5, 0.5);
+    intake.Forward();
+  } else if (autoTimer.Get() > 7.0_s && autoTimer.Get() < 10.0_s) {
+    shooter.ShootSpeaker();
+  }
+}
+// auto selector
+void Robot::RobotInit() {
+  m_autoChooser.SetDefaultOption(a_AmpAuto, AutoRoutine::kAmpAuto);
+  m_autoChooser.AddOption(a_MiddleAuto, AutoRoutine::kMiddleAuto);
+  m_autoChooser.AddOption(a_SideAuto, AutoRoutine::kSideAuto);
+  frc::SmartDashboard::PutData("Auto Modes", &m_autoChooser);
+}
 
 void Robot::AutonomousInit() { autoTimer.Start(); }
 void Robot::AutonomousPeriodic() {
-  if (autoTimer.Get() < 1.0_s) {
-    drive.diffDrive.ArcadeDrive(-0.6, 0.0);
-  } else if (autoTimer.Get() < 1.7_s) {
-    drive.diffDrive.ArcadeDrive(0.0, 0.6);
-  } else if (autoTimer.Get() > 1.7_s && autoTimer.Get() < 2.7_s) {
-    limelight.updateTracking();
-    drive.diffDrive.ArcadeDrive(1, limelight.m_LimelightTurnCmd);
-  } else if (autoTimer.Get() > 5_s && autoTimer.Get() < 9_s) {
-    shooter.ShootAmp();
+  m_autoSelected = m_autoChooser.GetSelected();
+
+  switch (m_autoSelected) {
+
+  case AutoRoutine::kAmpAuto:
+    ampAuto();
+    break;
+  case AutoRoutine::kMiddleAuto:
+    middleAuto();
+    break;
+  case AutoRoutine::kSideAuto:
+    sideAuto();
+    break;
   }
-  /*
+
+  frc::SmartDashboard::PutNumber("Auto Timer", autoTimer.Get().value());
+
+  /* if (autoTimer.Get() < 1.0_s) {
+     drive.diffDrive.ArcadeDrive(-0.6, 0.0);
+   } else if (autoTimer.Get() < 1.7_s) {
+     drive.diffDrive.ArcadeDrive(0.0, 0.6);
+   } else if (autoTimer.Get() > 1.7_s && autoTimer.Get() < 2.7_s) {
+     limelight.updateTracking();
+     drive.diffDrive.ArcadeDrive(1, limelight.m_LimelightTurnCmd);
+   } else if (autoTimer.Get() > 5_s && autoTimer.Get() < 9_s) {
+     shooter.ShootAmp();
+   }
+  */ /*
   while (limelight.autoTimer.Get() < 15.0_s) {
     limelight.updateTracking();
     drive.diffDrive.ArcadeDrive(0.4, limelight.m_LimelightTurnCmd);
   }
   */
-/*
-  limelight.updateTracking();
-  long long ID = llround(limelight.aprilTagID);
-  switch (ID) {
-  case 6:
-    limelight.ampAuto();
-    break;
-  default:
-    drive.diffDrive.ArcadeDrive(0.0, 0.0);
-    break;
-  }
-*/
+  /*
+    limelight.updateTracking();
+    long long ID = llround(limelight.aprilTagID);
+    switch (ID) {
+    case 6:
+      limelight.ampAuto();
+      break;
+    default:
+      drive.diffDrive.ArcadeDrive(0.0, 0.0);
+      break;
+    }
+  */
   /*
   limelight.autoTimer.Start();
   if (limelight.autoTimer.Get() < 0.5_s) {
