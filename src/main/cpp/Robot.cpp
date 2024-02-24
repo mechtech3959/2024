@@ -42,6 +42,8 @@ void Robot::TeleopPeriodic() {
     forw = 0;
   if (fabs(spin) < 0.10)
     spin = 0;
+  // Set the differential drive to the commanded speed
+  drive.diffDrive.ArcadeDrive(forw, spin, true);
 
   // Run the shooter at 50% for the amp and feed the note in
   if (_controller.GetLeftTriggerAxis() > 0) {
@@ -54,28 +56,15 @@ void Robot::TeleopPeriodic() {
     intake.Forward();
   }
 
-  // Set the differential drive to the commanded speed
-  drive.diffDrive.ArcadeDrive(forw, spin, true);
-
   // Load the note in from the front
   if (loadFromFront) {
-    if (!noteDetected) {
-      shooter.Reverse();
-      intake.Reverse();
-    } else {
-      shooter.Stop();
-      intake.Stop();
-    }
+    shooter.Reverse();
+    intake.Reverse();
   }
   // Load the note in from the intake
   if (loadFromIntake) {
-    if (!noteDetected) {
-      shooter.Reverse();
-      intake.Reverse();
-    } else {
-      shooter.Stop();
-      intake.Stop();
-    }
+    shooter.Reverse();
+    intake.Reverse();
   }
 
   // Run everything forward if the button is pressed
