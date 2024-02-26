@@ -91,4 +91,9 @@ public:
   void ampAuto();
   void middleAuto();
   void sideAuto();
+  void Rainbow();
+  void Green();
+  void Red();
+  void Yellow();
+  void Blue();
 };
