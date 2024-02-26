@@ -1,15 +1,8 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 #pragma once
 
 #include "Constants.h"
 #include "Drivetrain.h"
 
-#include <frc/Compressor.h>
-#include <frc/DriverStation.h>
-#include <frc/MathUtil.h>
 #include <frc/TimedRobot.h>
 #include <frc/XboxController.h>
 #include <frc/filter/SlewRateLimiter.h>
@@ -17,20 +10,10 @@
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
-#include <frc/trajectory/Trajectory.h>
-#include <frc/trajectory/TrajectoryGenerator.h>
-
-#include <units/math.h>
-#include <units/pressure.h>
-
 class Robot : public frc::TimedRobot {
 
 private:
   frc::XboxController driver{0};
-  frc::XboxController codriver{1};
-
-  // Shooter m_Shooter{};
-  // Intake m_Intake{};
 
   double m_speedScale;
 
@@ -46,16 +29,6 @@ private:
   Drivetrain m_swerve{config};
   bool headingControl;
 
-  frc::Trajectory traj2Score1;
-  frc::Trajectory traj2Piece1;
-  frc::Trajectory traj2Score2;
-  frc::Trajectory traj2Piece2;
-  frc::Trajectory traj2Score3;
-  frc::Trajectory trajSwitch;
-  frc::Timer autoTimer;
-  int autoState;
-  // waypoints::WaypointPoses waypointLib{};
-
   enum AutoRoutine { kLeft, kMiddle, kRight, kTest } m_autoSelected;
 
   frc::SendableChooser<AutoRoutine> m_autoChooser;
@@ -66,27 +39,6 @@ private:
 
   void Drive();
   void UpdatePose();
-  bool FuseLL();
-  bool FuseLLNoHeading();
-
-  void GenLeft();
-  void RunLeft();
-  void GenMiddle();
-  void RunMiddle();
-  void GenRight();
-  void RunRight();
-  void GenTest();
-  void RunTest();
-
-  void GenSimpleSwitch();
-  void RunSimpleSwitch();
-
-  void GenSpeedBump();
-  void RunSpeedBump();
-
-  void GenTraj();
-
-  void TrackToGoal(frc::Pose2d goal);
 
 public:
   Robot();
