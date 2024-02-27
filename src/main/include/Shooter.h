@@ -19,6 +19,4 @@ private:
 
   WPI_TalonSRX shooterMotorOne{constants::shooter::shooterMotorOneID};
   WPI_TalonSRX shooterMotorTwo{constants::shooter::shooterMotorTwoID};
-  WPI_TalonFX shooterMotorThree{constants::shooter::shooterMotorThreeID};
-  WPI_TalonFX shooterMotorFour{constants::shooter::shooterMotorFourID};
 };

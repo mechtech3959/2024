@@ -9,10 +9,8 @@ constexpr int rightRearMotorID = 4;
 } // namespace drive
 
 namespace shooter {
-constexpr int shooterMotorOneID = 5;
-constexpr int shooterMotorTwoID = 6;
-constexpr int shooterMotorThreeID = 9;
-constexpr int shooterMotorFourID = 10;
+constexpr int shooterMotorOneID = 9;
+constexpr int shooterMotorTwoID = 10;
 constexpr double speakerShootSpeed = 1;
 constexpr double ampShootSpeed = 0.5;
 } // namespace shooter
