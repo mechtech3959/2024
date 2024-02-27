@@ -34,7 +34,7 @@ constexpr double EncoderTicksPerInch =
 
 constexpr int MotorID = 21;
 constexpr int EncoderID = 11;
-const std::string CANBus = "Can1"; //"rio";
+const std::string CANBus = "rio"; //"rio";
 } // namespace slideConstants
 
 namespace clawConstants {
@@ -51,7 +51,7 @@ namespace swerveConstants {
 constexpr int PigeonID = 32;
 constexpr bool PigeonInverted = false;
 
-const std::string DriveCANBus = "Can1"; //"rio";
+const std::string DriveCANBus = "rio"; //"rio";
 constexpr units::millisecond_t DriveCANBusPeriod = 20_ms;
 
 constexpr double RotGain = 1.5; // for controlling the heading closed loop
