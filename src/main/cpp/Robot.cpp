@@ -71,12 +71,12 @@ void Robot::ampAuto() { // zac did this :)
     } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 6.0_s) {
       shooter.ShootAmp(); // shoot
     } else if (autoTimer.Get() > 6.0_s && autoTimer.Get() < 8_s) {
-      drive.diffDrive.ArcadeDrive(-0.65, -0.45); // turn to note and intake it
+      drive.diffDrive.ArcadeDrive(-0.65, -0.48); // turn to note and intake it
       intake.Forward();
-    } else if (autoTimer.Get() > 8.0_s && autoTimer.Get() < 10_s) {
-      drive.diffDrive.ArcadeDrive(0.65, 0.45); // turn to amp
+    } else if (autoTimer.Get() > 8.0_s && autoTimer.Get() < 10.5_s) {
+      drive.diffDrive.ArcadeDrive(0.65, 0.48); // turn to amp
       intake.Forward();
-    } else if (autoTimer.Get() > 10.0_s && autoTimer.Get() < 15_s) {
+    } else if (autoTimer.Get() > 10.5_s && autoTimer.Get() < 15_s) {
       shooter.ShootAmp(); // score
     }
   } else if (frc::DriverStation::GetAlliance() ==
@@ -86,12 +86,12 @@ void Robot::ampAuto() { // zac did this :)
     } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 6.0_s) {
       shooter.ShootAmp();
     } else if (autoTimer.Get() > 6.0_s && autoTimer.Get() < 8_s) {
-      drive.diffDrive.ArcadeDrive(-0.65, 0.45);
+      drive.diffDrive.ArcadeDrive(-0.65, 0.48);
       intake.Forward();
-    } else if (autoTimer.Get() > 8.0_s && autoTimer.Get() < 10_s) {
-      drive.diffDrive.ArcadeDrive(0.65, -0.45);
+    } else if (autoTimer.Get() > 8.0_s && autoTimer.Get() < 10.5_s) {
+      drive.diffDrive.ArcadeDrive(0.65, -0.48);
       intake.Forward();
-    } else if (autoTimer.Get() > 10.0_s && autoTimer.Get() < 15_s) {
+    } else if (autoTimer.Get() > 10.5_s && autoTimer.Get() < 15_s) {
       shooter.ShootAmp();
     }
   } else {
@@ -131,20 +131,35 @@ void Robot::middleAuto() { // callie did this :D
   }
 }
 
-void Robot::sideAuto() { // do not delete jeron pls
-  if (autoTimer.Get() < 3.0_s) {
-    shooter.ShootSpeaker();
-  } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
-    drive.diffDrive.ArcadeDrive(-0.65, -0.45);
-    intake.Forward();
-  } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 7.0_s) {
-    drive.diffDrive.ArcadeDrive(0.65, 0.45);
-    intake.Forward();
-  } else if (autoTimer.Get() > 7.0_s && autoTimer.Get() < 10.0_s) {
-    shooter.ShootSpeaker();
+void Robot::sideAuto() { // Jacob did this ;/
+  if (frc::DriverStation::GetAlliance() ==
+      frc::DriverStation::Alliance::kBlue) {
+    if (autoTimer.Get() < 3.0_s) {
+      shooter.ShootSpeaker();
+    } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
+      drive.diffDrive.ArcadeDrive(-0.8, -0.35);
+      intake.Forward();
+    } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 8.0_s) {
+      drive.diffDrive.ArcadeDrive(0.8, 0.35);
+      intake.Forward();
+    } else if (autoTimer.Get() > 8.0_s && autoTimer.Get() < 11.0_s) {
+      shooter.ShootSpeaker();
+    }
+  } else if (frc::DriverStation::GetAlliance() ==
+             frc::DriverStation::Alliance::kRed) {
+    if (autoTimer.Get() < 3.0_s) {
+      shooter.ShootSpeaker();
+    } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
+      drive.diffDrive.ArcadeDrive(-0.8, 0.35);
+      intake.Forward();
+    } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 8.0_s) {
+      drive.diffDrive.ArcadeDrive(0.8, -0.35);
+      intake.Forward();
+    } else if (autoTimer.Get() > 8.0_s && autoTimer.Get() < 11.0_s) {
+      shooter.ShootSpeaker();
+    }
   }
 }
-
 // auto selector
 void Robot::RobotInit() {
   // Default to a length of 60, start empty output
