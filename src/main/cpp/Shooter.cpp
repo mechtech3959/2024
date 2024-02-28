@@ -1,4 +1,5 @@
 #include "Shooter.h"
+#include "Constants.h"
 
 Shooter::Shooter() { Init(); }
 
@@ -7,28 +8,26 @@ void Shooter::Init() {
   shooterMotorTwo.ConfigFactoryDefault();
 
   shooterMotorTwo.SetInverted(true);
-  // shooterMotorThree.Follow(shooterMotorOne);
-  // shooterMotorFour.Follow(shooterMotorThree);
 }
 
 void Shooter::Forward() {
   shooterMotorOne.Set(ControlMode::PercentOutput, 1);
-  shooterMotorTwo.Set(ControlMode::PercentOutput, 1);
+  shooterMotorTwo.Set(ControlMode::PercentOutput, 1);;
 }
-
+;
 void Shooter::Reverse() {
   shooterMotorOne.Set(ControlMode::PercentOutput, -1);
   shooterMotorTwo.Set(ControlMode::PercentOutput, -1);
 }
 
 void Shooter::ShootSpeaker() {
-  shooterMotorOne.Set(ControlMode::PercentOutput, 1);
-  shooterMotorTwo.Set(ControlMode::PercentOutput, 1);
+  shooterMotorOne.Set(ControlMode::PercentOutput, constants::shooter::speakerShootSpeed);
+  shooterMotorTwo.Set(ControlMode::PercentOutput, constants::shooter::speakerShootSpeed);
 }
 
 void Shooter::ShootAmp() {
-  shooterMotorOne.Set(ControlMode::PercentOutput, 0.5);
-  shooterMotorTwo.Set(ControlMode::PercentOutput, 0.5);
+  shooterMotorOne.Set(ControlMode::PercentOutput, constants::shooter::ampShootSpeed);
+  shooterMotorTwo.Set(ControlMode::PercentOutput, constants::shooter::ampShootSpeed);
 }
 
 void Shooter::Stop() {
