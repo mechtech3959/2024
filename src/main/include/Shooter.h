@@ -8,11 +8,7 @@
 class Shooter {
 public:
   Shooter();
-  void Forward();
-  void Reverse();
-  void ShootSpeaker();
-  void ShootAmp();
-  void Stop();
+  void SetSpeed(double speed);
 
 private:
   void Init();

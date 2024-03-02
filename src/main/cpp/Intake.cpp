@@ -8,17 +8,7 @@ void Intake::Init() {
   intakeRearMotor.SetInverted(true);
 }
 
-void Intake::Forward() {
-  intakeFrontMotor.Set(1);
-  intakeRearMotor.Set(1);
-}
-
-void Intake::Reverse() {
-  intakeFrontMotor.Set(-1);
-  intakeRearMotor.Set(-1);
-}
-
-void Intake::Stop() {
-  intakeFrontMotor.Set(0);
-  intakeRearMotor.Set(0);
+void Intake::SetSpeed(double speed) {
+  intakeFrontMotor.Set(speed);
+  intakeRearMotor.Set(speed);
 }

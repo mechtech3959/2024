@@ -10,31 +10,8 @@ void Shooter::Init() {
   shooterMotorOne.SetInverted(true);
 }
 
-void Shooter::Forward() {
-  shooterMotorOne.Set(ControlMode::PercentOutput, 1);
-  shooterMotorTwo.Set(ControlMode::PercentOutput, 1);
+void Shooter::SetSpeed(double speed) {
+  shooterMotorOne.Set(ControlMode::PercentOutput, speed);
+  shooterMotorTwo.Set(ControlMode::PercentOutput, speed);
   ;
 };
-void Shooter::Reverse() {
-  shooterMotorOne.Set(ControlMode::PercentOutput, -1);
-  shooterMotorTwo.Set(ControlMode::PercentOutput, -1);
-}
-
-void Shooter::ShootSpeaker() {
-  shooterMotorOne.Set(ControlMode::PercentOutput,
-                      constants::shooter::speakerShootSpeed);
-  shooterMotorTwo.Set(ControlMode::PercentOutput,
-                      constants::shooter::speakerShootSpeed);
-}
-
-void Shooter::ShootAmp() {
-  shooterMotorOne.Set(ControlMode::PercentOutput,
-                      constants::shooter::ampShootSpeed);
-  shooterMotorTwo.Set(ControlMode::PercentOutput,
-                      constants::shooter::ampShootSpeed);
-}
-
-void Shooter::Stop() {
-  shooterMotorOne.Set(ControlMode::PercentOutput, 0);
-  shooterMotorTwo.Set(ControlMode::PercentOutput, 0);
-}

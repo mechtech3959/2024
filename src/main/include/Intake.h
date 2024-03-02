@@ -9,11 +9,11 @@ class Intake {
 public:
   Intake();
   void Init();
-  void Forward();
-  void Reverse();
-  void Stop();
+  void SetSpeed(double speed);
 
 private:
-  rev::CANSparkMax intakeFrontMotor{constants::intake::intakeFrontMotorID, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax intakeRearMotor{constants::intake::intakeRearMotorID, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax intakeFrontMotor{constants::intake::intakeFrontMotorID,
+                                    rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax intakeRearMotor{constants::intake::intakeRearMotorID,
+                                   rev::CANSparkMax::MotorType::kBrushless};
 };

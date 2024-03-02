@@ -28,14 +28,11 @@ void Robot::TeleopPeriodic() {
   // Get inputs/controller mapping
   double forw = -_controller.GetLeftY();
   double spin = _controller.GetRightX();
-  bool loadFromIntake = _controller.GetRightBumper();
-  bool loadFromFront = _controller.GetLeftBumper();
+  double intakeSpeed = _controller.GetLeftTriggerAxis();
+  double shooterSpeed = _controller.GetRightTriggerAxis();
   // bool climbUp = _controller.GetXButton();
   // bool climbDown = _controller.GetYButton();
-  bool forward = _controller.GetAButton();
-  bool reverse = _controller.GetBButton();
-  // Once we actually have a limit switch this will need to be fixed
-  bool noteDetected = false;
+  bool reverse = _controller.GetAButton();
 
   // Deadzone the joysticks
   if (fabs(forw) < 0.10)
@@ -45,38 +42,14 @@ void Robot::TeleopPeriodic() {
   // Set the differential drive to the commanded speed
   drive.diffDrive.ArcadeDrive(forw, spin, true);
 
-  // Run the shooter at 50% for the amp and feed the note in
-  if (_controller.GetLeftTriggerAxis() > 0) {
-    shooter.ShootAmp();
-    intake.Forward();
-  }
-  // Run the shooter at 100% for the speaker and feed the note in
-  if (_controller.GetRightTriggerAxis() > 0) {
-    shooter.ShootSpeaker();
-    intake.Forward();
-  }
-
-  // Load the note in from the front
-  if (loadFromFront) {
-    shooter.Reverse();
-    intake.Reverse();
-  }
-  // Load the note in from the intake
-  if (loadFromIntake) {
-    intake.Forward();
-  }
-
-  // Run everything forward if the button is pressed
-  if (forward) {
-    shooter.Forward();
-    intake.Forward();
-  }
-
   // Reverse everything if the button is pressed
   if (reverse) {
-    shooter.Reverse();
-    intake.Reverse();
+    intakeSpeed = -intakeSpeed;
+    shooterSpeed = -shooterSpeed;
   }
+
+  intake.SetSpeed(intakeSpeed);
+  shooter.SetSpeed(shooterSpeed);
 
   // Set the climber motor speed
   // Commented out until we have a climber
@@ -86,12 +59,6 @@ void Robot::TeleopPeriodic() {
   if (climbDown)
     _climber.Set(1);
   */
-
-  // If nothing is commanded stop the motors
-  if (_controller.GetXButton()) {
-    shooter.Stop();
-    intake.Stop();
-  }
 }
 
 void Robot::DisabledPeriodic() { limelight.autotimer.Reset(); }
