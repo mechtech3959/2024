@@ -64,12 +64,20 @@ private:
     const std::string kAutoNameDefault = "Default";
     const std::string kAutoNameCustom = "My Auto"; */
   // Auto selection
-  enum AutoRoutine { kAmpAuto, kMiddleAuto, kSideAuto } m_autoSelected;
+  enum AutoRoutine {
+    kAmpAuto,
+    kMiddleAuto,
+    kMiddle3PcAuto,
+    kSideAuto,
+    kdriveoutAuto
+  } m_autoSelected;
 
   frc::SendableChooser<AutoRoutine> m_autoChooser;
   const std::string a_AmpAuto = "2 Piece Amp";
   const std::string a_MiddleAuto = "2 Piece Middle";
+  const std::string a_Middle3PcAuto = "3 Piece Middle";
   const std::string a_SideAuto = "2 Piece Side";
+  const std::string a_driveoutAuto = "1 Piece Side";
 
   std::shared_ptr<nt::NetworkTable> table =
       nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
@@ -90,7 +98,9 @@ public:
   // auto routines
   void ampAuto();
   void middleAuto();
+  void middle3PcAuto();
   void sideAuto();
+  void driveoutAuto();
   void Rainbow();
   void Green();
   void Red();
