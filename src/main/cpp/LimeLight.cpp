@@ -1,5 +1,5 @@
 #include "LimeLight.h"
-#include "LimelightHelpers.h"
+#include "Robot.h"
 
 LimeLight::LimeLight(std::string name) {
   m_limelight = nt::NetworkTableInstance::GetDefault().GetTable(name);
@@ -96,7 +96,7 @@ void LimeLight::SendData(std::string name, LoggingLevel verbose) {
     break; // make sure nothing else prints
   }
 }
-void LimeLight::Update_Limelight_Tracking() {
+void LimeLight::updateTracking() {
   // Proportional Steering Constant:
   // If your robot doesn't turn fast enough toward the target, make
   // this number bigger If your robot oscillates (swings back and
@@ -115,7 +115,7 @@ void LimeLight::Update_Limelight_Tracking() {
   double ty = LimelightHelpers::getTY("limelight-greenie");
   double ta = LimelightHelpers::getTA("limelight-greenie");
   double tv = LimelightHelpers::getTV("limelight-greenie");
-  m_aprilTagID = LimelightHelpers::getFiducialID("limelight-greenie");
+  aprilTagID = LimelightHelpers::getFiducialID("limelight-greenie");
 
   if (tv < 1.0) {
     m_LimelightHasTarget = false;
@@ -134,21 +134,19 @@ void LimeLight::Update_Limelight_Tracking() {
   }
 }
 
-void LimeLight::AmpAuto() {
-  autotimer.Start();
-  Update_Limelight_Tracking();
-  double ID = LimelightHelpers::getFiducialID("limelight-greenie");
+
+/*
   if (autotimer.Get() < 5_s) {
-    if (ID == 6 || ID == 5)
-      drive.diffDrive.ArcadeDrive(m_LimelightDriveCmd, m_LimelightTurnCmd);
-  } else {
-    if (autotimer.Get() < 9_s && autotimer.Get() > 5_s) {
-      drive.diffDrive.ArcadeDrive(0.0, 0.0);
-      // shoot l8r
-    }
-    if (autotimer.Get() > 10_s) {
-      drive.diffDrive.ArcadeDrive(-0.5, 0.6);
-    }
-  }
-  autotimer.Stop();
-}
+  // if (ID == 6 || ID == 5)
+     drive.diffDrive.ArcadeDrive(0.5, -m_LimelightTurnCmd);
+ }
+   if (autotimer.Get() < 9_s && autotimer.Get() > 5.5_s) {
+     drive.diffDrive.ArcadeDrive(0.0, 0.0);
+     // shoot l8r
+   }
+   if (autotimer.Get() > 10_s) {
+     drive.diffDrive.ArcadeDrive(-0.5, 0.6);
+   }
+
+ autotimer.Stop();
+ */

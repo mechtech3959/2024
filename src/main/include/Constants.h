@@ -12,12 +12,8 @@ namespace shooter {
 constexpr int shooterMotorOneID = 9;
 constexpr int shooterMotorTwoID = 10;
 
-// Change the variables below to adjust shoot speeds
-// speakershootSpeed changes the speed of pressing the right trigger and
-// pressing the left bumper
-// ampShootSpeed changes the speed of pressing the left trigger
-constexpr double speakerShootSpeed = 0.3;
-constexpr double ampShootSpeed = 0.1;
+constexpr double speakerShootSpeed = 1;
+constexpr double ampShootSpeed = 0.5;
 } // namespace shooter
 
 namespace intake {

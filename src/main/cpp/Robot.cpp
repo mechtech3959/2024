@@ -1,30 +1,351 @@
 #include "Robot.h"
+#include "LimeLight.h"
+#include <ctre/phoenix6/Orchestra.hpp>
+#include <frc/AddressableLED.h>
+#include <unistd.h>
+TalonFX MUSIC{12};
 
-void Robot::RobotInit() {
-  // Auto stuff
-  m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
-  m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
-  frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
+static constexpr int kLength = 300;
+
+frc::AddressableLED m_led{0};
+
+std::array<frc::AddressableLED::LEDData, kLength>
+    m_ledBuffer; // Reuse the buffer
+
+// Store what the last hue of the first pixel is
+
+int firstPixelHue = 0;
+void Robot::Green() {
+  for (int i = 0; i < kLength; i++) {
+    m_ledBuffer[i].SetRGB(0, 255, 0);
+  }
+}
+void Robot::Red() {
+  for (int i = 0; i < kLength; i++) {
+    m_ledBuffer[i].SetRGB(255, 0, 0);
+  }
+}
+void Robot::Yellow() {
+  for (int i = 0; i < kLength; i++) {
+    m_ledBuffer[i].SetRGB(255, 255, 0);
+  }
+}
+void Robot::Blue() {
+  for (int i = 0; i < kLength; i++) {
+    m_ledBuffer[i].SetRGB(0, 0, 255);
+  }
+}
+void Robot::Rainbow() {
+
+  // For every pixel
+
+  for (int i = 0; i < kLength; i++) {
+
+    // Calculate the hue - hue is easier for rainbows because the color
+
+    // shape is a circle so only one value needs to precess
+
+    const auto pixelHue = (firstPixelHue + (i * 180 / kLength)) % 180;
+
+    // Set the value
+
+    m_ledBuffer[i].SetHSV(pixelHue, 255, 128);
+  }
+
+  // Increase by to make the rainbow "move"
+
+  firstPixelHue += 3;
+
+  // Check bounds
+
+  firstPixelHue %= 180;
 }
 
-void Robot::AutonomousPeriodic() {
-  limelight.AmpAuto();
+void Robot::ampAuto() { // zac did this :)
+  limelight.updateTracking();
+  if (frc::DriverStation::GetAlliance() ==
+      frc::DriverStation::Alliance::kBlue) {
+    if (autoTimer.Get() < 3.0_s) {
+      drive.diffDrive.ArcadeDrive(
+          0.6, limelight.m_LimelightTurnCmd); // drive towards apriltag
+    } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 6.0_s) {
+      shooter.SetSpeed(constants::shooter::ampShootSpeed); // shoot
+    } else if (autoTimer.Get() > 6.0_s && autoTimer.Get() < 8_s) {
+      drive.diffDrive.ArcadeDrive(-0.65, -0.48); // turn to note and intake it
+      intake.SetSpeed(1);
+    } else if (autoTimer.Get() > 8.0_s && autoTimer.Get() < 10.5_s) {
+      drive.diffDrive.ArcadeDrive(0.65, 0.48); // turn to amp
+      intake.SetSpeed(1);
+    } else if (autoTimer.Get() > 10.5_s && autoTimer.Get() < 15_s) {
+      shooter.SetSpeed(constants::shooter::ampShootSpeed); // score
+    }
+  } else if (frc::DriverStation::GetAlliance() ==
+             frc::DriverStation::Alliance::kRed) { // red
+    if (autoTimer.Get() < 3.0_s) {
+      drive.diffDrive.ArcadeDrive(0.6, limelight.m_LimelightTurnCmd);
+    } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 6.0_s) {
+      shooter.SetSpeed(constants::shooter::ampShootSpeed);
+    } else if (autoTimer.Get() > 6.0_s && autoTimer.Get() < 8_s) {
+      drive.diffDrive.ArcadeDrive(-0.65, 0.48);
+      intake.SetSpeed(1);
+    } else if (autoTimer.Get() > 8.0_s && autoTimer.Get() < 10.5_s) {
+      drive.diffDrive.ArcadeDrive(0.65, -0.48);
+      intake.SetSpeed(1);
+    } else if (autoTimer.Get() > 10.5_s && autoTimer.Get() < 15_s) {
+      shooter.SetSpeed(constants::shooter::ampShootSpeed);
+    }
+  } else {
+    // cout << "no" << endl;
+    drive.diffDrive.ArcadeDrive(0.0, 0.0);
+  }
+}
 
-  /* autotimer.Start();
-   if (autotimer.Get() < 0.5_s) {
-     _diffDrive.ArcadeDrive(0.0, 0.0);
-   };*/
-  /*(m_LimelightHasTarget)
-      ? _diffDrive.ArcadeDrive(m_LimelightDriveCmd, m_LimelightTurnCmd, true)
-      : _diffDrive.ArcadeDrive(0.0, 0.0);*/
-  /*void RunMiddleAuto() {
-    autotimer.Reset();
-    if(autotimer.Get() < 0.5_s){
-      _diffDrive.ArcadeDrive(0.5, 0.0);
-    }*/
+void Robot::middleAuto() { // callie did this :D
+  if (frc::DriverStation::GetAlliance() ==
+      frc::DriverStation::Alliance::kBlue) {
+    if (autoTimer.Get() < 3.0_s) {
+      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+    } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
+      drive.diffDrive.ArcadeDrive(-0.6, 0.0);
+      intake.SetSpeed(1);
+    } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 7.5_s) {
+      drive.diffDrive.ArcadeDrive(0.6, 0.0);
+    } else if (autoTimer.Get() > 7.5_s && autoTimer.Get() < 10.0_s) {
+      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+    }
+  } else if (frc::DriverStation::GetAlliance() ==
+             frc::DriverStation::Alliance::kRed) {
+    if (autoTimer.Get() < 3.0_s) {
+      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+    } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
+      drive.diffDrive.ArcadeDrive(-0.6, 0.0);
+      intake.SetSpeed(1);
+    } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 7.5_s) {
+      drive.diffDrive.ArcadeDrive(0.6, 0.0);
+    } else if (autoTimer.Get() > 7.5_s && autoTimer.Get() < 10.0_s) {
+      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+    }
+  } else {
+    // cout << "no" << endl;
+    drive.diffDrive.ArcadeDrive(0, 0);
+  }
+}
+
+void Robot::middle3PcAuto() { // callie did this :D
+  if (frc::DriverStation::GetAlliance() ==
+      frc::DriverStation::Alliance::kBlue) {
+    if (autoTimer.Get() < 2.0_s) {
+      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+    } else if (autoTimer.Get() > 2.0_s && autoTimer.Get() < 4.0_s) {
+      drive.diffDrive.ArcadeDrive(-0.6, 0.0);
+      intake.SetSpeed(1);
+    } else if (autoTimer.Get() > 4.0_s && autoTimer.Get() < 6.5_s) {
+      drive.diffDrive.ArcadeDrive(0.6, 0.0);
+    } else if (autoTimer.Get() > 6.5_s && autoTimer.Get() < 8.5_s) {
+      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+    } else if (autoTimer.Get() > 8.5_s && autoTimer.Get() < 11_s) {
+      drive.diffDrive.ArcadeDrive(-0.65, 0.3);
+      intake.SetSpeed(1);
+    } else if (autoTimer.Get() > 11_s && autoTimer.Get() < 13.5_s) {
+      drive.diffDrive.ArcadeDrive(0.65, -0.3);
+    } else if (autoTimer.Get() > 13.5_s && autoTimer.Get() < 15_s) {
+      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+    }
+  } else if (frc::DriverStation::GetAlliance() ==
+             frc::DriverStation::Alliance::kRed) {
+    if (autoTimer.Get() < 2.0_s) {
+      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+    } else if (autoTimer.Get() > 2.0_s && autoTimer.Get() < 4.0_s) {
+      drive.diffDrive.ArcadeDrive(-0.6, 0.0);
+      intake.SetSpeed(1);
+    } else if (autoTimer.Get() > 4.0_s && autoTimer.Get() < 6.5_s) {
+      drive.diffDrive.ArcadeDrive(0.6, 0.0);
+    } else if (autoTimer.Get() > 6.5_s && autoTimer.Get() < 8.5_s) {
+      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+    } else if (autoTimer.Get() > 8.5_s && autoTimer.Get() < 11_s) {
+      drive.diffDrive.ArcadeDrive(-0.65, -0.3);
+      intake.SetSpeed(1);
+    } else if (autoTimer.Get() > 11_s && autoTimer.Get() < 13.5_s) {
+      drive.diffDrive.ArcadeDrive(0.65, 0.3);
+    } else if (autoTimer.Get() > 13.5_s && autoTimer.Get() < 15_s) {
+      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+    }
+  } else {
+    // cout << "no" << endl;
+    drive.diffDrive.ArcadeDrive(0, 0);
+  }
+}
+
+void Robot::sideAuto() { // Jacob did this ;/
+  if (frc::DriverStation::GetAlliance() ==
+      frc::DriverStation::Alliance::kBlue) {
+    if (autoTimer.Get() < 3.0_s) {
+      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+    } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.1_s) {
+      drive.diffDrive.ArcadeDrive(-0.8, -0.42);
+      intake.SetSpeed(1);
+    } else if (autoTimer.Get() > 5.1_s && autoTimer.Get() < 5.6_s) {
+      drive.diffDrive.ArcadeDrive(0, 0);
+    } else if (autoTimer.Get() > 5.6_s && autoTimer.Get() < 7.7_s) {
+      drive.diffDrive.ArcadeDrive(0.8, 0.42);
+      intake.SetSpeed(1);
+    } else if (autoTimer.Get() > 8.7_s && autoTimer.Get() < 11.0_s) {
+      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+    }
+  } else if (frc::DriverStation::GetAlliance() ==
+             frc::DriverStation::Alliance::kRed) {
+    if (autoTimer.Get() < 3.0_s) {
+      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+    } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.1_s) {
+      drive.diffDrive.ArcadeDrive(-0.8, 0.42);
+      intake.SetSpeed(1);
+    } else if (autoTimer.Get() > 5.1_s && autoTimer.Get() < 5.6_s) {
+      drive.diffDrive.ArcadeDrive(0.0, 0.0);
+      intake.SetSpeed(1);
+    } else if (autoTimer.Get() > 5.6_s && autoTimer.Get() < 7.7_s) {
+      drive.diffDrive.ArcadeDrive(0.8, -0.42);
+      intake.SetSpeed(1);
+    } else if (autoTimer.Get() > 8.7_s && autoTimer.Get() < 11.0_s) {
+      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+    }
+  }
+}
+void Robot::driveoutAuto() { // ZAC
+  if (frc::DriverStation::GetAlliance() ==
+      frc::DriverStation::Alliance::kBlue) {
+    if (autoTimer.Get() < 3.0_s) {
+      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+    } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
+      drive.diffDrive.ArcadeDrive(-0.8, -0.35);
+    } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 15.0_s) {
+      drive.diffDrive.ArcadeDrive(-0.50, 0.00);
+    }
+  } else if (frc::DriverStation::GetAlliance() ==
+             frc::DriverStation::Alliance::kRed) {
+    if (autoTimer.Get() < 3.0_s) {
+      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+    } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
+      drive.diffDrive.ArcadeDrive(-0.8, 0.35);
+    } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 15.0_s) {
+      drive.diffDrive.ArcadeDrive(0.00, 0.00);
+    }
+  }
+}
+// auto selector
+void Robot::RobotInit() {
+  // Default to a length of 60, start empty output
+
+  // Length is expensive to set, so only set it once, then just update data
+
+  m_led.SetLength(kLength);
+  m_led.SetData(m_ledBuffer);
+  m_led.Start();
+
+  m_autoChooser.SetDefaultOption(a_AmpAuto, AutoRoutine::kAmpAuto);
+  m_autoChooser.AddOption(a_MiddleAuto, AutoRoutine::kMiddleAuto);
+  m_autoChooser.AddOption(a_Middle3PcAuto, AutoRoutine::kMiddle3PcAuto);
+  m_autoChooser.AddOption(a_SideAuto, AutoRoutine::kSideAuto);
+  m_autoChooser.AddOption(a_driveoutAuto, AutoRoutine::kdriveoutAuto);
+
+  frc::SmartDashboard::PutData("Auto Modes", &m_autoChooser);
+}
+
+void Robot::AutonomousInit() { autoTimer.Start(); }
+void Robot::AutonomousPeriodic() {
+  m_autoSelected = m_autoChooser.GetSelected();
+
+  if (frc::DriverStation::GetAlliance() ==
+      frc::DriverStation::Alliance::kBlue) {
+    Blue();
+    m_led.SetData(m_ledBuffer);
+    m_led.Start();
+  } else {
+    Red();
+    m_led.SetData(m_ledBuffer);
+    m_led.Start();
+  }
+
+  switch (m_autoSelected) {
+
+  case AutoRoutine::kAmpAuto:
+    ampAuto();
+    break;
+  case AutoRoutine::kMiddleAuto:
+    middleAuto();
+    break;
+  case AutoRoutine::kMiddle3PcAuto:
+    middle3PcAuto();
+    break;
+  case AutoRoutine::kSideAuto:
+    sideAuto();
+    break;
+  case AutoRoutine::kdriveoutAuto:
+    driveoutAuto();
+    break;
+  }
+
+  frc::SmartDashboard::PutNumber("Auto Timer", autoTimer.Get().value());
+
+  /* if (autoTimer.Get() < 1.0_s) {
+     drive.diffDrive.ArcadeDrive(-0.6, 0.0);
+   } else if (autoTimer.Get() < 1.7_s) {
+     drive.diffDrive.ArcadeDrive(0.0, 0.6);
+   } else if (autoTimer.Get() > 1.7_s && autoTimer.Get() < 2.7_s) {
+     limelight.updateTracking();
+     drive.diffDrive.ArcadeDrive(1, limelight.m_LimelightTurnCmd);
+   } else if (autoTimer.Get() > 5_s && autoTimer.Get() < 9_s) {
+     shooter.SetSpeed(constants::shooter::ampShootSpeed);
+   }
+  */ /*
+  while (limelight.autoTimer.Get() < 15.0_s) {
+    limelight.updateTracking();
+    drive.diffDrive.ArcadeDrive(0.4, limelight.m_LimelightTurnCmd);
+  }
+  */
+  /*
+    limelight.updateTracking();
+    long long ID = llround(limelight.aprilTagID);
+    switch (ID) {
+    case 6:
+      limelight.ampAuto();
+      break;
+    default:
+      drive.diffDrive.ArcadeDrive(0.0, 0.0);
+      break;
+    }
+  */
+  /*
+  limelight.autoTimer.Start();
+  if (limelight.autoTimer.Get() < 0.5_s) {
+    drive.diffDrive.ArcadeDrive(0.0, 0.0);
+  }
+  (limelight.m_LimelightHasTarget)
+      ? drive.diffDrive.ArcadeDrive(limelight.m_LimelightDriveCmd,
+                                    limelight.m_LimelightTurnCmd, true)
+      : drive.diffDrive.ArcadeDrive(0.0, 0.0);
+  */
 }
 
 void Robot::TeleopPeriodic() {
+  int i = -1;
+  if (i == -1) {
+    if (frc::DriverStation::GetAlliance() ==
+        frc::DriverStation::Alliance::kBlue) {
+      Blue();
+    } else {
+      Red();
+    }
+
+    m_led.SetData(m_ledBuffer);
+  }
+  Green();
+  i = 0;
+  m_led.SetData(m_ledBuffer);
+  m_led.Start();
+
+  m_led.SetData(m_ledBuffer);
+  m_led.Start();
+
   // Get inputs/controller mapping
   double forw = -_controller.GetLeftY();
   double spin = _controller.GetRightX();
@@ -33,6 +354,17 @@ void Robot::TeleopPeriodic() {
   // bool climbUp = _controller.GetXButton();
   // bool climbDown = _controller.GetYButton();
   bool reverse = _controller.GetAButton();
+  bool loadFromIntake = _controller.GetRightBumper();
+  bool loadFromFront = _controller.GetLeftBumper();
+  // bool climbUp = _controller.GetXButton();
+  // bool climbDown = _controller.GetYButton();
+  bool forward = _controller.GetAButton();
+
+  // Once we actually have a limit switch this will need to be fixed
+  bool noteDetected = false;
+  // Once we have a climber this will need to be fixed
+  // bool climbUp = _controller.GetXButton();
+  // bool climbDown = _controller.GetYButton();
 
   // Deadzone the joysticks
   if (fabs(forw) < 0.10)
@@ -61,14 +393,29 @@ void Robot::TeleopPeriodic() {
   */
 }
 
-void Robot::DisabledPeriodic() { limelight.autotimer.Reset(); }
+void Robot::DisabledInit() {
+  autoTimer.Stop();
+  autoTimer.Reset();
+  m_led.SetLength(kLength);
+
+  m_led.SetData(m_ledBuffer);
+}
 
 void Robot::RobotPeriodic() {}
-void Robot::AutonomousInit() {}
 void Robot::TeleopInit() {}
-void Robot::DisabledInit(){};
-void Robot::SimulationInit(){};
-void Robot::SimulationPeriodic(){};
+void Robot::DisabledPeriodic() {
+  int i = -1;
+  if (i == -1) {
+    Green();
+    m_led.SetData(m_ledBuffer);
+  }
+  Red();
+  i = 0;
+  m_led.SetData(m_ledBuffer);
+  m_led.Start();
+}
+void Robot::SimulationInit() {}
+void Robot::SimulationPeriodic() {}
 void Robot::TestPeriodic() {}
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }

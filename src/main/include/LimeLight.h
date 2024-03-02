@@ -4,12 +4,48 @@
 #include "LoggingLevel.h"
 #include "TankDrive.h"
 #include "networktables/NetworkTable.h"
-#include "networktables/NetworkTableInstance.h"
 #include <frc/Timer.h>
 #include <frc/geometry/Pose2d.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <string>
 #include <units/length.h>
+
+class LimeLight {
+public:
+  // void RunMiddleAuto();
+  void ampAuto();
+
+  LimeLight(std::string name);
+
+  bool IsTargetVisible();
+
+  frc::Pose2d GetRobotPose();
+
+  void SendData(std::string name, LoggingLevel verbose);
+
+  units::inch_t GetReflectiveTargetRange(double targetHeight);
+
+  void updateTracking();
+
+  double aprilTagID;
+
+  bool m_LimelightHasTarget;
+  double m_LimelightTurnCmd;
+  double m_LimelightDriveCmd;
+
+private:
+  TankDrive drive{};
+
+  std::shared_ptr<nt::NetworkTable> m_limelight;
+
+  double clamp(double in, double minval, double maxval) {
+    if (in > maxval)
+      return maxval;
+    if (in < minval)
+      return minval;
+    return in;
+  };
+};
 
 /*
 class LL3DPose{
@@ -43,40 +79,3 @@ public:
 
 };
 */
-
-class LimeLight {
-public:
-  frc::Timer autotimer;
-  void RunMiddleAuto();
-  void AmpAuto();
-
-  LimeLight(std::string name);
-
-  bool IsTargetVisible();
-
-  frc::Pose2d GetRobotPose();
-
-  void SendData(std::string name, LoggingLevel verbose);
-
-  units::inch_t GetReflectiveTargetRange(double targetHeight);
-
-private:
-  TankDrive drive{};
-
-  std::shared_ptr<nt::NetworkTable> m_limelight;
-
-  bool m_LimelightHasTarget;
-  double m_LimelightTurnCmd;
-  double m_LimelightDriveCmd;
-  double m_aprilTagID;
-
-  double clamp(double in, double minval, double maxval) {
-    if (in > maxval)
-      return maxval;
-    if (in < minval)
-      return minval;
-    return in;
-  };
-
-  void Update_Limelight_Tracking();
-};
