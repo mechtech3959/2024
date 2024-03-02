@@ -15,3 +15,8 @@ void Shooter::SetSpeed(double speed) {
   shooterMotorTwo.Set(ControlMode::PercentOutput, speed);
   ;
 };
+
+void Shooter::Stop() {
+  shooterMotorOne.Set(ControlMode::PercentOutput, 0);
+  shooterMotorTwo.Set(ControlMode::PercentOutput, 0);
+}

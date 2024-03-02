@@ -10,6 +10,7 @@ public:
   Intake();
   void Init();
   void SetSpeed(double speed);
+  void Stop();
 
 private:
   rev::CANSparkMax intakeFrontMotor{constants::intake::intakeFrontMotorID,

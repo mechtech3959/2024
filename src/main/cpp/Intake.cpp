@@ -12,3 +12,8 @@ void Intake::SetSpeed(double speed) {
   intakeFrontMotor.Set(speed);
   intakeRearMotor.Set(speed);
 }
+
+void Intake::Stop() {
+  intakeFrontMotor.Set(0);
+  intakeRearMotor.Set(0);
+}

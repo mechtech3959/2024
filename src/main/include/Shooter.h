@@ -9,6 +9,7 @@ class Shooter {
 public:
   Shooter();
   void SetSpeed(double speed);
+  void Stop();
 
 private:
   void Init();

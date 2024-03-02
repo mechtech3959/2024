@@ -106,6 +106,7 @@ void Robot::middleAuto() { // callie did this :D
     if (autoTimer.Get() < 3.0_s) {
       shooter.SetSpeed(constants::shooter::speakerShootSpeed);
     } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
+      shooter.Stop();
       drive.diffDrive.ArcadeDrive(-0.6, 0.0);
       intake.SetSpeed(1);
     } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 7.5_s) {
@@ -118,6 +119,7 @@ void Robot::middleAuto() { // callie did this :D
     if (autoTimer.Get() < 3.0_s) {
       shooter.SetSpeed(constants::shooter::speakerShootSpeed);
     } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
+      shooter.Stop();
       drive.diffDrive.ArcadeDrive(-0.6, 0.0);
       intake.SetSpeed(1);
     } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 7.5_s) {
