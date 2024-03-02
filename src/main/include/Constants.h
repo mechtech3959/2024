@@ -16,8 +16,8 @@ constexpr int shooterMotorTwoID = 10;
 // speakershootSpeed changes the speed of pressing the right trigger and
 // pressing the left bumper
 // ampShootSpeed changes the speed of pressing the left trigger
-constexpr double speakerShootSpeed = 1;
-constexpr double ampShootSpeed = 0.5;
+constexpr double speakerShootSpeed = 0.3;
+constexpr double ampShootSpeed = 0.1;
 } // namespace shooter
 
 namespace intake {
