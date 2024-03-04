@@ -1,9 +1,7 @@
 #include "Robot.h"
 #include "LimeLight.h"
-#include <ctre/phoenix6/Orchestra.hpp>
 #include <frc/AddressableLED.h>
 #include <unistd.h>
-TalonFX MUSIC{12};
 
 static constexpr int kLength = 300;
 
@@ -36,28 +34,20 @@ void Robot::Blue() {
   }
 }
 void Robot::Rainbow() {
-
   // For every pixel
-
   for (int i = 0; i < kLength; i++) {
-
     // Calculate the hue - hue is easier for rainbows because the color
-
     // shape is a circle so only one value needs to precess
-
     const auto pixelHue = (firstPixelHue + (i * 180 / kLength)) % 180;
 
     // Set the value
-
     m_ledBuffer[i].SetHSV(pixelHue, 255, 128);
   }
 
   // Increase by to make the rainbow "move"
-
   firstPixelHue += 3;
 
   // Check bounds
-
   firstPixelHue %= 180;
 }
 
@@ -212,6 +202,7 @@ void Robot::sideAuto() { // Jacob did this ;/
     }
   }
 }
+
 void Robot::driveoutAuto() { // ZAC
   if (frc::DriverStation::GetAlliance() ==
       frc::DriverStation::Alliance::kBlue) {
@@ -233,12 +224,10 @@ void Robot::driveoutAuto() { // ZAC
     }
   }
 }
-// auto selector
+
 void Robot::RobotInit() {
   // Default to a length of 60, start empty output
-
   // Length is expensive to set, so only set it once, then just update data
-
   m_led.SetLength(kLength);
   m_led.SetData(m_ledBuffer);
   m_led.Start();
@@ -268,7 +257,6 @@ void Robot::AutonomousPeriodic() {
   }
 
   switch (m_autoSelected) {
-
   case AutoRoutine::kAmpAuto:
     ampAuto();
     break;
@@ -353,18 +341,7 @@ void Robot::TeleopPeriodic() {
   double spin = _controller.GetRightX();
   double intakeSpeed = _controller.GetLeftTriggerAxis();
   double shooterSpeed = _controller.GetRightTriggerAxis();
-  // bool climbUp = _controller.GetXButton();
-  // bool climbDown = _controller.GetYButton();
   bool reverse = _controller.GetAButton();
-  bool loadFromIntake = _controller.GetRightBumper();
-  bool loadFromFront = _controller.GetLeftBumper();
-  // bool climbUp = _controller.GetXButton();
-  // bool climbDown = _controller.GetYButton();
-  bool forward = _controller.GetAButton();
-
-  // Once we actually have a limit switch this will need to be fixed
-  bool noteDetected = false;
-  // Once we have a climber this will need to be fixed
   // bool climbUp = _controller.GetXButton();
   // bool climbDown = _controller.GetYButton();
 
