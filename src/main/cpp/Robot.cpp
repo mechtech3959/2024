@@ -275,45 +275,6 @@ void Robot::AutonomousPeriodic() {
   }
 
   frc::SmartDashboard::PutNumber("Auto Timer", autoTimer.Get().value());
-
-  /* if (autoTimer.Get() < 1.0_s) {
-     drive.diffDrive.ArcadeDrive(-0.6, 0.0);
-   } else if (autoTimer.Get() < 1.7_s) {
-     drive.diffDrive.ArcadeDrive(0.0, 0.6);
-   } else if (autoTimer.Get() > 1.7_s && autoTimer.Get() < 2.7_s) {
-     limelight.updateTracking();
-     drive.diffDrive.ArcadeDrive(1, limelight.m_LimelightTurnCmd);
-   } else if (autoTimer.Get() > 5_s && autoTimer.Get() < 9_s) {
-     shooter.SetSpeed(constants::shooter::ampShootSpeed);
-   }
-  */ /*
-  while (limelight.autoTimer.Get() < 15.0_s) {
-    limelight.updateTracking();
-    drive.diffDrive.ArcadeDrive(0.4, limelight.m_LimelightTurnCmd);
-  }
-  */
-  /*
-    limelight.updateTracking();
-    long long ID = llround(limelight.aprilTagID);
-    switch (ID) {
-    case 6:
-      limelight.ampAuto();
-      break;
-    default:
-      drive.diffDrive.ArcadeDrive(0.0, 0.0);
-      break;
-    }
-  */
-  /*
-  limelight.autoTimer.Start();
-  if (limelight.autoTimer.Get() < 0.5_s) {
-    drive.diffDrive.ArcadeDrive(0.0, 0.0);
-  }
-  (limelight.m_LimelightHasTarget)
-      ? drive.diffDrive.ArcadeDrive(limelight.m_LimelightDriveCmd,
-                                    limelight.m_LimelightTurnCmd, true)
-      : drive.diffDrive.ArcadeDrive(0.0, 0.0);
-  */
 }
 
 void Robot::TeleopPeriodic() {
@@ -330,8 +291,6 @@ void Robot::TeleopPeriodic() {
   }
   Green();
   i = 0;
-  m_led.SetData(m_ledBuffer);
-  m_led.Start();
 
   m_led.SetData(m_ledBuffer);
   m_led.Start();
