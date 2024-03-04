@@ -1,4 +1,6 @@
 #include "Robot.h"
+#include "Constants.h"
+#include "Intake.h"
 #include "LimeLight.h"
 #include <frc/AddressableLED.h>
 #include <unistd.h>
@@ -59,7 +61,7 @@ void Robot::ampAuto() { // zac did this :)
       drive.diffDrive.ArcadeDrive(
           0.6, limelight.m_LimelightTurnCmd); // drive towards apriltag
     } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 6.0_s) {
-      shooter.SetSpeed(constants::shooter::ampShootSpeed); // shoot
+      ShootAmp(); // shoot
     } else if (autoTimer.Get() > 6.0_s && autoTimer.Get() < 8_s) {
       drive.diffDrive.ArcadeDrive(-0.65, -0.48); // turn to note and intake it
       intake.SetSpeed(1);
@@ -67,14 +69,14 @@ void Robot::ampAuto() { // zac did this :)
       drive.diffDrive.ArcadeDrive(0.65, 0.48); // turn to amp
       intake.SetSpeed(1);
     } else if (autoTimer.Get() > 10.5_s && autoTimer.Get() < 15_s) {
-      shooter.SetSpeed(constants::shooter::ampShootSpeed); // score
+      ShootAmp(); // score
     }
   } else if (frc::DriverStation::GetAlliance() ==
              frc::DriverStation::Alliance::kRed) { // red
     if (autoTimer.Get() < 3.0_s) {
       drive.diffDrive.ArcadeDrive(0.6, limelight.m_LimelightTurnCmd);
     } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 6.0_s) {
-      shooter.SetSpeed(constants::shooter::ampShootSpeed);
+      ShootAmp();
     } else if (autoTimer.Get() > 6.0_s && autoTimer.Get() < 8_s) {
       drive.diffDrive.ArcadeDrive(-0.65, 0.48);
       intake.SetSpeed(1);
@@ -82,7 +84,7 @@ void Robot::ampAuto() { // zac did this :)
       drive.diffDrive.ArcadeDrive(0.65, -0.48);
       intake.SetSpeed(1);
     } else if (autoTimer.Get() > 10.5_s && autoTimer.Get() < 15_s) {
-      shooter.SetSpeed(constants::shooter::ampShootSpeed);
+      ShootAmp();
     }
   } else {
     // cout << "no" << endl;
@@ -94,28 +96,30 @@ void Robot::middleAuto() { // callie did this :D
   if (frc::DriverStation::GetAlliance() ==
       frc::DriverStation::Alliance::kBlue) {
     if (autoTimer.Get() < 3.0_s) {
-      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+      ShootSpeaker();
     } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
       shooter.Stop();
+      intake.Stop();
       drive.diffDrive.ArcadeDrive(-0.6, 0.0);
       intake.SetSpeed(1);
     } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 7.5_s) {
       drive.diffDrive.ArcadeDrive(0.6, 0.0);
     } else if (autoTimer.Get() > 7.5_s && autoTimer.Get() < 10.0_s) {
-      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+      ShootSpeaker();
     }
   } else if (frc::DriverStation::GetAlliance() ==
              frc::DriverStation::Alliance::kRed) {
     if (autoTimer.Get() < 3.0_s) {
-      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+      ShootSpeaker();
     } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
       shooter.Stop();
+      intake.Stop();
       drive.diffDrive.ArcadeDrive(-0.6, 0.0);
       intake.SetSpeed(1);
     } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 7.5_s) {
       drive.diffDrive.ArcadeDrive(0.6, 0.0);
     } else if (autoTimer.Get() > 7.5_s && autoTimer.Get() < 10.0_s) {
-      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+      ShootSpeaker();
     }
   } else {
     // cout << "no" << endl;
@@ -127,40 +131,40 @@ void Robot::middle3PcAuto() { // callie did this :D
   if (frc::DriverStation::GetAlliance() ==
       frc::DriverStation::Alliance::kBlue) {
     if (autoTimer.Get() < 2.0_s) {
-      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+      ShootSpeaker();
     } else if (autoTimer.Get() > 2.0_s && autoTimer.Get() < 4.0_s) {
       drive.diffDrive.ArcadeDrive(-0.6, 0.0);
       intake.SetSpeed(1);
     } else if (autoTimer.Get() > 4.0_s && autoTimer.Get() < 6.5_s) {
       drive.diffDrive.ArcadeDrive(0.6, 0.0);
     } else if (autoTimer.Get() > 6.5_s && autoTimer.Get() < 8.5_s) {
-      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+      ShootSpeaker();
     } else if (autoTimer.Get() > 8.5_s && autoTimer.Get() < 11_s) {
       drive.diffDrive.ArcadeDrive(-0.65, 0.3);
       intake.SetSpeed(1);
     } else if (autoTimer.Get() > 11_s && autoTimer.Get() < 13.5_s) {
       drive.diffDrive.ArcadeDrive(0.65, -0.3);
     } else if (autoTimer.Get() > 13.5_s && autoTimer.Get() < 15_s) {
-      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+      ShootSpeaker();
     }
   } else if (frc::DriverStation::GetAlliance() ==
              frc::DriverStation::Alliance::kRed) {
     if (autoTimer.Get() < 2.0_s) {
-      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+      ShootSpeaker();
     } else if (autoTimer.Get() > 2.0_s && autoTimer.Get() < 4.0_s) {
       drive.diffDrive.ArcadeDrive(-0.6, 0.0);
       intake.SetSpeed(1);
     } else if (autoTimer.Get() > 4.0_s && autoTimer.Get() < 6.5_s) {
       drive.diffDrive.ArcadeDrive(0.6, 0.0);
     } else if (autoTimer.Get() > 6.5_s && autoTimer.Get() < 8.5_s) {
-      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+      ShootSpeaker();
     } else if (autoTimer.Get() > 8.5_s && autoTimer.Get() < 11_s) {
       drive.diffDrive.ArcadeDrive(-0.65, -0.3);
       intake.SetSpeed(1);
     } else if (autoTimer.Get() > 11_s && autoTimer.Get() < 13.5_s) {
       drive.diffDrive.ArcadeDrive(0.65, 0.3);
     } else if (autoTimer.Get() > 13.5_s && autoTimer.Get() < 15_s) {
-      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+      ShootSpeaker();
     }
   } else {
     // cout << "no" << endl;
@@ -172,7 +176,7 @@ void Robot::sideAuto() { // Jacob did this ;/
   if (frc::DriverStation::GetAlliance() ==
       frc::DriverStation::Alliance::kBlue) {
     if (autoTimer.Get() < 3.0_s) {
-      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+      ShootSpeaker();
     } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.1_s) {
       drive.diffDrive.ArcadeDrive(-0.8, -0.42);
       intake.SetSpeed(1);
@@ -182,12 +186,12 @@ void Robot::sideAuto() { // Jacob did this ;/
       drive.diffDrive.ArcadeDrive(0.8, 0.42);
       intake.SetSpeed(1);
     } else if (autoTimer.Get() > 8.7_s && autoTimer.Get() < 11.0_s) {
-      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+      ShootSpeaker();
     }
   } else if (frc::DriverStation::GetAlliance() ==
              frc::DriverStation::Alliance::kRed) {
     if (autoTimer.Get() < 3.0_s) {
-      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+      ShootSpeaker();
     } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.1_s) {
       drive.diffDrive.ArcadeDrive(-0.8, 0.42);
       intake.SetSpeed(1);
@@ -198,7 +202,7 @@ void Robot::sideAuto() { // Jacob did this ;/
       drive.diffDrive.ArcadeDrive(0.8, -0.42);
       intake.SetSpeed(1);
     } else if (autoTimer.Get() > 8.7_s && autoTimer.Get() < 11.0_s) {
-      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+      ShootSpeaker();
     }
   }
 }
@@ -207,7 +211,7 @@ void Robot::driveoutAuto() { // ZAC
   if (frc::DriverStation::GetAlliance() ==
       frc::DriverStation::Alliance::kBlue) {
     if (autoTimer.Get() < 3.0_s) {
-      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+      ShootSpeaker();
     } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
       drive.diffDrive.ArcadeDrive(-0.8, -0.35);
     } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 15.0_s) {
@@ -216,13 +220,23 @@ void Robot::driveoutAuto() { // ZAC
   } else if (frc::DriverStation::GetAlliance() ==
              frc::DriverStation::Alliance::kRed) {
     if (autoTimer.Get() < 3.0_s) {
-      shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+      ShootSpeaker();
     } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
       drive.diffDrive.ArcadeDrive(-0.8, 0.35);
     } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 15.0_s) {
       drive.diffDrive.ArcadeDrive(0.00, 0.00);
     }
   }
+}
+
+void Robot::ShootSpeaker() {
+  shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+  intake.feedMotor.Set(constants::intake::feedMotorSpeed);
+}
+
+void Robot::ShootAmp() {
+  shooter.SetSpeed(constants::shooter::ampShootSpeed);
+  intake.feedMotor.Set(constants::intake::feedMotorSpeed);
 }
 
 void Robot::RobotInit() {

@@ -12,9 +12,10 @@ public:
   void SetSpeed(double speed);
   void Stop();
 
-private:
-  rev::CANSparkMax intakeFrontMotor{constants::intake::intakeFrontMotorID,
-                                    rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax intakeRearMotor{constants::intake::intakeRearMotorID,
+  rev::CANSparkMax feedMotor{constants::intake::feedMotorID,
                                    rev::CANSparkMax::MotorType::kBrushless};
+
+private:
+  rev::CANSparkMax pickupMotor{constants::intake::pickupMotorID,
+                                    rev::CANSparkMax::MotorType::kBrushless};
 };

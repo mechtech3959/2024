@@ -3,17 +3,17 @@
 Intake::Intake() { Init(); }
 
 void Intake::Init() {
-  intakeFrontMotor.RestoreFactoryDefaults();
-  intakeRearMotor.RestoreFactoryDefaults();
-  intakeRearMotor.SetInverted(true);
+  pickupMotor.RestoreFactoryDefaults();
+  feedMotor.RestoreFactoryDefaults();
+  feedMotor.SetInverted(true);
 }
 
 void Intake::SetSpeed(double speed) {
-  intakeFrontMotor.Set(speed);
-  intakeRearMotor.Set(speed);
+  pickupMotor.Set(speed);
+  feedMotor.Set(speed);
 }
 
 void Intake::Stop() {
-  intakeFrontMotor.Set(0);
-  intakeRearMotor.Set(0);
+  pickupMotor.Set(0);
+  feedMotor.Set(0);
 }

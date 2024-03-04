@@ -14,6 +14,6 @@ public:
 private:
   void Init();
 
-  WPI_TalonSRX shooterMotorOne{constants::shooter::shooterMotorOneID};
-  WPI_TalonSRX shooterMotorTwo{constants::shooter::shooterMotorTwoID};
+  WPI_TalonSRX shooterMotorOne{constants::shooter::motorOneID};
+  WPI_TalonSRX shooterMotorTwo{constants::shooter::motorTwoID};
 };
