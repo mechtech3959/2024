@@ -134,7 +134,6 @@ void LimeLight::updateTracking() {
   }
 }
 
-
 /*
   if (autotimer.Get() < 5_s) {
   // if (ID == 6 || ID == 5)
