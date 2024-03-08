@@ -23,7 +23,8 @@
 #include <units/pressure.h>
 #include <units/time.h>
 
-class Robot : public frc::TimedRobot {
+class Robot : public frc::TimedRobot
+{
 private:
   // Initialize the controller
   frc::XboxController _controller{0};
@@ -34,7 +35,8 @@ private:
   LimeLight limelight{"limelight-greenie"};
 
   // Auto selection
-  enum AutoRoutine {
+  enum AutoRoutine
+  {
     kAmpAuto,
     kMiddleAuto,
     kMiddle3PcAuto,
@@ -49,10 +51,10 @@ private:
   const std::string a_SideAuto = "2 Piece Side";
   const std::string a_driveoutAuto = "1 Piece Side";
 
-  std::shared_ptr<nt::NetworkTable> table =
-      nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
+  std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
 
 public:
+  Pigeon2 Pigeon{constants::drive::PigeonID};
   void RobotInit() override;
   void RobotPeriodic() override;
   void AutonomousInit() override;

@@ -11,7 +11,7 @@ public:
   TankDrive() { Init(); }
 
   frc::DifferentialDrive diffDrive{rightFrontMotor, leftFrontMotor};
-
+ 
 private:
   void Init() {
     leftFrontMotor.ConfigFactoryDefault();

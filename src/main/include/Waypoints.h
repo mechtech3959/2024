@@ -38,11 +38,25 @@ constexpr units::inch_t RedYOffSetLeft = 0_in;  // prob same from last year
 
 constexpr units::degree_t RedHeading = 0_deg;      
 constexpr units::degree_t BlueHeading = 179.9_deg; 
+constexpr units::degree_t AmpHeading = 0_deg; // set to zero until heading is figured out
+
+
 
 
 constexpr frc::Translation2d BlueTop{ 250.50_in, 260.64_in}; // right of the field avoiding stage and goes to midfield
 constexpr frc::Translation2d BlueBottom{ 250.50_in, 29.64_in}; // left of the field avoiding stage and goes to midfield
- constexpr frc::Translation2d MidfieldNote5{ 250.50_in, 29.64_in};// bottom
+
+
+constexpr frc::Translation2d BlueNote1{ 114_in, 161.64_in};// stage 
+constexpr frc::Translation2d BlueNote2{ 114_in, 104.64_in};// middle
+constexpr frc::Translation2d BlueNote2{ 114_in, 47.64_in};// bottom
+
+constexpr frc::Translation2d RedNote1{ 539.22_in, 161.64_in};// stage 
+constexpr frc::Translation2d RedNote2{ 539.22_in, 104.64_in};// middle
+constexpr frc::Translation2d RedNote2{ 539.22_in, 47.64_in};// bottom
+
+
+constexpr frc::Translation2d MidfieldNote5{ 250.50_in, 29.64_in};// bottom
 constexpr frc::Translation2d MidfieldNote4{ 250.50_in, 95.64_in};
 constexpr frc::Translation2d MidfieldNote3{ 250.50_in,  161.64_in};
 constexpr frc::Translation2d MidfieldNote2{ 250.50_in,  227.64_in};

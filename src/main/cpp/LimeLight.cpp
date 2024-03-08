@@ -16,12 +16,21 @@ bool LimeLight::IsTargetVisible() {
 
   return false;
 }
-
+ /* 
+ LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+   if(limelightMeasurement.tagCount >= 2)
+   {
+     m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+     m_poseEstimator.addVisionMeasurement(
+         limelightMeasurement.pose,
+         limelightMeasurement.timestampSeconds);
+   }*/
 frc::Pose2d LimeLight::GetRobotPose() {
+  
 
   // create storage vector for bot pose from limelight
-  std::vector<double> data =
-      m_limelight->GetNumberArray("botpose_wpiblue", std::array<double, 7>{});
+  
+  std::vector<double> data = m_limelight->GetNumberArray("botpose_wpiblue", std::array<double, 7>{});
   // get 3d pose from limelight
 
   if (IsTargetVisible()) {

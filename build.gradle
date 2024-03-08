@@ -1,7 +1,7 @@
 plugins {
     id "cpp"
     id "google-test-test-suite"
-    id "edu.wpi.first.GradleRIO" version "2024.1.1"
+    id "edu.wpi.first.GradleRIO" version "2024.3.1"
 }
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
@@ -106,7 +106,7 @@ nativeUtils.platformConfigs.named("linuxathena").configure {
     it.cppCompiler.args.add('-Wcast-align')
     it.cppCompiler.args.add('-Wstrict-overflow=5')
     it.cppCompiler.args.add('-Wwrite-strings')
-    it.cppCompiler.args.add('-Waggregate-return')
+   // it.cppCompiler.args.add('-Waggregate-return')
     it.cppCompiler.args.add('-Wcast-qual')
     it.cppCompiler.args.add('-Wunreachable-code')
     // it.cppCompiler.args.add('-Wfloat-equal')
