@@ -34,6 +34,8 @@ public:
   double m_LimelightTurnCmd;
   double m_LimelightDriveCmd;
 
+  units::inch_t distance();
+
 private:
   std::shared_ptr<nt::NetworkTable> m_limelight;
 

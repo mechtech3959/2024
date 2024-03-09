@@ -83,6 +83,31 @@ units::inch_t LimeLight::GetReflectiveTargetRange(double targetHeight) {
   return 0_in;
 }
 
+units::inch_t LimeLight::distance(){
+  //distance stuff
+    double targetOffsetAngle_Vertical = m_limelight->GetNumber("ty",0.0);
+
+    // how many degrees back is your limelight rotated from perfectly vertical?
+    double limelightMountAngleDegrees = 56.4; 
+
+    // distance from the center of the Limelight lens to the floor
+    double limelightLensHeightInches = 21.5; 
+    //26 in for ring ll
+
+    // distance from the targets to the floor
+    double speakerHeightInches = 57.13; 
+    double ampHeightInches = 53.38;
+
+    double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
+    double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+
+    double distanceFromLimelightToSpeakerInches = (speakerHeightInches - limelightLensHeightInches)/tan(angleToGoalRadians);
+
+    double distanceFromLimelightToAmpInches = (ampHeightInches - limelightLensHeightInches)/tan(angleToGoalRadians);
+
+}
+
+
 void LimeLight::SendData(std::string name, LoggingLevel verbose) {
   switch (verbose) {
   case LoggingLevel::Everything: // everything that is not in the cases below it
@@ -99,6 +124,8 @@ void LimeLight::SendData(std::string name, LoggingLevel verbose) {
                                    units::inch_t(p.Y()).value());
     frc::SmartDashboard::PutNumber(name + " pose heading",
                                    p.Rotation().Degrees().value());
+    frc::SmartDashboard::PutNumber(name + " distance from targets",
+                                   distance().value());
   }
     // continue
   default:
