@@ -142,6 +142,43 @@ void LimeLight::updateTracking() {
     m_LimelightDriveCmd = clamp(m_LimelightDriveCmd, -MAX_DRIVE, MAX_DRIVE);
   }
 }
+void LimeLight::updateBackTracking() {
+  // Proportional Steering Constant:
+  // If your robot doesn't turn fast enough toward the target, make
+  // this number bigger If your robot oscillates (swings back and
+  // forth past the target) make this smaller
+  const double STEER_K = 0.04;
+
+  // Proportional Drive constant: bigger = faster drive
+  const double DRIVE_K = 0.26;
+
+  // Area of the target when your robot has reached the goal
+  const double DESIRED_TARGET_AREA = 4;
+  const double MAX_DRIVE = 1.0;
+  const double MAX_STEER = 0.5f;
+
+  double tx = LimelightHelpers::getTX("limelight-bakshot");
+  double ty = LimelightHelpers::getTY("limelight-bakshot");
+  double ta = LimelightHelpers::getTA("limelight-bakshot");
+  double tv = LimelightHelpers::getTV("limelight-bakshot");
+  Note = LimelightHelpers::getFiducialID("limelight-bakshot");
+
+  if (tv < 1.0) {
+    m_LimelightHasTarget = false;
+    m_LimelightDriveCmd = 0.0;
+    m_LimelightTurnCmd = 0.0;
+  } else {
+    m_LimelightHasTarget = true;
+
+    // Proportional steering
+    m_LimelightTurnCmd = tx * STEER_K;
+    m_LimelightTurnCmd = clamp(m_LimelightTurnCmd, -MAX_STEER, MAX_STEER);
+
+    // drive forward until the target area reaches our desired area
+    m_LimelightDriveCmd = (DESIRED_TARGET_AREA - ta) * DRIVE_K;
+    m_LimelightDriveCmd = clamp(m_LimelightDriveCmd, -MAX_DRIVE, MAX_DRIVE);
+  }
+}
 
 /*
   if (autotimer.Get() < 5_s) {

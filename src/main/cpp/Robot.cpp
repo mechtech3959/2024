@@ -381,10 +381,27 @@ void Robot::DisabledInit() {
 }
 
 void Robot::RobotPeriodic() {
+ if(frc::DriverStation::Alliance::kBlue and m_autoSelected == AutoRoutine::kMiddleAuto or AutoRoutine::kMiddle3PcAuto){
+  Pigeon.AddYaw(180);
+ }else if(frc::DriverStation::Alliance::kBlue and m_autoSelected == AutoRoutine::kSideAuto or AutoRoutine::kdriveoutAuto){
+  Pigeon.AddYaw(0); // test later
+ }else if(frc::DriverStation::Alliance::kBlue and m_autoSelected == AutoRoutine::kAmpAuto){
+  Pigeon.AddYaw(90); // maybe be right, double check
+ }; 
+ if(frc::DriverStation::Alliance::kRed and m_autoSelected == AutoRoutine::kMiddleAuto or AutoRoutine::kMiddle3PcAuto){
+  Pigeon.AddYaw(0);
+ }else if(frc::DriverStation::Alliance::kRed and m_autoSelected == AutoRoutine::kSideAuto or AutoRoutine::kdriveoutAuto){
+  Pigeon.AddYaw(0); // test later
+ }else if(frc::DriverStation::Alliance::kRed and m_autoSelected == AutoRoutine::kAmpAuto){
+  Pigeon.AddYaw(-90); // maybe be right, double check
+ };
   double Pitch = Pigeon.GetPitch();
   double Roll = Pigeon.GetRoll();
+  double Yaw = Pigeon.GetYaw();
   frc::SmartDashboard::PutNumber("Pitch", Pitch);
   frc::SmartDashboard::PutNumber("Roll", Roll);
+  frc::SmartDashboard::PutNumber("Yaw", Yaw);
+ // if(Roll == ) do later
 }
 void Robot::TeleopInit() {}
 void Robot::DisabledPeriodic() {
