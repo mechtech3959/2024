@@ -63,7 +63,7 @@ void Robot::ampAuto() { // zac did this :)
     } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 6.0_s) {
       ShootAmp(); // shoot
     } else if (autoTimer.Get() > 6.0_s && autoTimer.Get() < 8_s) {
-      diffDrive.ArcadeDrive(-0.75, -0.9); // turn to note and intake it
+      drive.diffDrive.ArcadeDrive(-0.75, -0.5); // turn to note and intake it
       intake.SetSpeed(1);
     } else if (autoTimer.Get() > 8.0_s && autoTimer.Get() < 10.5_s) {
       diffDrive.ArcadeDrive(0.65, 0.48); // turn to amp
@@ -213,18 +213,22 @@ void Robot::driveoutAuto() { // ZAC
     if (autoTimer.Get() < 3.0_s) {
       ShootSpeaker();
     } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
-      diffDrive.ArcadeDrive(-0.8, -0.35);
+      diffDrive.ArcadeDrive(-0.8, 0.00);
+      intake.SetSpeed(1);
     } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 15.0_s) {
-      diffDrive.ArcadeDrive(-0.50, 0.00);
+      diffDrive.ArcadeDrive(0.00, 0.00);
+      intake.Stop();
     }
   } else if (frc::DriverStation::GetAlliance() ==
              frc::DriverStation::Alliance::kRed) {
     if (autoTimer.Get() < 3.0_s) {
       ShootSpeaker();
     } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
-      diffDrive.ArcadeDrive(-0.8, 0.35);
+      diffDrive.ArcadeDrive(-0.8, 0.00);
+      intake.SetSpeed(1);
     } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 15.0_s) {
       diffDrive.ArcadeDrive(0.00, 0.00);
+      intake.Stop();
     }
   }
 }
