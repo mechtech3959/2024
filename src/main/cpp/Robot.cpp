@@ -213,7 +213,7 @@ void Robot::driveoutAuto() { // ZAC
     if (autoTimer.Get() < 3.0_s) {
       ShootSpeaker();
     } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
-      diffDrive.ArcadeDrive(-0.8, 0.00);
+      diffDrive.ArcadeDrive(-0.7, 0.00);
       intake.SetSpeed(1);
     } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 15.0_s) {
       diffDrive.ArcadeDrive(0.00, 0.00);
@@ -224,7 +224,7 @@ void Robot::driveoutAuto() { // ZAC
     if (autoTimer.Get() < 3.0_s) {
       ShootSpeaker();
     } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
-      diffDrive.ArcadeDrive(-0.8, 0.00);
+      diffDrive.ArcadeDrive(-0.7, 0.00);
       intake.SetSpeed(1);
     } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 15.0_s) {
       diffDrive.ArcadeDrive(0.00, 0.00);
@@ -381,27 +381,37 @@ void Robot::DisabledInit() {
 }
 
 void Robot::RobotPeriodic() {
- if(frc::DriverStation::Alliance::kBlue and m_autoSelected == AutoRoutine::kMiddleAuto or AutoRoutine::kMiddle3PcAuto){
-  Pigeon.AddYaw(180);
- }else if(frc::DriverStation::Alliance::kBlue and m_autoSelected == AutoRoutine::kSideAuto or AutoRoutine::kdriveoutAuto){
-  Pigeon.AddYaw(0); // test later
- }else if(frc::DriverStation::Alliance::kBlue and m_autoSelected == AutoRoutine::kAmpAuto){
-  Pigeon.AddYaw(90); // maybe be right, double check
- }; 
- if(frc::DriverStation::Alliance::kRed and m_autoSelected == AutoRoutine::kMiddleAuto or AutoRoutine::kMiddle3PcAuto){
-  Pigeon.AddYaw(0);
- }else if(frc::DriverStation::Alliance::kRed and m_autoSelected == AutoRoutine::kSideAuto or AutoRoutine::kdriveoutAuto){
-  Pigeon.AddYaw(0); // test later
- }else if(frc::DriverStation::Alliance::kRed and m_autoSelected == AutoRoutine::kAmpAuto){
-  Pigeon.AddYaw(-90); // maybe be right, double check
- };
+  if (frc::DriverStation::Alliance::kBlue and
+          m_autoSelected == AutoRoutine::kMiddleAuto or
+      AutoRoutine::kMiddle3PcAuto) {
+    Pigeon.AddYaw(180);
+  } else if (frc::DriverStation::Alliance::kBlue and
+                 m_autoSelected == AutoRoutine::kSideAuto or
+             AutoRoutine::kdriveoutAuto) {
+    Pigeon.AddYaw(0); // test later
+  } else if (frc::DriverStation::Alliance::kBlue and
+             m_autoSelected == AutoRoutine::kAmpAuto) {
+    Pigeon.AddYaw(90); // maybe be right, double check
+  };
+  if (frc::DriverStation::Alliance::kRed and
+          m_autoSelected == AutoRoutine::kMiddleAuto or
+      AutoRoutine::kMiddle3PcAuto) {
+    Pigeon.AddYaw(0);
+  } else if (frc::DriverStation::Alliance::kRed and
+                 m_autoSelected == AutoRoutine::kSideAuto or
+             AutoRoutine::kdriveoutAuto) {
+    Pigeon.AddYaw(0); // test later
+  } else if (frc::DriverStation::Alliance::kRed and
+             m_autoSelected == AutoRoutine::kAmpAuto) {
+    Pigeon.AddYaw(-90); // maybe be right, double check
+  };
   double Pitch = Pigeon.GetPitch();
   double Roll = Pigeon.GetRoll();
   double Yaw = Pigeon.GetYaw();
   frc::SmartDashboard::PutNumber("Pitch", Pitch);
   frc::SmartDashboard::PutNumber("Roll", Roll);
   frc::SmartDashboard::PutNumber("Yaw", Yaw);
- // if(Roll == ) do later
+  // if(Roll == ) do later
 }
 void Robot::TeleopInit() {}
 void Robot::DisabledPeriodic() {
