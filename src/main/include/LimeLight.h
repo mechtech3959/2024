@@ -33,6 +33,8 @@ public:
   double m_LimelightTurnCmd;
   double m_LimelightDriveCmd;
 
+  units::inch_t distance();
+
 private:
   TankDrive drive{};
 
