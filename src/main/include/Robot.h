@@ -10,7 +10,7 @@
 #include "networktables/NetworkTableValue.h"
 
 #include "Shooter.h"
-#include "TankDrive.h"
+// #include "TankDrive.h"
 #include <ctre/Phoenix.h>
 #include <frc/DriverStation.h>
 #include <frc/TimedRobot.h>
@@ -23,20 +23,26 @@
 #include <units/pressure.h>
 #include <units/time.h>
 
-class Robot : public frc::TimedRobot
-{
+class Robot : public frc::TimedRobot {
 private:
   // Initialize the controller
   frc::XboxController _controller{0};
   frc::Timer autoTimer;
   Shooter shooter{};
   Intake intake{};
-  TankDrive drive{};
   LimeLight limelight{"limelight-greenie"};
+  rev::CANSparkMax leftFrontMotor{constants::drive::leftFrontMotorID,
+                                  rev::CANSparkMax::MotorType::kBrushed};
+  rev::CANSparkMax leftRearMotor{constants::drive::leftRearMotorID,
+                                 rev::CANSparkMax::MotorType::kBrushed};
+  rev::CANSparkMax rightFrontMotor{constants::drive::rightFrontMotorID,
+                                   rev::CANSparkMax::MotorType::kBrushed};
+  rev::CANSparkMax rightRearMotor{constants::drive::rightRearMotorID,
+                                  rev::CANSparkMax::MotorType::kBrushed};
+  frc::DifferentialDrive diffDrive{rightFrontMotor, leftFrontMotor};
 
   // Auto selection
-  enum AutoRoutine
-  {
+  enum AutoRoutine {
     kAmpAuto,
     kMiddleAuto,
     kMiddle3PcAuto,
@@ -51,7 +57,8 @@ private:
   const std::string a_SideAuto = "2 Piece Side";
   const std::string a_driveoutAuto = "1 Piece Side";
 
-  std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
+  std::shared_ptr<nt::NetworkTable> table =
+      nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
 
 public:
   Pigeon2 Pigeon{constants::drive::PigeonID};

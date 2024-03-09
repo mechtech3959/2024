@@ -2,10 +2,10 @@
 
 namespace constants {
 namespace drive {
-constexpr int leftFrontMotorID = 1;
-constexpr int leftRearMotorID = 2;
-constexpr int rightFrontMotorID = 3;
-constexpr int rightRearMotorID = 4;
+constexpr int leftFrontMotorID = 2;
+constexpr int leftRearMotorID = 3;
+constexpr int rightFrontMotorID = 4;
+constexpr int rightRearMotorID = 5;
 constexpr int PigeonID = 32;
 
 } // namespace drive

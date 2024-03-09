@@ -2,7 +2,6 @@
 
 #include "LimelightHelpers.h"
 #include "LoggingLevel.h"
-#include "TankDrive.h"
 #include "networktables/NetworkTable.h"
 #include <frc/Timer.h>
 #include <frc/geometry/Pose2d.h>
@@ -34,8 +33,6 @@ public:
   double m_LimelightDriveCmd;
 
 private:
-  TankDrive drive{};
-
   std::shared_ptr<nt::NetworkTable> m_limelight;
 
   double clamp(double in, double minval, double maxval) {

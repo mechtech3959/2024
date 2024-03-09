@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Constants.h"
-#include "ctre/phoenix/motorcontrol/can/WPI_TalonFX.h"
 
 #include <ctre/Phoenix.h>
 
@@ -14,6 +13,6 @@ public:
 private:
   void Init();
 
-  WPI_TalonSRX shooterMotorOne{constants::shooter::motorOneID};
-  WPI_TalonSRX shooterMotorTwo{constants::shooter::motorTwoID};
+  WPI_TalonFX shooterMotorOne{constants::shooter::motorOneID};
+  WPI_TalonFX shooterMotorTwo{constants::shooter::motorTwoID};
 };
