@@ -350,15 +350,13 @@ void Robot::TeleopPeriodic() {
     shooter.SetSpeed(constants::shooter::ampShootSpeed);
   }
 
-  if (ShootSpeakerY) {
+  if (ShootSpeakerY)
     shooter.SetSpeed(constants::shooter::speakerShootSpeed);
-  }
-  if (ShootAmpX == false && ShootSpeakerY == false && shooterSpeed >= 0.1) {
-    shooter.Stop();
-  }
+
+  if (!ShootAmpX && !ShootSpeakerY)
+    shooter.SetSpeed(shooterSpeed);
 
   intake.SetSpeed(intakeSpeed);
-  shooter.SetSpeed(shooterSpeed);
 
   // Set the climber motor speed
   // Commented out until we have a climber
