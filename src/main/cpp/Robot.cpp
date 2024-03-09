@@ -223,10 +223,10 @@ void Robot::driveoutAuto() { // ZAC
              frc::DriverStation::Alliance::kRed) {
     if (autoTimer.Get() < 3.0_s) {
       ShootSpeaker();
-    } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
-      diffDrive.ArcadeDrive(-0.7, 0.00);
+    } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 6.0_s) {
+      diffDrive.ArcadeDrive(-0.5, 0.00);
       intake.SetSpeed(1);
-    } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 15.0_s) {
+    } else if (autoTimer.Get() > 6.0_s && autoTimer.Get() < 15.0_s) {
       diffDrive.ArcadeDrive(0.00, 0.00);
       intake.Stop();
     }
