@@ -39,7 +39,7 @@ private:
                                    rev::CANSparkMax::MotorType::kBrushed};
   rev::CANSparkMax rightRearMotor{constants::drive::rightRearMotorID,
                                   rev::CANSparkMax::MotorType::kBrushed};
-  frc::DifferentialDrive diffDrive{rightFrontMotor, leftFrontMotor};
+  frc::DifferentialDrive diffDrive{rightFrontMotor, leftRearMotor};
 
   // Auto selection
   enum AutoRoutine {

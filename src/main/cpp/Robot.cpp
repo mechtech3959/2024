@@ -246,14 +246,14 @@ void Robot::RobotInit() {
   rightFrontMotor.RestoreFactoryDefaults();
   rightRearMotor.RestoreFactoryDefaults();
 
-  leftRearMotor.Follow(leftFrontMotor);
+  leftFrontMotor.Follow(leftRearMotor);
   rightRearMotor.Follow(rightFrontMotor);
 
   // Set motors to go the correct direction
-  rightFrontMotor.SetInverted(true);
-  rightRearMotor.SetInverted(true);
-  leftFrontMotor.SetInverted(false);
-  leftRearMotor.SetInverted(false);
+  rightFrontMotor.SetInverted(false);
+  rightRearMotor.SetInverted(false);
+  leftFrontMotor.SetInverted(true);
+  leftRearMotor.SetInverted(true);
 
   // Default to a length of 60, start empty output
   // Length is expensive to set, so only set it once, then just update data
