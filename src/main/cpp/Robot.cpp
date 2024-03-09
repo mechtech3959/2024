@@ -402,6 +402,10 @@ void Robot::RobotPeriodic() {
   frc::SmartDashboard::PutNumber("Roll", Roll);
   frc::SmartDashboard::PutNumber("Yaw", Yaw);
  // if(Roll == ) do later
+ double ty = LimelightHelpers::getTY("limelight-greenie");
+ double tx = LimelightHelpers::getTX("limelight-greenie");
+  frc::SmartDashboard::PutNumber("Shooter TX", tx);
+  frc::SmartDashboard::PutNumber("Shooter TY", ty);
 }
 void Robot::TeleopInit() {}
 void Robot::DisabledPeriodic() {
