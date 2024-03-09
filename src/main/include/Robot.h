@@ -55,7 +55,7 @@ private:
   const std::string a_MiddleAuto = "2 Piece Middle";
   const std::string a_Middle3PcAuto = "3 Piece Middle";
   const std::string a_SideAuto = "2 Piece Side";
-  const std::string a_driveoutAuto = "1 Piece Middle";
+  const std::string a_driveoutAuto = "1 Piece Side";
 
   std::shared_ptr<nt::NetworkTable> table =
       nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");

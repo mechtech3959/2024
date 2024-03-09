@@ -11,8 +11,6 @@
 
 class LimeLight {
 public:
-  // void RunMiddleAuto();
-  void ampAuto();
 
   LimeLight(std::string name);
 
@@ -34,7 +32,7 @@ public:
   double m_LimelightTurnCmd;
   double m_LimelightDriveCmd;
 
-  units::inch_t distance();
+  units::inch_t Distance();
 
 private:
   std::shared_ptr<nt::NetworkTable> m_limelight;
