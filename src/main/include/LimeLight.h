@@ -26,8 +26,10 @@ public:
   units::inch_t GetReflectiveTargetRange(double targetHeight);
 
   void updateTracking();
+  void updateBackTracking();
 
   double aprilTagID;
+  double Note;
 
   bool m_LimelightHasTarget;
   double m_LimelightTurnCmd;
