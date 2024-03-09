@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Constants.h"
-#include "rev/CANSparkMax.h"
-
-#include <ctre/Phoenix.h>
+#include <rev/CANSparkMax.h>
 
 class Intake {
 public:

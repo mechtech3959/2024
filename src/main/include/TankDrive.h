@@ -1,23 +1,21 @@
 #pragma once
 
 #include "Constants.h"
-#include "ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h"
-
-#include <ctre/Phoenix.h>
 #include <frc/drive/DifferentialDrive.h>
+#include <rev/CANSparkMax.h>
 
 class TankDrive {
 public:
   TankDrive() { Init(); }
 
   frc::DifferentialDrive diffDrive{rightFrontMotor, leftFrontMotor};
- 
+
 private:
   void Init() {
-    leftFrontMotor.ConfigFactoryDefault();
-    leftRearMotor.ConfigFactoryDefault();
-    rightFrontMotor.ConfigFactoryDefault();
-    rightRearMotor.ConfigFactoryDefault();
+    leftFrontMotor.RestoreFactoryDefaults();
+    leftRearMotor.RestoreFactoryDefaults();
+    rightFrontMotor.RestoreFactoryDefaults();
+    rightRearMotor.RestoreFactoryDefaults();
 
     leftRearMotor.Follow(leftFrontMotor);
     rightRearMotor.Follow(rightFrontMotor);
@@ -27,14 +25,14 @@ private:
     rightRearMotor.SetInverted(true);
     leftFrontMotor.SetInverted(false);
     leftRearMotor.SetInverted(false);
-
-    // Set TalonSRX LEDs to be the correct colors
-    rightFrontMotor.SetSensorPhase(true);
-    leftFrontMotor.SetSensorPhase(true);
   }
 
-  WPI_TalonSRX leftFrontMotor{constants::drive::leftFrontMotorID};
-  WPI_TalonSRX leftRearMotor{constants::drive::leftRearMotorID};
-  WPI_TalonSRX rightFrontMotor{constants::drive::rightFrontMotorID};
-  WPI_TalonSRX rightRearMotor{constants::drive::rightRearMotorID};
+  rev::CANSparkMax leftFrontMotor{constants::drive::leftFrontMotorID,
+                                  rev::CANSparkMax::MotorType::kBrushed};
+  rev::CANSparkMax leftRearMotor{constants::drive::leftRearMotorID,
+                                 rev::CANSparkMax::MotorType::kBrushed};
+  rev::CANSparkMax rightFrontMotor{constants::drive::rightFrontMotorID,
+                                   rev::CANSparkMax::MotorType::kBrushed};
+  rev::CANSparkMax rightRearMotor{constants::drive::rightRearMotorID,
+                                  rev::CANSparkMax::MotorType::kBrushed};
 };

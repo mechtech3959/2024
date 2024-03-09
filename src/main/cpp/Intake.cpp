@@ -17,6 +17,7 @@ void Intake::Stop() {
   pickupMotor.Set(0);
   feedMotor.Set(0);
 }
+/*
 void Intake::Stuck() {
   // UNTESTED 3/6/24
   frc::Timer stuckTimer;
@@ -31,3 +32,4 @@ void Intake::Stuck() {
   stuckTimer.Stop();
   stuckTimer.Reset();
 }
+*/
