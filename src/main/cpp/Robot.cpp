@@ -244,7 +244,6 @@ void Robot::ShootAmp() {
 }
 
 void Robot::RobotInit() {
-
   leftFrontMotor.RestoreFactoryDefaults();
   leftRearMotor.RestoreFactoryDefaults();
   rightFrontMotor.RestoreFactoryDefaults();
