@@ -233,6 +233,17 @@ void Robot::driveoutAuto() { // ZAC
   }
 }
 
+void Robot::testAuto() {
+  limelight.updateTracking();
+  if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue) {
+    if (autoTimer.Get() < 3.0_s) {
+      diffDrive.ArcadeDrive(0.0 , limelight.m_LimelightTurnCmd);
+    }
+  } else if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kRed) {
+    //code
+  }
+}
+
 void Robot::ShootSpeaker() {
   shooter.SetSpeed(constants::shooter::speakerShootSpeed);
   intake.feedMotor.Set(constants::intake::feedMotorSpeed);
@@ -413,6 +424,7 @@ void Robot::RobotPeriodic() {
  // if(Roll == ) do later
  double ty = LimelightHelpers::getTY("limelight-greenie");
  double tx = LimelightHelpers::getTX("limelight-greenie");
+ double ta = LimelightHelpers::getTA("limelight-greenie");
   frc::SmartDashboard::PutNumber("Shooter TX", tx);
   frc::SmartDashboard::PutNumber("Shooter TY", ty);
 }
