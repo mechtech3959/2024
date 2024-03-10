@@ -234,10 +234,35 @@ void Robot::driveoutAuto() { // ZAC
 }
 
 void Robot::testAuto() {
+  double Yaw = Pigeon.GetYaw();
+  double ta = LimelightHelpers::getTA("limelight-greenie");
   limelight.updateTracking();
   if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue) {
     if (autoTimer.Get() < 3.0_s) {
-      diffDrive.ArcadeDrive(0.0 , limelight.m_LimelightTurnCmd);
+      diffDrive.ArcadeDrive(0.6 , limelight.m_LimelightTurnCmd);
+    } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
+      ShootAmp();
+      Yaw = 0;
+    } else if (autoTimer.Get() > 7.0_s && autoTimer.Get() < 9.0_s){
+      shooter.Stop();
+      if (ta < 5){
+        diffDrive.ArcadeDrive(-0.5,0);
+      } else if (Yaw > -90){
+        diffDrive.ArcadeDrive(0,-0.5);
+      }
+    } else if (autoTimer.Get() > 9.0_s && autoTimer.Get() < 10.0_s){
+      intake.SetSpeed(1);
+      diffDrive.ArcadeDrive(-0.5,0);
+    } else if (autoTimer.Get() > 10.0_s && autoTimer.Get() < 11.0_s){
+      diffDrive.ArcadeDrive(-0.5,0);
+    } else if (autoTimer.Get() > 11.0_s && autoTimer.Get() < 13.0_s){
+      if (Yaw < 0){
+        diffDrive.ArcadeDrive(0.0,0.5);
+      }
+    } else if (autoTimer.Get() > 13.0_s && autoTimer.Get() < 15.0_s){
+      diffDrive.ArcadeDrive(0.6,limelight.m_LimelightTurnCmd);
+    } else if (autoTimer.Get() > 15.0_s && autoTimer.Get() < 17.0_s){
+      ShootAmp();
     }
   } else if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kRed) {
     //code
@@ -422,9 +447,9 @@ void Robot::RobotPeriodic() {
   frc::SmartDashboard::PutNumber("Roll", Roll);
   frc::SmartDashboard::PutNumber("Yaw", Yaw);
  // if(Roll == ) do later
- double ty = LimelightHelpers::getTY("limelight-greenie");
- double tx = LimelightHelpers::getTX("limelight-greenie");
- double ta = LimelightHelpers::getTA("limelight-greenie");
+  double ty = LimelightHelpers::getTY("limelight-greenie");
+  double tx = LimelightHelpers::getTX("limelight-greenie");
+  double ta = LimelightHelpers::getTA("limelight-greenie");
   frc::SmartDashboard::PutNumber("Shooter TX", tx);
   frc::SmartDashboard::PutNumber("Shooter TY", ty);
 }
