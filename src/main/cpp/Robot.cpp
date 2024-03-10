@@ -305,6 +305,7 @@ void Robot::RobotInit() {
   m_autoChooser.AddOption(a_Middle3PcAuto, AutoRoutine::kMiddle3PcAuto);
   m_autoChooser.AddOption(a_SideAuto, AutoRoutine::kSideAuto);
   m_autoChooser.AddOption(a_driveoutAuto, AutoRoutine::kdriveoutAuto);
+  m_autoChooser.AddOption(a_TestAuto, AutoRoutine::kTestAuto);
 
   frc::SmartDashboard::PutData("Auto Modes", &m_autoChooser);
 }
@@ -339,6 +340,9 @@ void Robot::AutonomousPeriodic() {
     break;
   case AutoRoutine::kdriveoutAuto:
     driveoutAuto();
+    break;
+  case AutoRoutine::kTestAuto:
+    testAuto();
     break;
   }
 
