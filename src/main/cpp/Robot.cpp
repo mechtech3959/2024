@@ -233,6 +233,52 @@ void Robot::driveoutAuto() { // ZAC
   }
 }
 
+void Robot::testAuto() {
+  double Yaw = Pigeon.GetYaw();
+  double ta = LimelightHelpers::getTA("limelight-greenie");
+  limelight.updateTracking();
+  if (frc::DriverStation::GetAlliance() ==
+      frc::DriverStation::Alliance::kBlue) {
+    if (autoTimer.Get() < 2.0_s) {
+      diffDrive.ArcadeDrive(0.6, limelight.m_LimelightTurnCmd);
+    } else if (autoTimer.Get() > 2.0_s && autoTimer.Get() < 2.5_s) {
+      ShootAmp();
+      Pigeon.SetYaw(0);
+    } else if (autoTimer.Get() > 2.5_s && autoTimer.Get() < 3.5_s) {
+      shooter.Stop();
+      if ((ta < 1) or (ta = 0)) {
+        diffDrive.ArcadeDrive(-0.5, 0);
+      }
+    } else if (autoTimer.Get() > 3.5_s && autoTimer.Get() < 6.5_s) {
+      if (Yaw < 90) {
+        diffDrive.ArcadeDrive(0, -0.8);
+        diffDrive.ArcadeDrive(0, -0.1);
+        diffDrive.ArcadeDrive(0, -0.8);
+      }
+    } else if (autoTimer.Get() > 6.0_s && autoTimer.Get() < 7.5_s) {
+      intake.SetSpeed(1);
+      diffDrive.ArcadeDrive(-0.6, 0);
+    } else if (autoTimer.Get() > 7.5_s && autoTimer.Get() < 9.0_s) {
+      diffDrive.ArcadeDrive(0.5, -0.1);
+    } else if (autoTimer.Get() > 9_s && autoTimer.Get() < 12_s) {
+      if (Yaw > 0) {
+        diffDrive.ArcadeDrive(0, 0.8);
+        diffDrive.ArcadeDrive(0, 0);
+        diffDrive.ArcadeDrive(0, 0.7);
+      }
+    } else if (autoTimer.Get() > 12_s && autoTimer.Get() < 13_s) {
+      diffDrive.ArcadeDrive(0.6, limelight.m_LimelightTurnCmd);
+    } else if (autoTimer.Get() > 13_s && autoTimer.Get() < 14.5_s) {
+      ShootAmp();
+    } else if (autoTimer.Get() > 14.5_s && autoTimer.Get() < 15.0_s) {
+      shooter.Stop();
+    }
+  } else if (frc::DriverStation::GetAlliance() ==
+             frc::DriverStation::Alliance::kRed) {
+    // code
+  }
+}
+
 void Robot::ShootSpeaker() {
   shooter.SetSpeed(constants::shooter::speakerShootSpeed);
   intake.feedMotor.Set(constants::intake::feedMotorSpeed);
@@ -258,6 +304,8 @@ void Robot::RobotInit() {
   leftFrontMotor.SetInverted(true);
   leftRearMotor.SetInverted(true);
 
+  Pigeon.SetYaw(0);
+
   // Default to a length of 60, start empty output
   // Length is expensive to set, so only set it once, then just update data
   m_led.SetLength(kLength);
@@ -269,6 +317,7 @@ void Robot::RobotInit() {
   m_autoChooser.AddOption(a_Middle3PcAuto, AutoRoutine::kMiddle3PcAuto);
   m_autoChooser.AddOption(a_SideAuto, AutoRoutine::kSideAuto);
   m_autoChooser.AddOption(a_driveoutAuto, AutoRoutine::kdriveoutAuto);
+  m_autoChooser.AddOption(a_TestAuto, AutoRoutine::kTestAuto);
 
   frc::SmartDashboard::PutData("Auto Modes", &m_autoChooser);
 }
@@ -304,6 +353,9 @@ void Robot::AutonomousPeriodic() {
   case AutoRoutine::kdriveoutAuto:
     driveoutAuto();
     break;
+  case AutoRoutine::kTestAuto:
+    testAuto();
+    break;
   }
 
   frc::SmartDashboard::PutNumber("Auto Timer", autoTimer.Get().value());
@@ -311,21 +363,35 @@ void Robot::AutonomousPeriodic() {
 
 void Robot::TeleopPeriodic() {
   int i = -1;
-  if (i == -1) {
-    if (frc::DriverStation::GetAlliance() ==
-        frc::DriverStation::Alliance::kBlue) {
-      Blue();
-    } else {
-      Red();
-    }
+  double Roll = Pigeon.GetRoll();
+  bool gay;
+  if ((Roll < -2.3) or (Roll > 1)) {
+    gay = true;
+  } else {
+    gay = false;
+  }
+  if (gay == true) {
+    Rainbow();
 
     m_led.SetData(m_ledBuffer);
-  }
-  Green();
-  i = 0;
+    m_led.Start();
+  } else if (gay == false) {
+    if (i == -1) {
+      if (frc::DriverStation::GetAlliance() ==
+          frc::DriverStation::Alliance::kBlue) {
+        Blue();
+      } else {
+        Red();
+      }
 
-  m_led.SetData(m_ledBuffer);
-  m_led.Start();
+      m_led.SetData(m_ledBuffer);
+    }
+    Green();
+    i = 0;
+
+    m_led.SetData(m_ledBuffer);
+    m_led.Start();
+  }
 
   // Get inputs/controller mapping
   double forw = -_controller.GetLeftY();
@@ -374,13 +440,14 @@ void Robot::TeleopPeriodic() {
 void Robot::DisabledInit() {
   autoTimer.Stop();
   autoTimer.Reset();
+
   m_led.SetLength(kLength);
 
   m_led.SetData(m_ledBuffer);
 }
 
 void Robot::RobotPeriodic() {
-  if (frc::DriverStation::Alliance::kBlue and
+  /*if (frc::DriverStation::Alliance::kBlue and
           m_autoSelected == AutoRoutine::kMiddleAuto or
       AutoRoutine::kMiddle3PcAuto) {
     Pigeon.AddYaw(180);
@@ -403,30 +470,45 @@ void Robot::RobotPeriodic() {
   } else if (frc::DriverStation::Alliance::kRed and
              m_autoSelected == AutoRoutine::kAmpAuto) {
     Pigeon.AddYaw(-90); // maybe be right, double check
-  };
+  }; */
   double Pitch = Pigeon.GetPitch();
   double Roll = Pigeon.GetRoll();
   double Yaw = Pigeon.GetYaw();
   frc::SmartDashboard::PutNumber("Pitch", Pitch);
   frc::SmartDashboard::PutNumber("Roll", Roll);
   frc::SmartDashboard::PutNumber("Yaw", Yaw);
- // if(Roll == ) do later
- double ty = LimelightHelpers::getTY("limelight-greenie");
- double tx = LimelightHelpers::getTX("limelight-greenie");
+  // if(Roll == ) do later
+  double ty = LimelightHelpers::getTY("limelight-greenie");
+  double tx = LimelightHelpers::getTX("limelight-greenie");
+  double ta = LimelightHelpers::getTA("limelight-greenie");
   frc::SmartDashboard::PutNumber("Shooter TX", tx);
   frc::SmartDashboard::PutNumber("Shooter TY", ty);
+  frc::SmartDashboard::PutNumber("Shooter TA", ta);
 }
 void Robot::TeleopInit() {}
 void Robot::DisabledPeriodic() {
-  int i = -1;
-  if (i == -1) {
-    Green();
-    m_led.SetData(m_ledBuffer);
+  double Roll = Pigeon.GetRoll();
+  bool gay;
+  if ((Roll < -2.3) or (Roll > 1)) {
+    gay = true;
+  } else {
+    gay = false;
   }
-  Red();
-  i = 0;
-  m_led.SetData(m_ledBuffer);
-  m_led.Start();
+  int i = -1;
+  if (gay == true) {
+    Rainbow();
+    m_led.SetData(m_ledBuffer);
+    m_led.Start();
+  } else if (gay == false) {
+    if (i == -1) {
+      Green();
+      m_led.SetData(m_ledBuffer);
+    }
+    Red();
+    i = 0;
+    m_led.SetData(m_ledBuffer);
+    m_led.Start();
+  }
 }
 void Robot::SimulationInit() {}
 void Robot::SimulationPeriodic() {}

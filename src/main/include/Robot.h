@@ -47,7 +47,8 @@ private:
     kMiddleAuto,
     kMiddle3PcAuto,
     kSideAuto,
-    kdriveoutAuto
+    kdriveoutAuto,
+    kTestAuto
   } m_autoSelected;
 
   frc::SendableChooser<AutoRoutine> m_autoChooser;
@@ -56,6 +57,7 @@ private:
   const std::string a_Middle3PcAuto = "3 Piece Middle";
   const std::string a_SideAuto = "2 Piece Side";
   const std::string a_driveoutAuto = "1 Piece Side";
+  const std::string a_TestAuto = "secret auto";
 
   std::shared_ptr<nt::NetworkTable> table =
       nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
@@ -80,6 +82,7 @@ public:
   void middle3PcAuto();
   void sideAuto();
   void driveoutAuto();
+  void testAuto();
   void Rainbow();
   void Green();
   void Red();
