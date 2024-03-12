@@ -11,7 +11,6 @@
 
 class LimeLight {
 public:
-
   LimeLight(std::string name);
 
   bool IsTargetVisible();

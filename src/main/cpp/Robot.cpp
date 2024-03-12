@@ -87,7 +87,6 @@ void Robot::ampAuto() { // zac did this :)
       ShootAmp();
     }
   } else {
-    // cout << "no" << endl;
     diffDrive.ArcadeDrive(0.0, 0.0);
   }
 }
@@ -122,7 +121,6 @@ void Robot::middleAuto() { // callie did this :D
       ShootSpeaker();
     }
   } else {
-    // cout << "no" << endl;
     diffDrive.ArcadeDrive(0, 0);
   }
 }
@@ -167,7 +165,6 @@ void Robot::middle3PcAuto() { // callie did this :D
       ShootSpeaker();
     }
   } else {
-    // cout << "no" << endl;
     diffDrive.ArcadeDrive(0, 0);
   }
 }
@@ -273,9 +270,6 @@ void Robot::testAuto() {
     } else if (autoTimer.Get() > 14.5_s && autoTimer.Get() < 15.0_s) {
       shooter.Stop();
     }
-  } else if (frc::DriverStation::GetAlliance() ==
-             frc::DriverStation::Alliance::kRed) {
-    // code
   }
 }
 
@@ -362,33 +356,20 @@ void Robot::AutonomousPeriodic() {
 }
 
 void Robot::TeleopPeriodic() {
-  int i = -1;
   double Roll = Pigeon.GetRoll();
-  bool gay;
   if ((Roll < -2.3) or (Roll > 1)) {
-    gay = true;
-  } else {
-    gay = false;
-  }
-  if (gay == true) {
     Rainbow();
-
     m_led.SetData(m_ledBuffer);
     m_led.Start();
-  } else if (gay == false) {
-    if (i == -1) {
-      if (frc::DriverStation::GetAlliance() ==
-          frc::DriverStation::Alliance::kBlue) {
-        Blue();
-      } else {
-        Red();
-      }
-
-      m_led.SetData(m_ledBuffer);
+  } else {
+    if (frc::DriverStation::GetAlliance() ==
+        frc::DriverStation::Alliance::kBlue) {
+      Blue();
+    } else {
+      Red();
     }
+    m_led.SetData(m_ledBuffer);
     Green();
-    i = 0;
-
     m_led.SetData(m_ledBuffer);
     m_led.Start();
   }
@@ -426,15 +407,6 @@ void Robot::TeleopPeriodic() {
     shooter.SetSpeed(shooterSpeed);
 
   intake.SetSpeed(intakeSpeed);
-
-  // Set the climber motor speed
-  // Commented out until we have a climber
-  /*
-  if (climbUp)
-    _climber.Set(1);
-  if (climbDown)
-    _climber.Set(1);
-  */
 }
 
 void Robot::DisabledInit() {
@@ -471,41 +443,29 @@ void Robot::RobotPeriodic() {
              m_autoSelected == AutoRoutine::kAmpAuto) {
     Pigeon.AddYaw(-90); // maybe be right, double check
   }; */
-  double Pitch = Pigeon.GetPitch();
-  double Roll = Pigeon.GetRoll();
-  double Yaw = Pigeon.GetYaw();
-  frc::SmartDashboard::PutNumber("Pitch", Pitch);
-  frc::SmartDashboard::PutNumber("Roll", Roll);
-  frc::SmartDashboard::PutNumber("Yaw", Yaw);
-  // if(Roll == ) do later
-  double ty = LimelightHelpers::getTY("limelight-greenie");
-  double tx = LimelightHelpers::getTX("limelight-greenie");
-  double ta = LimelightHelpers::getTA("limelight-greenie");
-  frc::SmartDashboard::PutNumber("Shooter TX", tx);
-  frc::SmartDashboard::PutNumber("Shooter TY", ty);
-  frc::SmartDashboard::PutNumber("Shooter TA", ta);
+
+  frc::SmartDashboard::PutNumber("Pitch", Pigeon.GetPitch());
+  frc::SmartDashboard::PutNumber("Roll", Pigeon.GetRoll());
+  frc::SmartDashboard::PutNumber("Yaw", Pigeon.GetYaw());
+
+  frc::SmartDashboard::PutNumber("Shooter TX",
+                                 LimelightHelpers::getTY("limelight-greenie"));
+  frc::SmartDashboard::PutNumber("Shooter TY",
+                                 LimelightHelpers::getTX("limelight-greenie"));
+  frc::SmartDashboard::PutNumber("Shooter TA",
+                                 LimelightHelpers::getTA("limelight-greenie"));
 }
 void Robot::TeleopInit() {}
 void Robot::DisabledPeriodic() {
   double Roll = Pigeon.GetRoll();
-  bool gay;
-  if ((Roll < -2.3) or (Roll > 1)) {
-    gay = true;
-  } else {
-    gay = false;
-  }
-  int i = -1;
-  if (gay == true) {
+  if ((Roll < -2.3) || (Roll > 1)) {
     Rainbow();
     m_led.SetData(m_ledBuffer);
     m_led.Start();
-  } else if (gay == false) {
-    if (i == -1) {
-      Green();
-      m_led.SetData(m_ledBuffer);
-    }
+  } else {
+    Green();
+    m_led.SetData(m_ledBuffer);
     Red();
-    i = 0;
     m_led.SetData(m_ledBuffer);
     m_led.Start();
   }
