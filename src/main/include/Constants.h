@@ -15,7 +15,7 @@ constexpr int motorOneID = 9;
 constexpr int motorTwoID = 10;
 
 constexpr double speakerShootSpeed = 1;
-constexpr double ampShootSpeed = 0.35;
+constexpr double ampShootSpeed = 0.29;
 } // namespace shooter
 
 namespace intake {
