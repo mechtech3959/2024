@@ -270,6 +270,42 @@ void Robot::testAuto() {
     } else if (autoTimer.Get() > 14.5_s && autoTimer.Get() < 15.0_s) {
       shooter.Stop();
     }
+  } else if (frc::DriverStation::GetAlliance() ==
+             frc::DriverStation::Alliance::kRed) {
+    if (autoTimer.Get() < 2.0_s) {
+      diffDrive.ArcadeDrive(0.6, limelight.m_LimelightTurnCmd);
+    } else if (autoTimer.Get() > 2.0_s && autoTimer.Get() < 2.5_s) {
+      ShootAmp();
+      Pigeon.SetYaw(0);
+    } else if (autoTimer.Get() > 2.5_s && autoTimer.Get() < 3.5_s) {
+      shooter.Stop();
+      if ((ta < 1) or (ta = 0)) {
+        diffDrive.ArcadeDrive(-0.5, 0);
+      }
+    } else if (autoTimer.Get() > 3.5_s && autoTimer.Get() < 6.5_s) {
+      if (Yaw < 90) {
+        diffDrive.ArcadeDrive(0, 0.8);
+        diffDrive.ArcadeDrive(0, 0.1);
+        diffDrive.ArcadeDrive(0, 0.8);
+      }
+    } else if (autoTimer.Get() > 6.0_s && autoTimer.Get() < 7.5_s) {
+      intake.SetSpeed(1);
+      diffDrive.ArcadeDrive(-0.6, 0);
+    } else if (autoTimer.Get() > 7.5_s && autoTimer.Get() < 9.0_s) {
+      diffDrive.ArcadeDrive(0.5, 0.1);
+    } else if (autoTimer.Get() > 9_s && autoTimer.Get() < 12_s) {
+      if (Yaw > 0) {
+        diffDrive.ArcadeDrive(0, -0.8);
+        diffDrive.ArcadeDrive(0, 0);
+        diffDrive.ArcadeDrive(0, -0.7);
+      }
+    } else if (autoTimer.Get() > 12_s && autoTimer.Get() < 13_s) {
+      diffDrive.ArcadeDrive(0.6, limelight.m_LimelightTurnCmd);
+    } else if (autoTimer.Get() > 13_s && autoTimer.Get() < 14.5_s) {
+      ShootAmp();
+    } else if (autoTimer.Get() > 14.5_s && autoTimer.Get() < 15.0_s) {
+      shooter.Stop();
+    }
   }
 }
 
