@@ -416,8 +416,8 @@ void Robot::TeleopPeriodic() {
   double intakeSpeed = _controller.GetLeftTriggerAxis();
   double shooterSpeed = _controller.GetRightTriggerAxis();
   bool reverse = _controller.GetAButton();
-  bool ShootAmpX = _controller.GetXButton();
-  bool ShootSpeakerY = _controller.GetYButton();
+  bool shootAmp = _controller.GetLeftBumper();
+  bool shootSpeaker = _controller.GetRightBumper();
 
   // Deadzone the joysticks
   if (fabs(forw) < 0.10)
@@ -432,17 +432,20 @@ void Robot::TeleopPeriodic() {
     intakeSpeed = -intakeSpeed;
     shooterSpeed = -shooterSpeed;
   }
-  if (ShootAmpX) {
+  if (shootAmp) {
     shooter.SetSpeed(constants::shooter::ampShootSpeed);
+    intake.feedMotor.Set(constants::intake::feedMotorSpeed);
   }
 
-  if (ShootSpeakerY)
+  if (shootSpeaker) {
     shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+    intake.feedMotor.Set(constants::intake::feedMotorSpeed);
+  }
 
-  if (!ShootAmpX && !ShootSpeakerY)
+  if (!shootAmp && !shootSpeaker) {
     shooter.SetSpeed(shooterSpeed);
-
-  intake.SetSpeed(intakeSpeed);
+    intake.SetSpeed(intakeSpeed);
+  }
 }
 
 void Robot::DisabledInit() {
