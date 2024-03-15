@@ -3,22 +3,19 @@
 #include "Constants.h"
 #include "Intake.h"
 #include "LimeLight.h"
-#include "LimelightHelpers.h"
-#include "networktables/NetworkTable.h"
-#include "networktables/NetworkTableEntry.h"
-#include "networktables/NetworkTableInstance.h"
-#include "networktables/NetworkTableValue.h"
-
 #include "Shooter.h"
-// #include "TankDrive.h"
+
 #include <ctre/Phoenix.h>
+#include <frc/AddressableLED.h>
 #include <frc/DriverStation.h>
 #include <frc/TimedRobot.h>
 #include <frc/XboxController.h>
 #include <frc/drive/DifferentialDrive.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
-#include <iostream>
+#include <networktables/NetworkTable.h>
+#include <networktables/NetworkTableEntry.h>
+#include <networktables/NetworkTableInstance.h>
 #include <rev/CANSparkMax.h>
 #include <units/pressure.h>
 #include <units/time.h>
