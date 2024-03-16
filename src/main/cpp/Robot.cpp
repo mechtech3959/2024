@@ -91,28 +91,28 @@ void Robot::middleAuto() { // callie did this :D
       frc::DriverStation::Alliance::kBlue) {
     if (autoTimer.Get() < 4.5_s) {
       ShootSpeaker();
-    } else if (autoTimer.Get() > 4.5_s && autoTimer.Get() < 7.5_s) {
+    } else if (autoTimer.Get() > 4.5_s && autoTimer.Get() < 7.0_s) {
       shooter.Stop();
       diffDrive.ArcadeDrive(-0.6, 0.0);
       intake.SetSpeed(1);
-    } else if (autoTimer.Get() > 7.5_s && autoTimer.Get() < 10.0_s) {
+    } else if (autoTimer.Get() > 7.0_s && autoTimer.Get() < 9.5_s) {
       diffDrive.ArcadeDrive(0.6, 0.0);
-    } else if (autoTimer.Get() > 10.0_s && autoTimer.Get() < 12.5_s) {
+    } else if (autoTimer.Get() > 9.5_s && autoTimer.Get() < 12.5_s) {
       ShootSpeaker();
     } else if (autoTimer.Get() > 12.5_s && autoTimer.Get() < 15.0_s) {
       shooter.Stop();
     }
   } else if (frc::DriverStation::GetAlliance() ==
              frc::DriverStation::Alliance::kRed) {
-    if (autoTimer.Get() < 4.0_s) {
+    if (autoTimer.Get() < 4.5_s) {
       ShootSpeaker();
-    } else if (autoTimer.Get() > 4.0_s && autoTimer.Get() < 7.0_s) {
+    } else if (autoTimer.Get() > 4.5_s && autoTimer.Get() < 7.0_s) {
       shooter.Stop();
       diffDrive.ArcadeDrive(-0.6, 0.0);
       intake.SetSpeed(1);
     } else if (autoTimer.Get() > 7.0_s && autoTimer.Get() < 9.5_s) {
       diffDrive.ArcadeDrive(0.6, 0.0);
-    } else if (autoTimer.Get() > 9.5_s && autoTimer.Get() < 12.0_s) {
+    } else if (autoTimer.Get() > 9.5_s && autoTimer.Get() < 12.5_s) {
       ShootSpeaker();
     } else if (autoTimer.Get() > 13.0_s && autoTimer.Get() < 15.0_s) {
       shooter.Stop();
@@ -223,6 +223,70 @@ void Robot::driveoutAuto() { // ZAC
     } else if (autoTimer.Get() > 6.0_s && autoTimer.Get() < 15.0_s) {
       diffDrive.ArcadeDrive(0.00, 0.00);
       intake.Stop();
+    }
+  }
+}
+
+void Robot::wallOnlySideAuto() { // drive out only
+  if (frc::DriverStation::GetAlliance() ==
+      frc::DriverStation::Alliance::kBlue) {
+    if (autoTimer.Get() < 5_s) {
+      diffDrive.ArcadeDrive(-0.7, -0.6);
+    }
+  } else if (frc::DriverStation::GetAlliance() ==
+             frc::DriverStation::Alliance::kRed) {
+    if (autoTimer.Get() < 5_s) {
+      diffDrive.ArcadeDrive(-0.7, 0.6);
+    }
+  }
+}
+
+void Robot::wallShootSideAuto() { // shoot and drive out only
+  if (frc::DriverStation::GetAlliance() ==
+      frc::DriverStation::Alliance::kBlue) {
+    if (autoTimer.Get() < 5_s) {
+      ShootSpeaker();
+    } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 8.0_s) {
+      diffDrive.ArcadeDrive(-0.7, -0.6);
+    }
+  } else if (frc::DriverStation::GetAlliance() ==
+             frc::DriverStation::Alliance::kRed) {
+    if (autoTimer.Get() < 5_s) {
+      ShootSpeaker();
+    } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 8.0_s) {
+      diffDrive.ArcadeDrive(-0.7, 0.6);
+    }
+  }
+}
+
+void Robot::wallOnlyAmpAuto() {
+  if (frc::DriverStation::GetAlliance() ==
+      frc::DriverStation::Alliance::kBlue) {
+    if (autoTimer.Get() < 5_s) {
+      diffDrive.ArcadeDrive(-0.7, 0.6);
+    }
+  } else if (frc::DriverStation::GetAlliance() ==
+             frc::DriverStation::Alliance::kRed) {
+    if (autoTimer.Get() < 5_s) {
+      diffDrive.ArcadeDrive(-0.7, -0.6);
+    }
+  }
+}
+
+void Robot::wallShootAmpAuto() {
+  if (frc::DriverStation::GetAlliance() ==
+      frc::DriverStation::Alliance::kBlue) {
+    if (autoTimer.Get() < 5_s) {
+      ShootSpeaker();
+    } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 8.0_s) {
+      diffDrive.ArcadeDrive(-0.7, 0.6);
+    }
+  } else if (frc::DriverStation::GetAlliance() ==
+             frc::DriverStation::Alliance::kRed) {
+    if (autoTimer.Get() < 5_s) {
+      ShootSpeaker();
+    } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 8.0_s) {
+      diffDrive.ArcadeDrive(-0.7, -0.6);
     }
   }
 }
@@ -344,6 +408,10 @@ void Robot::RobotInit() {
   m_autoChooser.AddOption(a_Middle3PcAuto, AutoRoutine::kMiddle3PcAuto);
   m_autoChooser.AddOption(a_SideAuto, AutoRoutine::kSideAuto);
   m_autoChooser.AddOption(a_driveoutAuto, AutoRoutine::kdriveoutAuto);
+  m_autoChooser.AddOption(a_WallOnlySideAuto, AutoRoutine::kWallOnlySideAuto);
+  m_autoChooser.AddOption(a_WallShootSideAuto, AutoRoutine::kWallShootSideAuto);
+  m_autoChooser.AddOption(a_WallOnlyAmpAuto, AutoRoutine::kWallOnlyAmpAuto);
+  m_autoChooser.AddOption(a_WallShootAmpAuto, AutoRoutine::kWallShootAmpAuto);
   m_autoChooser.AddOption(a_TestAuto, AutoRoutine::kTestAuto);
 
   frc::SmartDashboard::PutData("Auto Modes", &m_autoChooser);
@@ -379,6 +447,18 @@ void Robot::AutonomousPeriodic() {
     break;
   case AutoRoutine::kdriveoutAuto:
     driveoutAuto();
+    break;
+  case AutoRoutine::kWallOnlySideAuto:
+    wallOnlySideAuto();
+    break;
+  case AutoRoutine::kWallShootSideAuto:
+    wallShootSideAuto();
+    break;
+  case AutoRoutine::kWallOnlyAmpAuto:
+    wallOnlyAmpAuto();
+    break;
+  case AutoRoutine::kWallShootAmpAuto:
+    wallShootAmpAuto();
     break;
   case AutoRoutine::kTestAuto:
     testAuto();

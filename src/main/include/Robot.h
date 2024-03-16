@@ -45,6 +45,10 @@ private:
     kMiddle3PcAuto,
     kSideAuto,
     kdriveoutAuto,
+    kWallOnlySideAuto,
+    kWallShootSideAuto,
+    kWallOnlyAmpAuto,
+    kWallShootAmpAuto,
     kTestAuto
   } m_autoSelected;
 
@@ -54,6 +58,10 @@ private:
   const std::string a_Middle3PcAuto = "3 Piece Middle";
   const std::string a_SideAuto = "2 Piece Side";
   const std::string a_driveoutAuto = "1 Piece Side";
+  const std::string a_WallOnlySideAuto = "Wall Only Side";
+  const std::string a_WallShootSideAuto = "Wall Shoot Side";
+  const std::string a_WallOnlyAmpAuto = "Wall Only Amp";
+  const std::string a_WallShootAmpAuto = "Wall Shoot Amp";
   const std::string a_TestAuto = "secret auto";
 
   std::shared_ptr<nt::NetworkTable> table =
@@ -79,6 +87,10 @@ public:
   void middle3PcAuto();
   void sideAuto();
   void driveoutAuto();
+  void wallOnlySideAuto();
+  void wallShootSideAuto();
+  void wallOnlyAmpAuto();
+  void wallShootAmpAuto();
   void testAuto();
   void Rainbow();
   void Green();
