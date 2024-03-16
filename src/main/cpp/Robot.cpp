@@ -89,31 +89,33 @@ void Robot::ampAuto() { // zac did this :)
 void Robot::middleAuto() { // callie did this :D
   if (frc::DriverStation::GetAlliance() ==
       frc::DriverStation::Alliance::kBlue) {
-    if (autoTimer.Get() < 3.0_s) {
+    if (autoTimer.Get() < 4.5_s) {
       ShootSpeaker();
-    } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
+    } else if (autoTimer.Get() > 4.5_s && autoTimer.Get() < 7.5_s) {
       shooter.Stop();
-      intake.Stop();
       diffDrive.ArcadeDrive(-0.6, 0.0);
       intake.SetSpeed(1);
-    } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 7.5_s) {
-      diffDrive.ArcadeDrive(0.6, 0.0);
     } else if (autoTimer.Get() > 7.5_s && autoTimer.Get() < 10.0_s) {
+      diffDrive.ArcadeDrive(0.6, 0.0);
+    } else if (autoTimer.Get() > 10.0_s && autoTimer.Get() < 12.5_s) {
       ShootSpeaker();
+    } else if (autoTimer.Get() > 12.5_s && autoTimer.Get() < 15.0_s) {
+      shooter.Stop();
     }
   } else if (frc::DriverStation::GetAlliance() ==
              frc::DriverStation::Alliance::kRed) {
-    if (autoTimer.Get() < 3.0_s) {
+    if (autoTimer.Get() < 4.0_s) {
       ShootSpeaker();
-    } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
+    } else if (autoTimer.Get() > 4.0_s && autoTimer.Get() < 7.0_s) {
       shooter.Stop();
-      intake.Stop();
       diffDrive.ArcadeDrive(-0.6, 0.0);
       intake.SetSpeed(1);
-    } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 7.5_s) {
+    } else if (autoTimer.Get() > 7.0_s && autoTimer.Get() < 9.5_s) {
       diffDrive.ArcadeDrive(0.6, 0.0);
-    } else if (autoTimer.Get() > 7.5_s && autoTimer.Get() < 10.0_s) {
+    } else if (autoTimer.Get() > 9.5_s && autoTimer.Get() < 12.0_s) {
       ShootSpeaker();
+    } else if (autoTimer.Get() > 13.0_s && autoTimer.Get() < 15.0_s) {
+      shooter.Stop();
     }
   } else {
     diffDrive.ArcadeDrive(0, 0);
@@ -204,13 +206,13 @@ void Robot::driveoutAuto() { // ZAC
       frc::DriverStation::Alliance::kBlue) {
     if (autoTimer.Get() < 3.0_s) {
       ShootSpeaker();
-    } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
-      diffDrive.ArcadeDrive(-0.7, 0.00);
-      intake.SetSpeed(1);
-    } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 15.0_s) {
-      diffDrive.ArcadeDrive(0.00, 0.00);
-      intake.Stop();
-    }
+    } /* else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 5.0_s) {
+       diffDrive.ArcadeDrive(-0.7, 0.00);
+       intake.SetSpeed(1);
+     } else if (autoTimer.Get() > 5.0_s && autoTimer.Get() < 15.0_s) {
+       diffDrive.ArcadeDrive(0.00, 0.00);
+       intake.Stop();
+     }*/
   } else if (frc::DriverStation::GetAlliance() ==
              frc::DriverStation::Alliance::kRed) {
     if (autoTimer.Get() < 3.0_s) {
