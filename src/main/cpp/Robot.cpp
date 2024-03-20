@@ -292,7 +292,7 @@ void Robot::wallShootAmpAuto() {
 }
 
 void Robot::testAuto() {
-  double Yaw = Pigeon.GetYaw();
+  double Yaw = Pigeon.GetYaw().GetValueAsDouble();
   double ta = LimelightHelpers::getTA("limelight-greenie");
   limelight.updateTracking();
   if (frc::DriverStation::GetAlliance() ==
@@ -301,7 +301,7 @@ void Robot::testAuto() {
       diffDrive.ArcadeDrive(0.6, limelight.m_LimelightTurnCmd);
     } else if (autoTimer.Get() > 2.0_s && autoTimer.Get() < 2.5_s) {
       ShootAmp();
-      Pigeon.SetYaw(0);
+      Pigeon.SetYaw(0_deg);
     } else if (autoTimer.Get() > 2.5_s && autoTimer.Get() < 3.5_s) {
       shooterMotorLeader.Set(0);
       if ((ta < 1) or (ta = 0)) {
@@ -337,7 +337,7 @@ void Robot::testAuto() {
       diffDrive.ArcadeDrive(0.6, limelight.m_LimelightTurnCmd);
     } else if (autoTimer.Get() > 2.0_s && autoTimer.Get() < 2.5_s) {
       ShootAmp();
-      Pigeon.SetYaw(0);
+      Pigeon.SetYaw(0_deg);
     } else if (autoTimer.Get() > 2.5_s && autoTimer.Get() < 3.5_s) {
       shooterMotorLeader.Set(0);
       if ((ta < 1) or (ta = 0)) {
@@ -398,7 +398,7 @@ void Robot::RobotInit() {
   leftFrontMotor.SetInverted(true);
   leftRearMotor.SetInverted(true);
 
-  Pigeon.SetYaw(0);
+  Pigeon.SetYaw(0_deg);
 
   shooterMotorLeader.GetConfigurator().Apply(
       ctre::phoenix6::configs::TalonFXConfiguration{});
@@ -480,7 +480,7 @@ void Robot::AutonomousPeriodic() {
 }
 
 void Robot::TeleopPeriodic() {
-  double Roll = Pigeon.GetRoll();
+  double Roll = Pigeon.GetRoll().GetValueAsDouble();
   if ((Roll < -2.3) or (Roll > 1)) {
     Rainbow();
     m_led.SetData(m_ledBuffer);
@@ -587,7 +587,7 @@ void Robot::RobotPeriodic() {
 
   // Get the total power of all channels.
 
-  // Power is the bus voltage multiplied by the current with the units Watts.
+  // Power is the bus voltage multiplied by the current with the auto Watts.
 
   double totalPower = pdh.GetTotalPower();
 
@@ -595,14 +595,14 @@ void Robot::RobotPeriodic() {
 
   // Get the total energy of all channels.
 
-  // Energy is the power summed over time with units Joules.
+  // Energy is the power summed over time with auto Joules.
 
   double totalEnergy = pdh.GetTotalEnergy();
 
   frc::SmartDashboard::PutNumber("Total Energy", totalEnergy);
-  frc::SmartDashboard::PutNumber("Pitch", Pigeon.GetPitch());
-  frc::SmartDashboard::PutNumber("Roll", Pigeon.GetRoll());
-  frc::SmartDashboard::PutNumber("Yaw", Pigeon.GetYaw());
+  frc::SmartDashboard::PutNumber("Pitch", Pigeon.GetPitch().GetValueAsDouble());
+  frc::SmartDashboard::PutNumber("Roll", Pigeon.GetRoll().GetValueAsDouble());
+  frc::SmartDashboard::PutNumber("Yaw", Pigeon.GetYaw().GetValueAsDouble());
 
   frc::SmartDashboard::PutNumber("Shooter TX",
                                  LimelightHelpers::getTY("limelight-greenie"));
@@ -613,7 +613,7 @@ void Robot::RobotPeriodic() {
 }
 void Robot::TeleopInit() {}
 void Robot::DisabledPeriodic() {
-  double Roll = Pigeon.GetRoll();
+  double Roll = Pigeon.GetRoll().GetValueAsDouble();
   if ((Roll < -2.3) || (Roll > 1)) {
     Rainbow();
     m_led.SetData(m_ledBuffer);

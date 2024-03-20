@@ -4,8 +4,9 @@
 #include "Intake.h"
 #include "LimeLight.h"
 
-#include <ctre/Phoenix.h>
+
 #include <ctre/phoenix6/TalonFX.hpp>
+#include <ctre/phoenix6/Pigeon2.hpp>
 #include <frc/AddressableLED.h>
 #include <frc/DriverStation.h>
 #include <frc/TimedRobot.h>
@@ -20,6 +21,7 @@
 #include <rev/CANSparkMax.h>
 #include <units/pressure.h>
 #include <units/time.h>
+#include <units/angle.h>
 
 class Robot : public frc::TimedRobot {
 private:
@@ -73,7 +75,7 @@ private:
       nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
 
 public:
-  Pigeon2 Pigeon{constants::drive::PigeonID};
+  ctre::phoenix6::hardware::Pigeon2 Pigeon{constants::drive::PigeonID, constants::canBus};
   void RobotInit() override;
   void RobotPeriodic() override;
   void AutonomousInit() override;
