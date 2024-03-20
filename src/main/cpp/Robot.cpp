@@ -92,7 +92,7 @@ void Robot::middleAuto() { // callie did this :D
     if (autoTimer.Get() < 4.5_s) {
       ShootSpeaker();
     } else if (autoTimer.Get() > 4.5_s && autoTimer.Get() < 7.0_s) {
-      shooter.Stop();
+      shooterMotorLeader.Set(0);
       diffDrive.ArcadeDrive(-0.6, 0.0);
       intake.SetSpeed(1);
     } else if (autoTimer.Get() > 7.0_s && autoTimer.Get() < 9.5_s) {
@@ -100,14 +100,14 @@ void Robot::middleAuto() { // callie did this :D
     } else if (autoTimer.Get() > 9.5_s && autoTimer.Get() < 12.5_s) {
       ShootSpeaker();
     } else if (autoTimer.Get() > 12.5_s && autoTimer.Get() < 15.0_s) {
-      shooter.Stop();
+      shooterMotorLeader.Set(0);
     }
   } else if (frc::DriverStation::GetAlliance() ==
              frc::DriverStation::Alliance::kRed) {
     if (autoTimer.Get() < 4.5_s) {
       ShootSpeaker();
     } else if (autoTimer.Get() > 4.5_s && autoTimer.Get() < 7.0_s) {
-      shooter.Stop();
+      shooterMotorLeader.Set(0);
       diffDrive.ArcadeDrive(-0.6, 0.0);
       intake.SetSpeed(1);
     } else if (autoTimer.Get() > 7.0_s && autoTimer.Get() < 9.5_s) {
@@ -115,7 +115,7 @@ void Robot::middleAuto() { // callie did this :D
     } else if (autoTimer.Get() > 9.5_s && autoTimer.Get() < 12.5_s) {
       ShootSpeaker();
     } else if (autoTimer.Get() > 13.0_s && autoTimer.Get() < 15.0_s) {
-      shooter.Stop();
+      shooterMotorLeader.Set(0);
     }
   } else {
     diffDrive.ArcadeDrive(0, 0);
@@ -303,7 +303,7 @@ void Robot::testAuto() {
       ShootAmp();
       Pigeon.SetYaw(0);
     } else if (autoTimer.Get() > 2.5_s && autoTimer.Get() < 3.5_s) {
-      shooter.Stop();
+      shooterMotorLeader.Set(0);
       if ((ta < 1) or (ta = 0)) {
         diffDrive.ArcadeDrive(-0.5, 0);
       }
@@ -329,7 +329,7 @@ void Robot::testAuto() {
     } else if (autoTimer.Get() > 13_s && autoTimer.Get() < 14.5_s) {
       ShootAmp();
     } else if (autoTimer.Get() > 14.5_s && autoTimer.Get() < 15.0_s) {
-      shooter.Stop();
+      shooterMotorLeader.Set(0);
     }
   } else if (frc::DriverStation::GetAlliance() ==
              frc::DriverStation::Alliance::kRed) {
@@ -339,7 +339,7 @@ void Robot::testAuto() {
       ShootAmp();
       Pigeon.SetYaw(0);
     } else if (autoTimer.Get() > 2.5_s && autoTimer.Get() < 3.5_s) {
-      shooter.Stop();
+      shooterMotorLeader.Set(0);
       if ((ta < 1) or (ta = 0)) {
         diffDrive.ArcadeDrive(-0.5, 0);
       }
@@ -365,18 +365,18 @@ void Robot::testAuto() {
     } else if (autoTimer.Get() > 13_s && autoTimer.Get() < 14.5_s) {
       ShootAmp();
     } else if (autoTimer.Get() > 14.5_s && autoTimer.Get() < 15.0_s) {
-      shooter.Stop();
+      shooterMotorLeader.Set(0);
     }
   }
 }
 
 void Robot::ShootSpeaker() {
-  shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+  shooterMotorLeader.Set(constants::shooter::speakerShootSpeed);
   intake.feedMotor.Set(constants::intake::feedMotorSpeed);
 }
 
 void Robot::ShootAmp() {
-  shooter.SetSpeed(constants::shooter::ampShootSpeed);
+  shooterMotorLeader.Set(constants::shooter::ampShootSpeed);
   intake.feedMotor.Set(constants::intake::feedMotorSpeed);
 }
 
@@ -385,7 +385,10 @@ void Robot::RobotInit() {
   leftRearMotor.RestoreFactoryDefaults();
   rightFrontMotor.RestoreFactoryDefaults();
   rightRearMotor.RestoreFactoryDefaults();
-
+  leftFrontMotor.SetSmartCurrentLimit(30);
+  leftRearMotor.SetSmartCurrentLimit(30);
+  rightFrontMotor.SetSmartCurrentLimit(30);
+  rightRearMotor.SetSmartCurrentLimit(30);
   leftFrontMotor.Follow(leftRearMotor);
   rightRearMotor.Follow(rightFrontMotor);
 
@@ -396,6 +399,14 @@ void Robot::RobotInit() {
   leftRearMotor.SetInverted(true);
 
   Pigeon.SetYaw(0);
+
+  shooterMotorLeader.GetConfigurator().Apply(
+      ctre::phoenix6::configs::TalonFXConfiguration{});
+  shooterMotorFollower.GetConfigurator().Apply(
+      ctre::phoenix6::configs::TalonFXConfiguration{});
+  shooterMotorLeader.SetInverted(true);
+  shooterMotorFollower.SetControl(ctre::phoenix6::controls::Follower{
+      shooterMotorLeader.GetDeviceID(), true});
 
   // Default to a length of 60, start empty output
   // Length is expensive to set, so only set it once, then just update data
@@ -510,17 +521,17 @@ void Robot::TeleopPeriodic() {
     shooterSpeed = -shooterSpeed;
   }
   if (shootAmp) {
-    shooter.SetSpeed(constants::shooter::ampShootSpeed);
+    shooterMotorLeader.Set(constants::shooter::ampShootSpeed);
     intake.feedMotor.Set(constants::intake::feedMotorSpeed);
   }
 
   if (shootSpeaker) {
-    shooter.SetSpeed(constants::shooter::speakerShootSpeed);
+    shooterMotorLeader.Set(constants::shooter::speakerShootSpeed);
     intake.feedMotor.Set(constants::intake::feedMotorSpeed);
   }
 
   if (!shootAmp && !shootSpeaker) {
-    shooter.SetSpeed(shooterSpeed);
+    shooterMotorLeader.Set(shooterSpeed);
     intake.SetSpeed(intakeSpeed);
   }
 }
@@ -559,7 +570,36 @@ void Robot::RobotPeriodic() {
              m_autoSelected == AutoRoutine::kAmpAuto) {
     Pigeon.AddYaw(-90); // maybe be right, double check
   }; */
+ 
+  // The PDP returns the voltage in increments of 0.05 Volts.
+  double voltage = pdh.GetVoltage();
+  frc::SmartDashboard::PutNumber("Voltage", voltage);
+  // Retrieves the temperature of the PDP, in degrees Celsius.
 
+  double temperatureCelsius = pdh.GetTemperature();
+
+  frc::SmartDashboard::PutNumber("Temperature", temperatureCelsius);
+  // Get the total current of all channels.
+
+  double totalCurrent = pdh.GetTotalCurrent();
+
+  frc::SmartDashboard::PutNumber("Total Current", totalCurrent);
+
+  // Get the total power of all channels.
+
+  // Power is the bus voltage multiplied by the current with the units Watts.
+
+  double totalPower = pdh.GetTotalPower();
+
+  frc::SmartDashboard::PutNumber("Total Power", totalPower);
+
+  // Get the total energy of all channels.
+
+  // Energy is the power summed over time with units Joules.
+
+  double totalEnergy = pdh.GetTotalEnergy();
+
+  frc::SmartDashboard::PutNumber("Total Energy", totalEnergy);
   frc::SmartDashboard::PutNumber("Pitch", Pigeon.GetPitch());
   frc::SmartDashboard::PutNumber("Roll", Pigeon.GetRoll());
   frc::SmartDashboard::PutNumber("Yaw", Pigeon.GetYaw());

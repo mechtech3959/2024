@@ -3,14 +3,15 @@
 #include "Constants.h"
 #include "Intake.h"
 #include "LimeLight.h"
-#include "Shooter.h"
 
 #include <ctre/Phoenix.h>
+#include <ctre/phoenix6/TalonFX.hpp>
 #include <frc/AddressableLED.h>
 #include <frc/DriverStation.h>
 #include <frc/TimedRobot.h>
 #include <frc/XboxController.h>
 #include <frc/drive/DifferentialDrive.h>
+#include <frc/PowerDistribution.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <networktables/NetworkTable.h>
@@ -25,7 +26,7 @@ private:
   // Initialize the controller
   frc::XboxController _controller{0};
   frc::Timer autoTimer;
-  Shooter shooter{};
+  frc::PowerDistribution pdh{};
   Intake intake{};
   LimeLight limelight{"limelight-greenie"};
   rev::CANSparkMax leftFrontMotor{constants::drive::leftFrontMotorID,
@@ -37,6 +38,10 @@ private:
   rev::CANSparkMax rightRearMotor{constants::drive::rightRearMotorID,
                                   rev::CANSparkMax::MotorType::kBrushed};
   frc::DifferentialDrive diffDrive{rightFrontMotor, leftRearMotor};
+  ctre::phoenix6::hardware::TalonFX shooterMotorLeader{
+      constants::shooter::motorOneID, constants::canBus};
+  ctre::phoenix6::hardware::TalonFX shooterMotorFollower{
+      constants::shooter::motorTwoID, constants::canBus};
 
   // Auto selection
   enum AutoRoutine {

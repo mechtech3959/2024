@@ -1,6 +1,7 @@
 #pragma once
 
 namespace constants {
+  constexpr char canBus[] = "rio";
 namespace drive {
 constexpr int leftFrontMotorID = 2;
 constexpr int leftRearMotorID = 3;
