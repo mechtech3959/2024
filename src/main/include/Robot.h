@@ -25,7 +25,7 @@
 
 class Robot : public frc::TimedRobot {
 private:
-  // Initialize the controller
+  // Initialize stuff
   frc::XboxController _controller{0};
   frc::Timer autoTimer;
   frc::PowerDistribution pdh{};
@@ -59,6 +59,7 @@ private:
     kTestAuto
   } m_autoSelected;
 
+  // Auto chooser
   frc::SendableChooser<AutoRoutine> m_autoChooser;
   const std::string a_AmpAuto = "2 Piece Amp";
   const std::string a_MiddleAuto = "2 Piece Middle";
@@ -71,11 +72,15 @@ private:
   const std::string a_WallShootAmpAuto = "Wall Shoot Amp";
   const std::string a_TestAuto = "secret auto";
 
+  // Intitialize Limelight NetworkTables connection
   std::shared_ptr<nt::NetworkTable> table =
       nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
 
 public:
+  // Initialize the Pigeon
   ctre::phoenix6::hardware::Pigeon2 Pigeon{constants::drive::PigeonID, constants::canBus};
+
+  // Override standard functions
   void RobotInit() override;
   void RobotPeriodic() override;
   void AutonomousInit() override;
@@ -88,7 +93,7 @@ public:
   void SimulationInit() override;
   void SimulationPeriodic() override;
 
-  // auto routines
+  // Auto routines
   void ampAuto();
   void middleAuto();
   void middle3PcAuto();
@@ -99,12 +104,15 @@ public:
   void wallOnlyAmpAuto();
   void wallShootAmpAuto();
   void testAuto();
+
+  // LED functions
   void Rainbow();
   void Green();
   void Red();
   void Yellow();
   void Blue();
 
+  // Shoot functions
   void ShootSpeaker();
   void ShootAmp();
 };

@@ -570,7 +570,7 @@ void Robot::RobotPeriodic() {
              m_autoSelected == AutoRoutine::kAmpAuto) {
     Pigeon.AddYaw(-90); // maybe be right, double check
   }; */
- 
+  limelight.SendData("limelight-greenie", LoggingLevel::Everything);
   // The PDP returns the voltage in increments of 0.05 Volts.
   double voltage = pdh.GetVoltage();
   frc::SmartDashboard::PutNumber("Voltage", voltage);
