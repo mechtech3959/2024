@@ -4,24 +4,28 @@
 #include "Intake.h"
 #include "LimeLight.h"
 
-
-#include <ctre/phoenix6/TalonFX.hpp>
 #include <ctre/phoenix6/Pigeon2.hpp>
+#include <ctre/phoenix6/TalonFX.hpp>
 #include <frc/AddressableLED.h>
 #include <frc/DriverStation.h>
+#include <frc/PowerDistribution.h>
 #include <frc/TimedRobot.h>
 #include <frc/XboxController.h>
 #include <frc/drive/DifferentialDrive.h>
-#include <frc/PowerDistribution.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc2/command/CommandScheduler.h>
 #include <networktables/NetworkTable.h>
 #include <networktables/NetworkTableEntry.h>
 #include <networktables/NetworkTableInstance.h>
+#include <optional>
 #include <rev/CANSparkMax.h>
+#include <units/angle.h>
 #include <units/pressure.h>
 #include <units/time.h>
-#include <units/angle.h>
+#include <frc/TimedRobot.h>
+#include <frc2/command/Command.h>
+#include "RobotContainer.h"
 
 class Robot : public frc::TimedRobot {
 private:
@@ -44,6 +48,9 @@ private:
       constants::shooter::motorOneID, constants::canBus};
   ctre::phoenix6::hardware::TalonFX shooterMotorFollower{
       constants::shooter::motorTwoID, constants::canBus};
+  std::optional<frc2::CommandPtr> m_autonomousCommand;
+
+  RobotContainer m_container;
 
   // Auto selection
   enum AutoRoutine {
