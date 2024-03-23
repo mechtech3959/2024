@@ -5,8 +5,8 @@ Intake::Intake() { Init(); }
 void Intake::Init() {
   pickupMotor.RestoreFactoryDefaults();
   feedMotor.RestoreFactoryDefaults();
-  pickupMotor.SetSmartCurrentLimit(15);
-  feedMotor.SetSmartCurrentLimit(15);
+  pickupMotor.SetSmartCurrentLimit(20);
+  feedMotor.SetSmartCurrentLimit(20);
   feedMotor.SetInverted(true);
 }
 
