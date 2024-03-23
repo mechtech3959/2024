@@ -1,14 +1,14 @@
 #pragma once
 
 namespace constants {
-  constexpr char canBus[] = "rio";
+// Set to 'CAN1' for CANivore, 'rio' for roboRIO
+constexpr char canBus[] = "rio";
 namespace drive {
 constexpr int leftFrontMotorID = 2;
 constexpr int leftRearMotorID = 3;
 constexpr int rightFrontMotorID = 4;
 constexpr int rightRearMotorID = 5;
 constexpr int PigeonID = 32;
-
 } // namespace drive
 
 namespace shooter {
