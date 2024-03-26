@@ -4,24 +4,31 @@
 #include "Intake.h"
 #include "LimeLight.h"
 
-
-#include <ctre/phoenix6/TalonFX.hpp>
 #include <ctre/phoenix6/Pigeon2.hpp>
+#include <ctre/phoenix6/TalonFX.hpp>
 #include <frc/AddressableLED.h>
 #include <frc/DriverStation.h>
+#include <frc/PowerDistribution.h>
 #include <frc/TimedRobot.h>
 #include <frc/XboxController.h>
 #include <frc/drive/DifferentialDrive.h>
-#include <frc/PowerDistribution.h>
+#include <frc/kinematics/DifferentialDriveKinematics.h>
+#include <frc/kinematics/DifferentialDriveOdometry.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <networktables/NetworkTable.h>
 #include <networktables/NetworkTableEntry.h>
 #include <networktables/NetworkTableInstance.h>
 #include <rev/CANSparkMax.h>
+#include <units/acceleration.h>
+#include <units/angle.h>
+#include <units/angular_velocity.h>
+#include <units/dimensionless.h>
+#include <units/length.h>
+#include <units/math.h>
 #include <units/pressure.h>
 #include <units/time.h>
-#include <units/angle.h>
+#include <units/velocity.h>
 
 class Robot : public frc::TimedRobot {
 private:
@@ -78,7 +85,8 @@ private:
 
 public:
   // Initialize the Pigeon
-  ctre::phoenix6::hardware::Pigeon2 Pigeon{constants::drive::PigeonID, constants::canBus};
+  ctre::phoenix6::hardware::Pigeon2 Pigeon{constants::drive::PigeonID,
+                                           constants::canBus};
 
   // Override standard functions
   void RobotInit() override;

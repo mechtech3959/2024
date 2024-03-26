@@ -48,6 +48,15 @@ void Robot::Rainbow() {
   firstPixelHue %= 180;
 }
 
+// Creating my odometry object. Here,
+// our starting pose is 5 meters along the long end of the field and in the
+// center of the field along the short end, facing forward.
+/*
+frc::DifferentialDriveOdometry m_odometry{
+    Pigeon.GetRotation2d(), units::meter_t{m_leftEncoder.GetDistance()},
+    units::meter_t{m_rightEncoder.GetDistance()},
+    frc::Pose2d{5_m, 13.5_m, 0_rad}};
+*/
 void Robot::ampAuto() { // zac did this :)
   limelight.updateTracking();
   if (frc::DriverStation::GetAlliance() ==
@@ -570,7 +579,7 @@ void Robot::RobotPeriodic() {
              m_autoSelected == AutoRoutine::kAmpAuto) {
     Pigeon.AddYaw(-90); // maybe be right, double check
   }; */
- 
+
   // The PDP returns the voltage in increments of 0.05 Volts.
   double voltage = pdh.GetVoltage();
   frc::SmartDashboard::PutNumber("Voltage", voltage);
