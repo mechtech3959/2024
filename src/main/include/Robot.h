@@ -87,6 +87,9 @@ public:
   // Initialize the Pigeon
   ctre::phoenix6::hardware::Pigeon2 Pigeon{constants::drive::PigeonID,
                                            constants::canBus};
+  // Initialize the Encoders
+  ctre::phoenix6::m_leftEncoder(constants::drive::m_leftEncoderID,
+                                constants::canBus);
 
   // Override standard functions
   void RobotInit() override;
