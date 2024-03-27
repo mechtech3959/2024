@@ -4,6 +4,7 @@
 #include "Intake.h"
 #include "LimeLight.h"
 
+#include <ctre/phoenix6/CANcoder.hpp>
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <frc/AddressableLED.h>
@@ -14,6 +15,7 @@
 #include <frc/drive/DifferentialDrive.h>
 #include <frc/kinematics/DifferentialDriveKinematics.h>
 #include <frc/kinematics/DifferentialDriveOdometry.h>
+#include <frc/smartdashboard/Field2d.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <networktables/NetworkTable.h>
@@ -51,7 +53,16 @@ private:
       constants::shooter::motorOneID, constants::canBus};
   ctre::phoenix6::hardware::TalonFX shooterMotorFollower{
       constants::shooter::motorTwoID, constants::canBus};
-
+  // Initialize the Pigeon
+  ctre::phoenix6::hardware::Pigeon2 Pigeon{constants::drive::PigeonID,
+                                           constants::canBus};
+  // Initialize the Encoders
+  ctre::phoenix6::hardware::CANcoder m_leftEncoder{
+      constants::drive::m_leftEncoderID, constants::canBus};
+  ctre::phoenix6::hardware::CANcoder m_rightEncoder{
+      constants::drive::m_rightEncoderID, constants::canBus};
+  // Initialize the field
+  frc::Field2d Field;
   // Auto selection
   enum AutoRoutine {
     kAmpAuto,
@@ -84,46 +95,41 @@ private:
       nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
 
 public:
-  // Initialize the Pigeon
-  ctre::phoenix6::hardware::Pigeon2 Pigeon{constants::drive::PigeonID,
-                                           constants::canBus};
-  // Initialize the Encoders
-  ctre::phoenix6::m_leftEncoder(constants::drive::m_leftEncoderID,
-                                constants::canBus);
+ 
+   
+    // Override standard functions
+    void RobotInit() override;
+    void RobotPeriodic() override;
+    void AutonomousInit() override;
+    void AutonomousPeriodic() override;
+    void TeleopInit() override;
+    void TeleopPeriodic() override;
+    void DisabledInit() override;
+    void DisabledPeriodic() override;
+    void TestPeriodic() override;
+    void SimulationInit() override;
+    void SimulationPeriodic() override;
 
-  // Override standard functions
-  void RobotInit() override;
-  void RobotPeriodic() override;
-  void AutonomousInit() override;
-  void AutonomousPeriodic() override;
-  void TeleopInit() override;
-  void TeleopPeriodic() override;
-  void DisabledInit() override;
-  void DisabledPeriodic() override;
-  void TestPeriodic() override;
-  void SimulationInit() override;
-  void SimulationPeriodic() override;
+    // Auto routines
+    void ampAuto();
+    void middleAuto();
+    void middle3PcAuto();
+    void sideAuto();
+    void driveoutAuto();
+    void wallOnlySideAuto();
+    void wallShootSideAuto();
+    void wallOnlyAmpAuto();
+    void wallShootAmpAuto();
+    void testAuto();
 
-  // Auto routines
-  void ampAuto();
-  void middleAuto();
-  void middle3PcAuto();
-  void sideAuto();
-  void driveoutAuto();
-  void wallOnlySideAuto();
-  void wallShootSideAuto();
-  void wallOnlyAmpAuto();
-  void wallShootAmpAuto();
-  void testAuto();
+    // LED functions
+    void Rainbow();
+    void Green();
+    void Red();
+    void Yellow();
+    void Blue();
 
-  // LED functions
-  void Rainbow();
-  void Green();
-  void Red();
-  void Yellow();
-  void Blue();
-
-  // Shoot functions
-  void ShootSpeaker();
-  void ShootAmp();
+    // Shoot functions
+    void ShootSpeaker();
+    void ShootAmp();
 };

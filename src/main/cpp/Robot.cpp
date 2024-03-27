@@ -2,10 +2,10 @@
 
 static constexpr int kLength = 300;
 
+
 frc::AddressableLED m_led{0};
 
-std::array<frc::AddressableLED::LEDData, kLength>
-    m_ledBuffer; // Reuse the buffer
+std::array<frc::AddressableLED::LEDData, kLength> m_ledBuffer; // Reuse the buffer
 
 // Store what the last hue of the first pixel is
 
@@ -48,15 +48,8 @@ void Robot::Rainbow() {
   firstPixelHue %= 180;
 }
 
-// Creating my odometry object. Here,
-// our starting pose is 5 meters along the long end of the field and in the
-// center of the field along the short end, facing forward.
-/*
-frc::DifferentialDriveOdometry m_odometry{
-    Pigeon.GetRotation2d(), units::meter_t{m_leftEncoder.GetDistance()},
-    units::meter_t{m_rightEncoder.GetDistance()},
-    frc::Pose2d{5_m, 13.5_m, 0_rad}};
-*/
+
+ 
 void Robot::ampAuto() { // zac did this :)
   limelight.updateTracking();
   if (frc::DriverStation::GetAlliance() ==
@@ -619,6 +612,9 @@ void Robot::RobotPeriodic() {
                                  LimelightHelpers::getTX("limelight-greenie"));
   frc::SmartDashboard::PutNumber("Shooter TA",
                                  LimelightHelpers::getTA("limelight-greenie"));
+  constants::drive::m_odometry().Update(Pigeon.GetAngle(),
+                                        m_leftEncoder.GetPositionSinceBoot(),
+                                        m_rightEncoder.GetPosition().GetValueAsDouble() );
 }
 void Robot::TeleopInit() {}
 void Robot::DisabledPeriodic() {
