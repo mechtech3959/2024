@@ -14,7 +14,6 @@ public:
   rev::CANSparkMax feedMotor{constants::intake::feedMotorID,
                              rev::CANSparkMax::MotorType::kBrushless};
 
-private:
   rev::CANSparkMax pickupMotor{constants::intake::pickupMotorID,
                                rev::CANSparkMax::MotorType::kBrushless};
 };

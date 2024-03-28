@@ -1,4 +1,6 @@
 #include "Robot.h"
+#include "Constants.h"
+#include "frc/smartdashboard/SmartDashboard.h"
 
 static constexpr int kLength = 300;
 
@@ -385,10 +387,10 @@ void Robot::RobotInit() {
   leftRearMotor.RestoreFactoryDefaults();
   rightFrontMotor.RestoreFactoryDefaults();
   rightRearMotor.RestoreFactoryDefaults();
-  leftFrontMotor.SetSmartCurrentLimit(30);
-  leftRearMotor.SetSmartCurrentLimit(30);
-  rightFrontMotor.SetSmartCurrentLimit(30);
-  rightRearMotor.SetSmartCurrentLimit(30);
+  leftFrontMotor.SetSmartCurrentLimit(constants::drive::defaultCurrentLimit);
+  leftRearMotor.SetSmartCurrentLimit(constants::drive::defaultCurrentLimit);
+  rightFrontMotor.SetSmartCurrentLimit(constants::drive::defaultCurrentLimit);
+  rightRearMotor.SetSmartCurrentLimit(constants::drive::defaultCurrentLimit);
   leftFrontMotor.Follow(leftRearMotor);
   rightRearMotor.Follow(rightFrontMotor);
 
@@ -426,6 +428,14 @@ void Robot::RobotInit() {
   m_autoChooser.AddOption(a_TestAuto, AutoRoutine::kTestAuto);
 
   frc::SmartDashboard::PutData("Auto Modes", &m_autoChooser);
+  frc::SmartDashboard::PutNumber("Drivetrain Current Limit",
+                                 constants::drive::defaultCurrentLimit);
+  frc::SmartDashboard::PutNumber(
+      "Intake Feed Current Limit",
+      constants::intake::defaultFeedMotorCurrentLimit);
+  frc::SmartDashboard::PutNumber(
+      "Intake Pickup Current Limit",
+      constants::intake::defaultPickupMotorCurrentLimit);
 }
 
 void Robot::AutonomousInit() { autoTimer.Start(); }
@@ -570,7 +580,31 @@ void Robot::RobotPeriodic() {
              m_autoSelected == AutoRoutine::kAmpAuto) {
     Pigeon.AddYaw(-90); // maybe be right, double check
   }; */
- 
+  double driveCurrentLimit = frc::SmartDashboard::GetNumber(
+      "Drivetrain Current Limit", constants::drive::defaultCurrentLimit);
+  double feedCurrentLimit = frc::SmartDashboard::GetNumber(
+      "Intake Feed Current Limit",
+      constants::intake::defaultFeedMotorCurrentLimit);
+  double pickupCurrentLimit = frc::SmartDashboard::GetNumber(
+      "Intake Pickup Current Limit",
+      constants::intake::defaultPickupMotorCurrentLimit);
+
+  if (driveCurrentLimit != oldDriveCurrentLimit) {
+    leftFrontMotor.SetSmartCurrentLimit(driveCurrentLimit);
+    leftRearMotor.SetSmartCurrentLimit(driveCurrentLimit);
+    rightFrontMotor.SetSmartCurrentLimit(driveCurrentLimit);
+    rightRearMotor.SetSmartCurrentLimit(driveCurrentLimit);
+  }
+
+  if (feedCurrentLimit != oldFeedCurrentLimit)
+    intake.feedMotor.SetSmartCurrentLimit(feedCurrentLimit);
+
+  if (pickupCurrentLimit != oldPickupCurrentLimit)
+    intake.pickupMotor.SetSmartCurrentLimit(pickupCurrentLimit);
+
+  oldDriveCurrentLimit = driveCurrentLimit;
+  oldFeedCurrentLimit = feedCurrentLimit;
+  oldPickupCurrentLimit = pickupCurrentLimit;
   // The PDP returns the voltage in increments of 0.05 Volts.
   double voltage = pdh.GetVoltage();
   frc::SmartDashboard::PutNumber("Voltage", voltage);

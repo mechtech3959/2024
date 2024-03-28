@@ -9,6 +9,7 @@ constexpr int leftRearMotorID = 3;
 constexpr int rightFrontMotorID = 4;
 constexpr int rightRearMotorID = 5;
 constexpr int PigeonID = 32;
+constexpr double defaultCurrentLimit = 30;
 } // namespace drive
 
 namespace shooter {
@@ -22,6 +23,8 @@ constexpr double ampShootSpeed = 0.29;
 namespace intake {
 constexpr int pickupMotorID = 7;
 constexpr int feedMotorID = 8;
+constexpr double defaultFeedMotorCurrentLimit = 20;
+constexpr double defaultPickupMotorCurrentLimit = 20;
 
 constexpr double pickupMotorSpeed = 1;
 constexpr double feedMotorSpeed = 1;

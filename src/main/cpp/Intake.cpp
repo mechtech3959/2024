@@ -1,12 +1,15 @@
 #include "Intake.h"
+#include "Constants.h"
 
 Intake::Intake() { Init(); }
 
 void Intake::Init() {
   pickupMotor.RestoreFactoryDefaults();
   feedMotor.RestoreFactoryDefaults();
-  pickupMotor.SetSmartCurrentLimit(20);
-  feedMotor.SetSmartCurrentLimit(20);
+  pickupMotor.SetSmartCurrentLimit(
+      constants::intake::defaultPickupMotorCurrentLimit);
+  feedMotor.SetSmartCurrentLimit(
+      constants::intake::defaultFeedMotorCurrentLimit);
   feedMotor.SetInverted(true);
 }
 
