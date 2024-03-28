@@ -612,9 +612,13 @@ void Robot::RobotPeriodic() {
                                  LimelightHelpers::getTX("limelight-greenie"));
   frc::SmartDashboard::PutNumber("Shooter TA",
                                  LimelightHelpers::getTA("limelight-greenie"));
-  constants::drive::m_odometry().Update(Pigeon.GetAngle(),
-                                        m_leftEncoder.GetPositionSinceBoot(),
-                                        m_rightEncoder.GetPosition().GetValueAsDouble() );
+  
+  frc::Rotation2d gyroAngle = Pigeon.GetRotation2d();
+
+  constants::drive::m_odometry.Update(
+      gyroAngle, 
+      units::inch_t{m_leftEncoder.GetPosition().GetValueAsDouble()},
+      units::inch_t{m_rightEncoder.GetPosition().GetValueAsDouble()});
 }
 void Robot::TeleopInit() {}
 void Robot::DisabledPeriodic() {
