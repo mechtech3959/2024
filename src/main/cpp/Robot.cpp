@@ -615,7 +615,7 @@ void Robot::RobotPeriodic() {
   
   frc::Rotation2d gyroAngle = Pigeon.GetRotation2d();
 
-  constants::drive::m_odometry.Update(
+  m_odometry.Update(
       gyroAngle, 
       units::inch_t{m_leftEncoder.GetPosition().GetValueAsDouble()},
       units::inch_t{m_rightEncoder.GetPosition().GetValueAsDouble()});

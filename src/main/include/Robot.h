@@ -13,9 +13,9 @@
 #include <frc/TimedRobot.h>
 #include <frc/XboxController.h>
 #include <frc/drive/DifferentialDrive.h>
+#include <frc/kinematics/ChassisSpeeds.h>
 #include <frc/kinematics/DifferentialDriveKinematics.h>
 #include <frc/kinematics/DifferentialDriveOdometry.h>
-#include <frc/kinematics/ChassisSpeeds.h>
 #include <frc/kinematics/DifferentialDriveWheelPositions.h>
 #include <frc/kinematics/DifferentialDriveWheelSpeeds.h>
 #include <frc/smartdashboard/Field2d.h>
@@ -96,6 +96,22 @@ private:
   // Intitialize Limelight NetworkTables connection
   std::shared_ptr<nt::NetworkTable> table =
       nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
+  frc::DifferentialDriveKinematics kinematics{constants::drive::kWidth};
+  frc::ChassisSpeeds chassisSpeeds{2_mps, 0_mps,
+                                   1_rad_per_s}; // SET WHAT THE THE DOCS SAID
+  frc::DifferentialDriveWheelSpeeds wheelSpeeds{
+      2_mps, 3_mps}; // SET WHAT THE THE DOCS SAID
+  auto [left, right] = kinematics.ToWheelSpeeds(
+      chassisSpeeds); // Converting Chassis speed to Wheel Speed
+  auto [linearVelocity, vy, angularVelocity] = kinematics.ToChassisSpeeds(
+      wheelSpeeds); // Converting Wheel Speeds to Chassis Speeds
+  // Creating my odometry object. Here,
+  // our starting pose is 0,0
+  frc::DifferentialDriveOdometry m_odometry{
+      Pigeon.GetRotation2d(),
+      units::inch_t(m_leftEncoder.GetPosition().GetValueAsDouble()),
+      units::inch_t(m_rightEncoder.GetPosition().GetValueAsDouble()),
+      frc::Pose2d{0_in, 0_in, 0_rad}};
 
 public:
  
