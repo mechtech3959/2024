@@ -1,5 +1,8 @@
 
 #pragma once
+#include <frc/kinematics/ChassisSpeeds.h>
+#include <frc/kinematics/DifferentialDriveWheelSpeeds.h>
+#include <frc/kinematics/DifferentialDriveOdometry.h>
 
 namespace constants {
 // Set to 'CAN1' for CANivore, 'rio' for roboRIO
