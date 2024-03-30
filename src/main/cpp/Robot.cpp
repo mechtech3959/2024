@@ -436,7 +436,7 @@ void Robot::RobotInit() {
 }
 
 void Robot::AutonomousInit() { autoTimer.Start(); }
-void Robot::AutonomousPeriodic() {
+void Robot::AutonomousPeriodic() {  
   m_autoSelected = m_autoChooser.GetSelected();
 
   if (frc::DriverStation::GetAlliance() ==
@@ -600,6 +600,13 @@ void Robot::RobotPeriodic() {
 
   frc::SmartDashboard::PutNumber("Total Power", totalPower);
 
+  double leftEncoderValue = m_leftEncoder.GetAbsolutePosition().GetValueAsDouble();
+
+  frc::SmartDashboard::PutNumber("Left Encoder Value", leftEncoderValue);
+
+  double rightEncoderValue = m_rightEncoder.GetAbsolutePosition().GetValueAsDouble();
+
+  frc::SmartDashboard::PutNumber("Right Encoder Value", rightEncoderValue);
   // Get the total energy of all channels.
 
   // Energy is the power summed over time with auto Joules.
