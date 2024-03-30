@@ -109,7 +109,7 @@ nativeUtils.platformConfigs.named("linuxathena").configure {
     it.cppCompiler.args.add('-Waggregate-return')
     it.cppCompiler.args.add('-Wcast-qual')
     it.cppCompiler.args.add('-Wunreachable-code')
-    // it.cppCompiler.args.add('-Wfloat-equal')
+    it.cppCompiler.args.add('-std=gnu++2b')
     // it.cppCompiler.args.add('-Wundef')
     // it.cppCompiler.args.add('-Wshadow')
     // it.cppCompiler.args.add('-Wswitch-default')

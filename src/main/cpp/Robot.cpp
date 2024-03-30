@@ -600,11 +600,11 @@ void Robot::RobotPeriodic() {
 
   frc::SmartDashboard::PutNumber("Total Power", totalPower);
 
-  double leftEncoderValue = m_leftEncoder.GetAbsolutePosition().GetValueAsDouble();
+  double leftEncoderValue = m_leftEncoder.GetPosition().GetValueAsDouble();
 
   frc::SmartDashboard::PutNumber("Left Encoder Value", leftEncoderValue);
 
-  double rightEncoderValue = m_rightEncoder.GetAbsolutePosition().GetValueAsDouble();
+  double rightEncoderValue = m_rightEncoder.GetPosition().GetValueAsDouble();
 
   frc::SmartDashboard::PutNumber("Right Encoder Value", rightEncoderValue);
   // Get the total energy of all channels.
@@ -626,12 +626,17 @@ void Robot::RobotPeriodic() {
                                  LimelightHelpers::getTA("limelight-greenie"));
   
   frc::Rotation2d gyroAngle = Pigeon.GetRotation2d();
-
-  m_odometry.Update(
+// Do some magic bullshit to convert number of rotations to meters
+  frc::Pose2d pose2d = m_odometry.Update(
       gyroAngle, 
-      units::inch_t{m_leftEncoder.GetPosition().GetValueAsDouble()},
-      units::inch_t{m_rightEncoder.GetPosition().GetValueAsDouble()});
+      double{m_leftEncoder.GetPosition().GetValueAsDouble()},
+      double{m_rightEncoder.GetPosition().GetValueAsDouble()});
+  auto posX = pose2d.X().value();
+  auto posY = pose2d.Y().value();
+  frc::SmartDashboard::PutNumber("Pos X", posX);
+  frc::SmartDashboard::PutNumber("Pos Y", posY);
 }
+//m_odometry.up
 void Robot::TeleopInit() {}
 void Robot::DisabledPeriodic() {
   double Roll = Pigeon.GetRoll().GetValueAsDouble();
