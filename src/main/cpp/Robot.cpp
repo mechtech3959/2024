@@ -47,7 +47,8 @@ void Robot::Rainbow() {
   // Check bounds
   firstPixelHue %= 180;
 }
-
+ 
+ 
 
  
 void Robot::ampAuto() { // zac did this :)
@@ -415,6 +416,10 @@ void Robot::RobotInit() {
   m_led.SetLength(kLength);
   m_led.SetData(m_ledBuffer);
   m_led.Start();
+  auto [Left, Right] = Kinematics.ToWheelSpeeds(
+      chassisSpeeds); // Converting Chassis speed to Wheel Speed
+  auto [linearVelocity, vy, angularVelocity] = Kinematics.ToChassisSpeeds(
+      wheelSpeeds); // Converting Wheel Speeds to Chassis Speeds
 
   m_autoChooser.SetDefaultOption(a_AmpAuto, AutoRoutine::kAmpAuto);
   m_autoChooser.AddOption(a_MiddleAuto, AutoRoutine::kMiddleAuto);

@@ -56,63 +56,59 @@ private:
       constants::shooter::motorOneID, constants::canBus};
   ctre::phoenix6::hardware::TalonFX shooterMotorFollower{
       constants::shooter::motorTwoID, constants::canBus};
-  // Initialize the Pigeon
-  ctre::phoenix6::hardware::Pigeon2 Pigeon{constants::drive::PigeonID,
-                                           constants::canBus};
-  // Initialize the Encoders
-  ctre::phoenix6::hardware::CANcoder m_leftEncoder{
-      constants::drive::m_leftEncoderID, constants::canBus};
-  ctre::phoenix6::hardware::CANcoder m_rightEncoder{
-      constants::drive::m_rightEncoderID, constants::canBus};
-  // Initialize the field
-  frc::Field2d Field;
-  // Auto selection
-  enum AutoRoutine {
-    kAmpAuto,
-    kMiddleAuto,
-    kMiddle3PcAuto,
-    kSideAuto,
-    kdriveoutAuto,
-    kWallOnlySideAuto,
-    kWallShootSideAuto,
-    kWallOnlyAmpAuto,
-    kWallShootAmpAuto,
-    kTestAuto
-  } m_autoSelected;
+   // Initialize the Pigeon
+ctre::phoenix6::hardware::Pigeon2 Pigeon{constants::drive::PigeonID,
+                                         constants::canBus};
+// Initialize the Encoders
+ctre::phoenix6::hardware::CANcoder m_leftEncoder{
+    constants::drive::m_leftEncoderID, constants::canBus};
+ctre::phoenix6::hardware::CANcoder m_rightEncoder{
+    constants::drive::m_rightEncoderID, constants::canBus};
+// Creating my kinematics object: track width of 27 inches
+frc::DifferentialDriveKinematics Kinematics{27_in};
+frc::ChassisSpeeds chassisSpeeds{2_mps, 0_mps,1_rad_per_s}; // SET WHAT THE THE DOCS SAID
+frc::DifferentialDriveWheelSpeeds wheelSpeeds{2_mps, 3_mps}; // SET WHAT THE THE DOCS SAID
+// Creating my odometry object. Here,
+// our starting pose is 0,0
+frc::DifferentialDriveOdometry m_odometry{
+    Pigeon.GetRotation2d(),
+    units::inch_t(m_leftEncoder.GetPosition().GetValueAsDouble()),
+    units::inch_t(m_rightEncoder.GetPosition().GetValueAsDouble()),
+    frc::Pose2d{0_in, 0_in, 0_rad}};
 
-  // Auto chooser
-  frc::SendableChooser<AutoRoutine> m_autoChooser;
-  const std::string a_AmpAuto = "2 Piece Amp";
-  const std::string a_MiddleAuto = "2 Piece Middle";
-  const std::string a_Middle3PcAuto = "3 Piece Middle";
-  const std::string a_SideAuto = "2 Piece Side";
-  const std::string a_driveoutAuto = "1 Piece Side";
-  const std::string a_WallOnlySideAuto = "Wall Only Side";
-  const std::string a_WallShootSideAuto = "Wall Shoot Side";
-  const std::string a_WallOnlyAmpAuto = "Wall Only Amp";
-  const std::string a_WallShootAmpAuto = "Wall Shoot Amp";
-  const std::string a_TestAuto = "secret auto";
+// Initialize the field
+frc::Field2d Field;
+// Auto selection
+enum AutoRoutine {
+  kAmpAuto,
+  kMiddleAuto,
+  kMiddle3PcAuto,
+  kSideAuto,
+  kdriveoutAuto,
+  kWallOnlySideAuto,
+  kWallShootSideAuto,
+  kWallOnlyAmpAuto,
+  kWallShootAmpAuto,
+  kTestAuto
+} m_autoSelected;
 
-  // Intitialize Limelight NetworkTables connection
-  std::shared_ptr<nt::NetworkTable> table =
-      nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
-  frc::DifferentialDriveKinematics kinematics{constants::drive::kWidth};
-  frc::ChassisSpeeds chassisSpeeds{2_mps, 0_mps,
-                                   1_rad_per_s}; // SET WHAT THE THE DOCS SAID
-  frc::DifferentialDriveWheelSpeeds wheelSpeeds{
-      2_mps, 3_mps}; // SET WHAT THE THE DOCS SAID
-  auto [left, right] = kinematics.ToWheelSpeeds(
-      chassisSpeeds); // Converting Chassis speed to Wheel Speed
-  auto [linearVelocity, vy, angularVelocity] = kinematics.ToChassisSpeeds(
-      wheelSpeeds); // Converting Wheel Speeds to Chassis Speeds
-  // Creating my odometry object. Here,
-  // our starting pose is 0,0
-  frc::DifferentialDriveOdometry m_odometry{
-      Pigeon.GetRotation2d(),
-      units::inch_t(m_leftEncoder.GetPosition().GetValueAsDouble()),
-      units::inch_t(m_rightEncoder.GetPosition().GetValueAsDouble()),
-      frc::Pose2d{0_in, 0_in, 0_rad}};
+// Auto chooser
+frc::SendableChooser<AutoRoutine> m_autoChooser;
+const std::string a_AmpAuto = "2 Piece Amp";
+const std::string a_MiddleAuto = "2 Piece Middle";
+const std::string a_Middle3PcAuto = "3 Piece Middle";
+const std::string a_SideAuto = "2 Piece Side";
+const std::string a_driveoutAuto = "1 Piece Side";
+const std::string a_WallOnlySideAuto = "Wall Only Side";
+const std::string a_WallShootSideAuto = "Wall Shoot Side";
+const std::string a_WallOnlyAmpAuto = "Wall Only Amp";
+const std::string a_WallShootAmpAuto = "Wall Shoot Amp";
+const std::string a_TestAuto = "secret auto";
 
+// Intitialize Limelight NetworkTables connection
+std::shared_ptr<nt::NetworkTable> table =
+    nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
+  
 public:
  
    
