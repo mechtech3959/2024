@@ -12,8 +12,8 @@ constexpr int rightRearMotorID = 5;
 constexpr int PigeonID = 32;
 constexpr int m_leftEncoderID = 30;  // set once attached
 constexpr int m_rightEncoderID = 31; // set once attached
-constexpr units::inch_t kWidth =
-    26.935_in; // remeasure needs to be wheel to wheel width
+constexpr units::inch_t kWidth =26.935_in; // remeasure needs to be wheel to wheel width
+constexpr double rotperIn = 0.0740288628; // rotation per inch
 } // namespace drive
 
 namespace shooter {

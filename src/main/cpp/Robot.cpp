@@ -629,8 +629,8 @@ void Robot::RobotPeriodic() {
 // Do some magic bullshit to convert number of rotations to meters
   frc::Pose2d pose2d = m_odometry.Update(
       gyroAngle, 
-      double{m_leftEncoder.GetPosition().GetValueAsDouble()},
-      double{m_rightEncoder.GetPosition().GetValueAsDouble()});
+      units::inch_t{m_leftEncoder.GetPosition().GetValueAsDouble()},
+      units::inch_t{m_rightEncoder.GetPosition().GetValueAsDouble()});
   auto posX = pose2d.X().value();
   auto posY = pose2d.Y().value();
   frc::SmartDashboard::PutNumber("Pos X", posX);

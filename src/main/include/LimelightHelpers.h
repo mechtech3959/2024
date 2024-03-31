@@ -27,6 +27,7 @@
 #include <iostream>
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <units/time.h>
 #include <vector>
 
 namespace LimelightHelpers {
@@ -176,8 +177,8 @@ inline double getFiducialID(const std::string &limelightName = "") {
   return getLimelightNTDouble(limelightName, "tid");
 }
 
-inline double getNeuralClassID(const std::string &limelightName = "") {
-  return getLimelightNTDouble(limelightName, "tclass");
+inline std::string getNeuralClassID(const std::string &limelightName = "") {
+  return getLimelightNTString(limelightName, "tclass");
 }
 
 /////
@@ -187,31 +188,35 @@ inline void setPipelineIndex(const std::string &limelightName, int index) {
   setLimelightNTDouble(limelightName, "pipeline", index);
 }
 
-inline void setLEDMode_PipelineControl(const std::string &limelightName) {
+inline void setPriorityTagID(const std::string &limelightName, int ID) {
+  setLimelightNTDouble(limelightName, "priorityid", ID);
+}
+
+inline void setLEDMode_PipelineControl(const std::string &limelightName = "") {
   setLimelightNTDouble(limelightName, "ledMode", 0);
 }
 
-inline void setLEDMode_ForceOff(const std::string &limelightName) {
+inline void setLEDMode_ForceOff(const std::string &limelightName = "") {
   setLimelightNTDouble(limelightName, "ledMode", 1);
 }
 
-inline void setLEDMode_ForceBlink(const std::string &limelightName) {
+inline void setLEDMode_ForceBlink(const std::string &limelightName = "") {
   setLimelightNTDouble(limelightName, "ledMode", 2);
 }
 
-inline void setLEDMode_ForceOn(const std::string &limelightName) {
+inline void setLEDMode_ForceOn(const std::string &limelightName = "") {
   setLimelightNTDouble(limelightName, "ledMode", 3);
 }
 
-inline void setStreamMode_Standard(const std::string &limelightName) {
+inline void setStreamMode_Standard(const std::string &limelightName = "") {
   setLimelightNTDouble(limelightName, "stream", 0);
 }
 
-inline void setStreamMode_PiPMain(const std::string &limelightName) {
+inline void setStreamMode_PiPMain(const std::string &limelightName = "") {
   setLimelightNTDouble(limelightName, "stream", 1);
 }
 
-inline void setStreamMode_PiPSecondary(const std::string &limelightName) {
+inline void setStreamMode_PiPSecondary(const std::string &limelightName = "") {
   setLimelightNTDouble(limelightName, "stream", 2);
 }
 
@@ -223,6 +228,24 @@ inline void setCropWindow(const std::string &limelightName, double cropXMin,
                           double cropXMax, double cropYMin, double cropYMax) {
   double cropWindow[4]{cropXMin, cropXMax, cropYMin, cropYMax};
   setLimelightNTDoubleArray(limelightName, "crop", cropWindow);
+}
+
+/**
+ * Sets the robot orientation for mt2.
+ */
+inline void SetRobotOrientation(const std::string &limelightName, double yaw,
+                                double yawRate, double pitch, double pitchRate,
+                                double roll, double rollRate) {
+  std::vector<double> entries = {yaw,       yawRate, pitch,
+                                 pitchRate, roll,    rollRate};
+  setLimelightNTDoubleArray(limelightName, "robot_orientation_set", entries);
+}
+
+inline void SetFiducialIDFiltersOverride(const std::string &limelightName,
+                                         const std::vector<int> &validIDs) {
+  std::vector<double> validIDsDouble(validIDs.begin(), validIDs.end());
+  setLimelightNTDoubleArray(limelightName, "fiducial_id_filters_set",
+                            validIDsDouble);
 }
 
 /////
@@ -258,6 +281,111 @@ getPythonScriptData(const std::string &limelightName = "") {
 
 /////
 /////
+
+inline double extractBotPoseEntry(const std::vector<double> &inData,
+                                  int position) {
+  if (inData.size() < static_cast<size_t>(position + 1)) {
+    return 0.0;
+  }
+  return inData[position];
+}
+
+class RawFiducial {
+public:
+  int id{0};
+  double txnc{0.0};
+  double tync{0.0};
+  double ta{0.0};
+  double distToCamera{0.0};
+  double distToRobot{0.0};
+  double ambiguity{0.0};
+
+  RawFiducial(int id, double txnc, double tync, double ta, double distToCamera,
+              double distToRobot, double ambiguity)
+      : id(id), txnc(txnc), tync(tync), ta(ta), distToCamera(distToCamera),
+        distToRobot(distToRobot), ambiguity(ambiguity) {}
+};
+
+class PoseEstimate {
+public:
+  frc::Pose2d pose;
+  units::time::second_t timestampSeconds{0.0};
+  double latency{0.0};
+  int tagCount{0};
+  double tagSpan{0.0};
+  double avgTagDist{0.0};
+  double avgTagArea{0.0};
+  std::vector<RawFiducial> rawFiducials;
+
+  PoseEstimate() = default;
+
+  PoseEstimate(const frc::Pose2d &pose, units::time::second_t timestampSeconds,
+               double latency, int tagCount, double tagSpan, double avgTagDist,
+               double avgTagArea, const std::vector<RawFiducial> &rawFiducials)
+      : pose(pose), timestampSeconds(timestampSeconds), latency(latency),
+        tagCount(tagCount), tagSpan(tagSpan), avgTagDist(avgTagDist),
+        avgTagArea(avgTagArea), rawFiducials(rawFiducials) {}
+};
+
+inline PoseEstimate getBotPoseEstimate(const std::string &limelightName,
+                                       const std::string &entryName) {
+  nt::NetworkTableEntry poseEntry =
+      getLimelightNTTableEntry(limelightName, entryName);
+  std::vector<double> poseArray = poseEntry.GetDoubleArray(std::span<double>{});
+  frc::Pose2d pose = toPose2D(poseArray);
+
+  double latency = extractBotPoseEntry(poseArray, 6);
+  int tagCount = static_cast<int>(extractBotPoseEntry(poseArray, 7));
+  double tagSpan = extractBotPoseEntry(poseArray, 8);
+  double tagDist = extractBotPoseEntry(poseArray, 9);
+  double tagArea = extractBotPoseEntry(poseArray, 10);
+
+  // getLastChange: microseconds; latency: milliseconds
+  units::time::second_t timestamp = units::time::second_t(
+      (poseEntry.GetLastChange() / 1000000.0) - (latency / 1000.0));
+
+  std::vector<RawFiducial> rawFiducials;
+  int valsPerFiducial = 7;
+  int expectedTotalVals = 11 + valsPerFiducial * tagCount;
+
+  if (poseArray.size() == expectedTotalVals) {
+    for (int i = 0; i < tagCount; i++) {
+      int baseIndex = 11 + (i * valsPerFiducial);
+      int id = static_cast<int>(extractBotPoseEntry(poseArray, baseIndex));
+      double txnc = extractBotPoseEntry(poseArray, baseIndex + 1);
+      double tync = extractBotPoseEntry(poseArray, baseIndex + 2);
+      double ta = extractBotPoseEntry(poseArray, baseIndex + 3);
+      double distToCamera = extractBotPoseEntry(poseArray, baseIndex + 4);
+      double distToRobot = extractBotPoseEntry(poseArray, baseIndex + 5);
+      double ambiguity = extractBotPoseEntry(poseArray, baseIndex + 6);
+      rawFiducials.emplace_back(id, txnc, tync, ta, distToCamera, distToRobot,
+                                ambiguity);
+    }
+  }
+
+  return PoseEstimate(pose, timestamp, latency, tagCount, tagSpan, tagDist,
+                      tagArea, rawFiducials);
+}
+
+inline PoseEstimate
+getBotPoseEstimate_wpiBlue(const std::string &limelightName = "") {
+  return getBotPoseEstimate(limelightName, "botpose_wpiblue");
+}
+
+inline PoseEstimate
+getBotPoseEstimate_wpiRed(const std::string &limelightName = "") {
+  return getBotPoseEstimate(limelightName, "botpose_wpired");
+}
+
+inline PoseEstimate
+getBotPoseEstimate_wpiBlue_MegaTag2(const std::string &limelightName = "") {
+  return getBotPoseEstimate(limelightName, "botpose_orb_wpiblue");
+}
+
+inline PoseEstimate
+getBotPoseEstimate_wpiRed_MegaTag2(const std::string &limelightName = "") {
+  return getBotPoseEstimate(limelightName, "botpose_orb_wpired");
+}
 
 inline const double INVALID_TARGET = 0.0;
 class SingleTargetingResultClass {
@@ -342,9 +470,9 @@ public:
   double m_latencyJSON{0};
   double m_pipelineIndex{-1.0};
   int valid{0};
-  std::vector<double> botPose;
-  std::vector<double> botPose_wpired;
-  std::vector<double> botPose_wpiblue;
+  std::vector<double> botPose{6, 0.0};
+  std::vector<double> botPose_wpired{6, 0.0};
+  std::vector<double> botPose_wpiblue{6, 0.0};
   void Clear() {
     RetroResults.clear();
     FiducialResults.clear();
