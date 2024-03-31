@@ -13,6 +13,7 @@
 #include <frc/TimedRobot.h>
 #include <frc/XboxController.h>
 #include <frc/drive/DifferentialDrive.h>
+#include <frc/estimator/PoseEstimator.h>
 #include <frc/kinematics/ChassisSpeeds.h>
 #include <frc/kinematics/DifferentialDriveKinematics.h>
 #include <frc/kinematics/DifferentialDriveOdometry.h>
@@ -67,9 +68,20 @@ ctre::phoenix6::hardware::CANcoder m_rightEncoder{
 // Creating my kinematics object: track width of 27 inches
 frc::DifferentialDriveKinematics Kinematics{27_in};
 frc::ChassisSpeeds chassisSpeeds{2_mps, 0_mps,1_rad_per_s}; // SET WHAT THE THE DOCS SAID
-frc::DifferentialDriveWheelSpeeds wheelSpeeds{2_mps, 3_mps}; // SET WHAT THE THE DOCS SAID
-// Creating my odometry object. Here,
-// our starting pose is 0,0
+double rightEncoderRotationsperinchDB = m_rightEncoder.GetVelocity().GetValueAsDouble() * constants::drive::rotperIn;
+double leftEncoderRotationsperinchDB = m_leftEncoder.GetVelocity().GetValueAsDouble() * constants::drive::rotperIn;
+units::inch_t leftEncoderRotationsperinch = units::inch_t{leftEncoderRotationsperinchDB};
+units::inch_t rightEncoderRotationsperinch = units::inch_t{rightEncoderRotationsperinchDB};
+
+frc::DifferentialDriveWheelSpeeds wheelSpeeds{
+    units::velocity::feet_per_second_t{leftEncoderRotationsperinch},
+    units::velocity::feet_per_second_t{rightEncoderRotationsperinch}  }; // SET WHAT THE THE DOCS SAID
+// DifferentialDriveWheelPositions
+frc::DifferentialDriveWheelPositions diffWPos{
+    units::inch_t(m_leftEncoder.GetPosition().GetValueAsDouble()),
+    units::inch_t(m_rightEncoder.GetPosition().GetValueAsDouble())};
+// Creating my odometry object.
+// Here, our starting pose is 0,0
 frc::DifferentialDriveOdometry m_odometry{
     Pigeon.GetRotation2d(),
     units::inch_t(m_leftEncoder.GetPosition().GetValueAsDouble()),

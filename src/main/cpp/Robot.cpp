@@ -626,17 +626,21 @@ void Robot::RobotPeriodic() {
                                  LimelightHelpers::getTA("limelight-greenie"));
   
   frc::Rotation2d gyroAngle = Pigeon.GetRotation2d();
-// Do some magic bullshit to convert number of rotations to meters
-  frc::Pose2d pose2d = m_odometry.Update(
-      gyroAngle, 
-      units::inch_t{m_leftEncoder.GetPosition().GetValueAsDouble()},
-      units::inch_t{m_rightEncoder.GetPosition().GetValueAsDouble()});
+// Do some magic bullshit to convert number of rotations to inchs
+   frc::Pose2d pose2d = m_odometry.Update(
+      gyroAngle,
+      // i multiplied the position of the enconders by the number of rotations
+      // per inch to properly convert?
+      units::inch_t{m_leftEncoder.GetPosition().GetValueAsDouble() *
+                    constants::drive::rotperIn},
+      units::inch_t{m_rightEncoder.GetPosition().GetValueAsDouble() * 
+                    constants::drive::rotperIn});
+  // this gets our calculated X and Y pose through our odometry update above then puts it on drivers station
   auto posX = pose2d.X().value();
   auto posY = pose2d.Y().value();
   frc::SmartDashboard::PutNumber("Pos X", posX);
   frc::SmartDashboard::PutNumber("Pos Y", posY);
 }
-//m_odometry.up
 void Robot::TeleopInit() {}
 void Robot::DisabledPeriodic() {
   double Roll = Pigeon.GetRoll().GetValueAsDouble();
