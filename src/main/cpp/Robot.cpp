@@ -506,6 +506,7 @@ void Robot::TeleopPeriodic() {
   bool reverse = _controller.GetAButton();
   bool shootAmp = _controller.GetLeftBumper();
   bool shootSpeaker = _controller.GetRightBumper();
+  int pov = _controller.GetPOV();
 
   // Deadzone the joysticks
   if (fabs(forw) < 0.10)
@@ -514,7 +515,39 @@ void Robot::TeleopPeriodic() {
     spin = 0;
   // Set the differential drive to the commanded speed
   diffDrive.ArcadeDrive(forw, spin, true);
+// class member variable
+ctre::phoenix6::controls::MotionMagicVoltage m_motmag{0_tr};
 
+// robot init
+ctre::phoenix6::configs::TalonFXConfiguration talonFXConfigs{};
+
+// set slot 0 gains
+auto& slot0Configs = talonFXConfigs.Slot0;
+slot0Configs.kS = 0.24; // add 0.24 V to overcome friction
+slot0Configs.kV = 0.12; // apply 12 V for a target velocity of 100 rps
+// PID runs on position
+slot0Configs.kP = 4.8;
+slot0Configs.kI = 0;
+slot0Configs.kD = 0.1;
+
+// set Motion Magic settings
+auto& motionMagicConfigs = talonFXConfigs.MotionMagic;
+motionMagicConfigs.MotionMagicCruiseVelocity = 80; // 80 rps cruise velocity
+motionMagicConfigs.MotionMagicAcceleration = 160; // 160 rps/s acceleration (0.5 seconds)
+motionMagicConfigs.MotionMagicJerk = 1600; // 1600 rps/s^2 jerk (0.1 seconds)
+
+climberMotor.GetConfigurator().Apply(talonFXConfigs, 50_ms);
+
+// periodic, run Motion Magic with slot 0 configs,
+// target position of 200 rotations
+m_motmag.Slot = 0;
+climberMotor.SetControl(m_motmag.WithPosition(200_tr));
+  if (pov == 0 || pov == 45 || pov == 315)
+    climberMotor.Set(constants::climber::speed);
+  else if (pov == 135 || pov == 180 || pov == 225)
+    climberMotor.Set(-constants::climber::speed);
+  else
+    climberMotor.Set(0);
   // Reverse everything if the button is pressed
   if (reverse) {
     intakeSpeed = -intakeSpeed;
