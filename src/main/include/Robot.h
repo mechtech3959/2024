@@ -123,81 +123,87 @@ frc::Trajectory traj =
 frc::RamseteController controller1;
 frc::ChassisSpeeds adjustedSpeeds{controller1.Calculate( pose2dUpdate, traj.Sample(3.4_s))};
 
-// Using the secondary constructor of RamseteController where
-// the user can choose any other gains.
-//frc::RamseteController controller2{2.1, 0.8};
-// Initialize the field
-frc::Field2d Field;
+// frc::DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.ToWheelSpeeds(adjustedSpeeds);
+ //auto [Tleft, Tright] = kinematics.ToWheelSpeeds(adjustedSpeeds);
 
-// Auto selection
-enum AutoRoutine {
-  kAmpAuto,
-  kMiddleAuto,
-  kMiddle3PcAuto,
-  kSideAuto,
-  kdriveoutAuto,
-  kWallOnlySideAuto,
-  kWallShootSideAuto,
-  kWallOnlyAmpAuto,
-  kWallShootAmpAuto,
-  kTestAuto
-} m_autoSelected;
+ // Using the secondary constructor of RamseteController where
+ // the user can choose any other gains.
+ // frc::RamseteController controller2{2.1, 0.8};
+ // Initialize the field
+ frc::Field2d Field;
 
-// Auto chooser
-frc::SendableChooser<AutoRoutine> m_autoChooser;
-const std::string a_AmpAuto = "2 Piece Amp";
-const std::string a_MiddleAuto = "2 Piece Middle";
-const std::string a_Middle3PcAuto = "3 Piece Middle";
-const std::string a_SideAuto = "2 Piece Side";
-const std::string a_driveoutAuto = "1 Piece Side";
-const std::string a_WallOnlySideAuto = "Wall Only Side";
-const std::string a_WallShootSideAuto = "Wall Shoot Side";
-const std::string a_WallOnlyAmpAuto = "Wall Only Amp";
-const std::string a_WallShootAmpAuto = "Wall Shoot Amp";
-const std::string a_TestAuto = "secret auto";
+ // Auto selection
+ enum AutoRoutine {
+   kAmpAuto,
+   kMiddleAuto,
+   kMiddle3PcAuto,
+   kSideAuto,
+   kdriveoutAuto,
+   kWallOnlySideAuto,
+   kWallShootSideAuto,
+   kWallOnlyAmpAuto,
+   kWallShootAmpAuto,
+   kTestAuto
+ } m_autoSelected;
 
-// Intitialize Limelight NetworkTables connection
-std::shared_ptr<nt::NetworkTable> table =
-    nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
+ // Auto chooser
+ frc::SendableChooser<AutoRoutine> m_autoChooser;
+ const std::string a_AmpAuto = "2 Piece Amp";
+ const std::string a_MiddleAuto = "2 Piece Middle";
+ const std::string a_Middle3PcAuto = "3 Piece Middle";
+ const std::string a_SideAuto = "2 Piece Side";
+ const std::string a_driveoutAuto = "1 Piece Side";
+ const std::string a_WallOnlySideAuto = "Wall Only Side";
+ const std::string a_WallShootSideAuto = "Wall Shoot Side";
+ const std::string a_WallOnlyAmpAuto = "Wall Only Amp";
+ const std::string a_WallShootAmpAuto = "Wall Shoot Amp";
+ const std::string a_TestAuto = "secret auto";
 
-public:
-// Override standard functions
-void RobotInit() override;
-void RobotPeriodic() override;
-void AutonomousInit() override;
-void AutonomousPeriodic() override;
-void TeleopInit() override;
-void TeleopPeriodic() override;
-void DisabledInit() override;
-void DisabledPeriodic() override;
-void TestPeriodic() override;
-void SimulationInit() override;
-void SimulationPeriodic() override;
+ // Intitialize Limelight NetworkTables connection
+ std::shared_ptr<nt::NetworkTable> table =
+     nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
 
-// Auto routines
-void ampAuto();
-void middleAuto();
-void middle3PcAuto();
-void sideAuto();
-void driveoutAuto();
-void wallOnlySideAuto();
-void wallShootSideAuto();
-void wallOnlyAmpAuto();
-void wallShootAmpAuto();
-void testAuto();
-void waypointtestauto();
+ public:
+ // Override standard functions
+ void RobotInit() override;
+ void RobotPeriodic() override;
+ void AutonomousInit() override;
+ void AutonomousPeriodic() override;
+ void TeleopInit() override;
+ void TeleopPeriodic() override;
+ void DisabledInit() override;
+ void DisabledPeriodic() override;
+ void TestPeriodic() override;
+ void SimulationInit() override;
+ void SimulationPeriodic() override;
 
-// LED functions
-void Rainbow();
-void Green();
-void Red();
-void Yellow();
-void Blue();
+ // Auto routines
+ void ampAuto();
+ void middleAuto();
+ void middle3PcAuto();
+ void sideAuto();
+ void driveoutAuto();
+ void wallOnlySideAuto();
+ void wallShootSideAuto();
+ void wallOnlyAmpAuto();
+ void wallShootAmpAuto();
+ void testAuto();
+ void waypointtestauto();
 
-// Shoot functions
-void ShootSpeaker();
-void ShootAmp();
+ // LED functions
+ void Rainbow();
+ void Green();
+ void Red();
+ void Yellow();
+ void Blue();
 
-// poseupdate
-void poseupdater();
+ // Shoot functions
+ void ShootSpeaker();
+ void ShootAmp();
+
+ // poseupdate
+ void poseupdater();
+ void Robot::Drive(units::meters_per_second_t xSpeed,
+                   units::meters_per_second_t ySpeed,
+                   units::radians_per_second_t rot, bool fieldRelative);
 };

@@ -3,7 +3,7 @@
  
 static constexpr int kLength = 300;
 
-
+ 
 frc::AddressableLED m_led{0};
 
 std::array<frc::AddressableLED::LEDData, kLength> m_ledBuffer; // Reuse the buffer
@@ -48,8 +48,16 @@ void Robot::Rainbow() {
   // Check bounds
   firstPixelHue %= 180;
 }
- 
- 
+
+frc::Rotation2d Robot::GetHeading() {
+
+  return m_odometry.GetPose().Rotation();
+}
+
+frc::Rotation2d Drivetrain::GetGryoHeading() {
+  return frc::Rotation2d(units::degree_t(m_gyro.GetYaw()));
+}
+
 void Robot::poseupdater(){
   m_odometry.Update(
       Pigeon.GetRotation2d(),
@@ -57,8 +65,35 @@ void Robot::poseupdater(){
   pose2d = m_odometry.GetPose();
 
 }
- 
- 
+void Robot::Drive(units::meters_per_second_t xSpeed,
+                       units::meters_per_second_t ySpeed,
+                       units::radians_per_second_t rot, bool fieldRelative) {
+/*
+  auto states = Kinematics.ToChassisSpeeds (
+      fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
+                          xSpeed, ySpeed, rot, GetHeading())
+                    : frc::ChassisSpeeds{xSpeed, ySpeed, rot});
+
+  m_kinematics.DesaturateWheelSpeeds(&states,
+                                     constants::swerveConstants::MaxSpeed);
+
+  auto [fl, fr, bl, br] = states;
+
+  m_frontLeft.Set(fl);
+  m_frontRight.Set(fr);
+  m_backLeft.Set(bl);
+  m_backRight.Set(br);
+
+  m_vx_goal = xSpeed;
+  m_vy_goal = ySpeed;
+  m_vw_goal = rot;
+
+*/
+auto states = Kinematics.ToChassisSpeeds(
+    fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
+                        xSpeed, ySpeed, rot, GetHeading())
+                  : frc::ChassisSpeeds{xSpeed, ySpeed, rot});
+}
  void Robot::waypointtestauto() {  
   limelight.updateTracking();
   units::time::second_t time = autoTimer.Get();
