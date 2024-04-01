@@ -5,14 +5,22 @@
 #include "LimeLight.h"
 #include "Waypoints.h"
 
+#include "frc/spline/SplineParameterizer.h"
+#include "frc/trajectory/Trajectory.h"
+#include "frc/trajectory/TrajectoryConfig.h"
+#include "frc/trajectory/constraint/DifferentialDriveKinematicsConstraint.h"
+#include "frc/trajectory/constraint/TrajectoryConstraint.h"
 #include <ctre/phoenix6/CANcoder.hpp>
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <frc/AddressableLED.h>
 #include <frc/DriverStation.h>
+#include <frc/MathUtil.h>
 #include <frc/PowerDistribution.h>
 #include <frc/TimedRobot.h>
 #include <frc/XboxController.h>
+#include <frc/apriltag/AprilTagPoseEstimator.h>
+#include <frc/controller/RamseteController.h>
 #include <frc/drive/DifferentialDrive.h>
 #include <frc/estimator/PoseEstimator.h>
 #include <frc/kinematics/ChassisSpeeds.h>
@@ -23,6 +31,9 @@
 #include <frc/smartdashboard/Field2d.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc2/command/RamseteCommand.h>
+#include <functional>
+#include <memory>
 #include <networktables/NetworkTable.h>
 #include <networktables/NetworkTableEntry.h>
 #include <networktables/NetworkTableInstance.h>
@@ -36,19 +47,9 @@
 #include <units/pressure.h>
 #include <units/time.h>
 #include <units/velocity.h>
-#include <frc/apriltag/AprilTagPoseEstimator.h> 
-#include <functional>
-#include <memory>
 #include <utility>
 #include <vector>
 #include <wpi/SymbolExports.h>
-#include "frc/spline/SplineParameterizer.h"
-#include "frc/trajectory/Trajectory.h"
-#include "frc/trajectory/TrajectoryConfig.h"
-#include "frc/trajectory/constraint/DifferentialDriveKinematicsConstraint.h"
-#include "frc/trajectory/constraint/TrajectoryConstraint.h"
-#include <frc/MathUtil.h>
-
 
 class Robot : public frc::TimedRobot {
 private:
@@ -83,30 +84,51 @@ ctre::phoenix6::hardware::CANcoder m_rightEncoder{
 // Creating my kinematics object: track width of 27 inches
 frc::DifferentialDriveKinematics Kinematics{27_in};
 frc::ChassisSpeeds chassisSpeeds{2_mps, 0_mps,1_rad_per_s}; // SET WHAT THE THE DOCS SAID
-double rightEncoderRotationsperinchDB = m_rightEncoder.GetVelocity().GetValueAsDouble() * constants::drive::rotperIn;
-double leftEncoderRotationsperinchDB = m_leftEncoder.GetVelocity().GetValueAsDouble() * constants::drive::rotperIn;
-units::inch_t leftEncoderRotationsperinch = units::inch_t{leftEncoderRotationsperinchDB};
-units::inch_t rightEncoderRotationsperinch = units::inch_t{rightEncoderRotationsperinchDB};
+//double rightEncoderRotationsperMeter = m_rightEncoder.GetVelocity().GetValueAsDouble() * constants::drive::rotperM;
+//double leftEncoderRotationsperMeter = m_leftEncoder.GetVelocity().GetValueAsDouble() * constants::drive::rotperM;
 
 frc::DifferentialDriveWheelSpeeds wheelSpeeds{
-    units::velocity::feet_per_second_t{leftEncoderRotationsperinch},
-    units::velocity::feet_per_second_t{rightEncoderRotationsperinch}  };  
+    units::velocity::meters_per_second_t{
+        m_rightEncoder.GetVelocity().GetValueAsDouble() *
+        constants::drive::rotperM},
+    units::velocity::meters_per_second_t{
+        m_leftEncoder.GetVelocity().GetValueAsDouble() *
+        constants::drive::rotperM}};
 // DifferentialDriveWheelPositions
 frc::DifferentialDriveWheelPositions diffWPos{
-    units::inch_t(m_leftEncoder.GetPosition().GetValueAsDouble()),
-    units::inch_t(m_rightEncoder.GetPosition().GetValueAsDouble())};
+    units::meter_t(m_leftEncoder.GetPosition().GetValueAsDouble()),
+    units::meter_t(m_rightEncoder.GetPosition().GetValueAsDouble())};
 // Creating my odometry object.
 // Here, our starting pose is 0,0
 frc::DifferentialDriveOdometry m_odometry{
     Pigeon.GetRotation2d(),
-    units::inch_t(m_leftEncoder.GetPosition().GetValueAsDouble()),
-    units::inch_t(m_rightEncoder.GetPosition().GetValueAsDouble()),
+    units::meter_t(m_leftEncoder.GetPosition().GetValueAsDouble() *
+                   constants::drive::rotperM),
+    units::meter_t(m_rightEncoder.GetPosition().GetValueAsDouble() *
+                  constants::drive::rotperM),
     frc::Pose2d{0_in, 0_in, 0_rad}};
-frc::Pose2d pose2dUpdate;
+frc::Pose2d pose2dUpdate = m_odometry.GetPose();
 frc::Pose2d pose2d;
+frc::Pose2d Xtraj = {m_odometry.GetPose().Translation(), Pigeon.GetRotation2d()};
+units::meters_per_second_t speed{1};
+units::meters_per_second_squared_t a{1};
+frc::TrajectoryConfig trajconfig{speed, a};
+frc::Pose2d t{};
+const std::vector<frc::Pose2d> waypoint{t};
+
+frc::Trajectory traj =
+    frc::TrajectoryGenerator::GenerateTrajectory(waypoint, trajconfig);
+// Using the default constructor of RamseteController. Here
+// the gains are initialized to 2.0 and 0.7.
+frc::RamseteController controller1;
+frc::ChassisSpeeds adjustedSpeeds{controller1.Calculate( pose2dUpdate, traj.Sample(3.4_s))};
+
+// Using the secondary constructor of RamseteController where
+// the user can choose any other gains.
+//frc::RamseteController controller2{2.1, 0.8};
 // Initialize the field
 frc::Field2d Field;
- 
+
 // Auto selection
 enum AutoRoutine {
   kAmpAuto,
@@ -178,7 +200,4 @@ void ShootAmp();
 
 // poseupdate
 void poseupdater();
-void DrivePos(units::inch_t x, units::inch_t y, units::degree_t heading);
-void Drive(units::feet_per_second_t xSpeed, units::feet_per_second_t ySpeed,
-           units::radians_per_second_t rot);
 };

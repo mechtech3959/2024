@@ -1,5 +1,6 @@
 #include "Robot.h"
-
+#include <ctre/phoenix/core/GadgeteerUartClient.h>
+ 
 static constexpr int kLength = 300;
 
 
@@ -50,34 +51,15 @@ void Robot::Rainbow() {
  
  
 void Robot::poseupdater(){
-    m_odometry.Update(
+  m_odometry.Update(
       Pigeon.GetRotation2d(),
-      // i multiplied the position of the encoders by the number of rotations
-      // per inch to properly convert?
-      units::inch_t{m_leftEncoder.GetPosition().GetValueAsDouble() *
-                    constants::drive::rotperIn},
-      units::inch_t{m_rightEncoder.GetPosition().GetValueAsDouble() * 
-                    constants::drive::rotperIn});
-    pose2d = m_odometry.GetPose();
-}
-units::degree_t head;
-void Robot::DrivePos(units::inch_t x, units::inch_t y, units::degree_t heading){
-  frc::Pose2d pose = pose2d;
-   head = heading;
+    diffWPos.left,diffWPos.right);
+  pose2d = m_odometry.GetPose();
 
-  units::feet_per_second_t vx(x-pose.X().value());
-  units::feet_per_second_t vy(y-pose.Y().value());
-  
-frc::Rotation2d e = frc::AngleModulus(heading-pose2d.Rotation().Degrees());
- units::radians_per_second_t w(e.Degrees() / 180_deg);
- Drive(vx, vy, w);
 }
-
-frc::Pose2d t{114_in, 104.64_in,0_rad};
-const std::vector<frc::Pose2d> waypoint{t};
  
-frc::Trajectory traj = frc::TrajectoryGenerator::GenerateTrajectory(waypoint, waypoints::configs::trajconfig);
-void Robot::waypointtestauto() {  
+ 
+ void Robot::waypointtestauto() {  
   limelight.updateTracking();
   units::time::second_t time = autoTimer.Get();
   frc::Pose2d p;
@@ -88,9 +70,9 @@ void Robot::waypointtestauto() {
      }else if(time > 3.0_s and time < 4.0_s){
       p = traj.Sample(autoTimer.Get()).pose;
       }else if (time > 4.0_s){
-        (p.X(), p.Y(), true);
-      }
-  } else if (frc::DriverStation::GetAlliance() ==
+      //diffDrive.(p.X(), p.Y(), true);
+      }}
+   else if (frc::DriverStation::GetAlliance() ==
              frc::DriverStation::Alliance::kRed) { // red
     if (autoTimer.Get() < 3.0_s) {
       diffDrive.ArcadeDrive(0.6, limelight.m_LimelightTurnCmd);
@@ -110,7 +92,6 @@ void Robot::waypointtestauto() {
   }
 }
 
- 
 void Robot::ampAuto() { // zac did this :)
   limelight.updateTracking();
   if (frc::DriverStation::GetAlliance() ==
@@ -686,16 +667,15 @@ void Robot::RobotPeriodic() {
                                  LimelightHelpers::getTA("limelight-greenie"));
   
   frc::Rotation2d gyroAngle = Pigeon.GetRotation2d();
-// Do some magic bullshit to convert number of rotations to inchs
- 
-   limelight.GetRobotPose();
-   pose2dUpdate;
-   // this gets our calculated X and Y pose through our odometry update above
-   // then puts it on drivers station
-   auto posX = pose2d.X().value();
-   auto posY = pose2d.Y().value();
-   frc::SmartDashboard::PutNumber("Pos X", posX);
-   frc::SmartDashboard::PutNumber("Pos Y", posY);
+  poseupdater();
+  //limelight.GetRobotPose();
+
+  // this gets our calculated X and Y pose through our odometry update above
+  // then puts it on drivers station
+  auto posX = pose2d.X().value();
+  auto posY = pose2d.Y().value();
+  frc::SmartDashboard::PutNumber("Pos X", posX);
+  frc::SmartDashboard::PutNumber("Pos Y", posY);
 }
 void Robot::TeleopInit() {}
 void Robot::DisabledPeriodic() {

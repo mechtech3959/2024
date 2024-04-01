@@ -24,9 +24,7 @@ constexpr units::inch_t TapeOffset = 0_in;
 // https://firstfrc.blob.core.windows.net/frc2024/FieldAssets/2024FieldDrawings.pdf
 // pg 4 for april ID
 constexpr units::inch_t sourceB_farY = 9.68_in;    // april tag #1
-constexpr units::inch_t sourceB_CloseY = 34.79_in; // april tag #2
-constexpr units::inch_t sourceB_CloseY =
-    34.79_in; // april tag #9 & #9 close to the wall
+constexpr units::inch_t sourceB_CloseY = 34.79_in; // april tag #9 & #9 close to the wall
 constexpr units::inch_t speakerSY =
     196.17_in; // april tag #3 source side of the red station
 constexpr units::inch_t speakerAY = 218.42_in; // april tag #4 amp side
@@ -55,23 +53,16 @@ constexpr frc::Translation2d BlueBottom{
 
 constexpr frc::Translation2d blueNote1{114_in, 161.64_in}; // stage
 constexpr frc::Translation2d blueNote2{114_in, 104.64_in}; // middle
-constexpr frc::Translation2d blueNote2{114_in, 47.64_in};  // bottom
+constexpr frc::Translation2d blueNote3{114_in, 47.64_in};  // bottom
 
 constexpr frc::Translation2d RedNote1{539.22_in, 161.64_in}; // stage
 constexpr frc::Translation2d RedNote2{539.22_in, 104.64_in}; // middle
-constexpr frc::Translation2d RedNote2{539.22_in, 47.64_in};  // bottom
+constexpr frc::Translation2d RedNote3{539.22_in, 47.64_in};  // bottom
 
 constexpr frc::Translation2d MidfieldNote5{250.50_in, 29.64_in}; // bottom
 constexpr frc::Translation2d MidfieldNote4{250.50_in, 95.64_in};
 constexpr frc::Translation2d MidfieldNote3{250.50_in, 161.64_in};
 constexpr frc::Translation2d MidfieldNote2{250.50_in, 227.64_in};
 constexpr frc::Translation2d MidfieldNote1{250.50_in, 293.64_in}; // top
-namespace configs{
- 
-units::feet_per_second_t speed{1};
-units::feet_per_second_squared_t a{1}; 
-frc::TrajectoryConfig trajconfig{speed,a};
- 
 
-};
 }
