@@ -36,7 +36,9 @@ private:
   const std::string a_Middle = "Middle";
   const std::string a_Right = "Right";
   const std::string a_Test = "Top Secret";
-
+  double dashScale = 1;
+ 
+ 
   void Drive();
   void UpdatePose();
 

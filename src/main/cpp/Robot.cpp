@@ -3,12 +3,13 @@
 Robot::Robot() {}
 
 void Robot::RobotInit() {
+
   m_autoChooser.SetDefaultOption(a_Left, AutoRoutine::kLeft);
   m_autoChooser.AddOption(a_Middle, AutoRoutine::kMiddle);
   m_autoChooser.AddOption(a_Right, AutoRoutine::kRight);
   m_autoChooser.AddOption(a_Test, AutoRoutine::kTest);
   frc::SmartDashboard::PutData("Auto Modes", &m_autoChooser);
-
+ 
   m_swerve.SetHeading(0_deg);
   headingControl = true;
   driveMode = DriveMode::HeadingControl;
@@ -26,6 +27,9 @@ void Robot::RobotPeriodic() {
   frc::SmartDashboard::PutNumber("Bot Pose Y", units::inch_t(bp.Y()).value());
   frc::SmartDashboard::PutNumber("Bot Pose Heading",
                                  bp.Rotation().Degrees().value());
+  frc::SmartDashboard::PutNumber("Drive Scale Factor", dashScale);
+
+  frc::SmartDashboard::GetNumber("Drive Scale Factor", dashScale);
 
   m_swerve.SendData();
 }
@@ -90,7 +94,8 @@ void Robot::Drive() {
 
   // Scale Speed
   units::scalar_t scale = 1.0 - driver.GetRightTriggerAxis() * .9;
-  scale = scale * .8;
+
+  scale *= dashScale;
 
   // Set control mode
   if (driver.GetAButtonPressed()) {
@@ -112,7 +117,7 @@ void Robot::Drive() {
                        constants::swerveConstants::MaxSpeed * scale,
                    m_rotLimiter.Calculate(pow(hy, 3)) *
                        constants::swerveConstants::MaxAngularVelocity * scale,
-                   true);
+                   false);
     break;
   case DriveMode::HeadingControl:
     if (sqrt(hx * hx + hy * hy) >
