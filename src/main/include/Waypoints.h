@@ -15,7 +15,8 @@
 // #include "frc/geometry/Rotation2d.h"
 // #include "frc/geometry/Translation2d.h"
 // #include "frc/trajectory/constraint/TrajectoryConstraint.h"
-// idk
+namespace waypoints{
+
 constexpr units::inch_t RedTapeX = 420.02_in;
 // BLUE IS CONSIDERED 0,0 SIDE
 constexpr units::inch_t BlueTapeX = 231.2_in;
@@ -52,9 +53,9 @@ constexpr frc::Translation2d BlueBottom{
     250.50_in,
     29.64_in}; // left of the field avoiding stage and goes to midfield
 
-constexpr frc::Translation2d BlueNote1{114_in, 161.64_in}; // stage
-constexpr frc::Translation2d BlueNote2{114_in, 104.64_in}; // middle
-constexpr frc::Translation2d BlueNote2{114_in, 47.64_in};  // bottom
+constexpr frc::Translation2d blueNote1{114_in, 161.64_in}; // stage
+constexpr frc::Translation2d blueNote2{114_in, 104.64_in}; // middle
+constexpr frc::Translation2d blueNote2{114_in, 47.64_in};  // bottom
 
 constexpr frc::Translation2d RedNote1{539.22_in, 161.64_in}; // stage
 constexpr frc::Translation2d RedNote2{539.22_in, 104.64_in}; // middle
@@ -65,3 +66,12 @@ constexpr frc::Translation2d MidfieldNote4{250.50_in, 95.64_in};
 constexpr frc::Translation2d MidfieldNote3{250.50_in, 161.64_in};
 constexpr frc::Translation2d MidfieldNote2{250.50_in, 227.64_in};
 constexpr frc::Translation2d MidfieldNote1{250.50_in, 293.64_in}; // top
+namespace configs{
+ 
+units::feet_per_second_t speed{1};
+units::feet_per_second_squared_t a{1}; 
+frc::TrajectoryConfig trajconfig{speed,a};
+ 
+
+};
+}

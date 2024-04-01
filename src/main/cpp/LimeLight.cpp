@@ -36,14 +36,14 @@ frc::Pose2d LimeLight::GetRobotPose() {
 
   if (IsTargetVisible()) {
     // translate 3d pose to 2d pose
-    units::meter_t x{data.at(0)};
-    units::meter_t y{data.at(1)};
+    units::inch_t x{data.at(0)};
+    units::inch_t y{data.at(1)};
     units::degree_t heading{data.at(5)};
 
     return frc::Pose2d(x, y, frc::Rotation2d(heading));
-  } else {
+  } /*else {
     return frc::Pose2d(0_m, 0_m, frc::Rotation2d(0_deg));
-  }
+  }*/
 }
 
 units::inch_t LimeLight::GetReflectiveTargetRange(double targetHeight) {

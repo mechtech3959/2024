@@ -49,6 +49,66 @@ void Robot::Rainbow() {
 }
  
  
+void Robot::poseupdater(){
+    m_odometry.Update(
+      Pigeon.GetRotation2d(),
+      // i multiplied the position of the encoders by the number of rotations
+      // per inch to properly convert?
+      units::inch_t{m_leftEncoder.GetPosition().GetValueAsDouble() *
+                    constants::drive::rotperIn},
+      units::inch_t{m_rightEncoder.GetPosition().GetValueAsDouble() * 
+                    constants::drive::rotperIn});
+    pose2d = m_odometry.GetPose();
+}
+units::degree_t head;
+void Robot::DrivePos(units::inch_t x, units::inch_t y, units::degree_t heading){
+  frc::Pose2d pose = pose2d;
+   head = heading;
+
+  units::feet_per_second_t vx(x-pose.X().value());
+  units::feet_per_second_t vy(y-pose.Y().value());
+  
+frc::Rotation2d e = frc::AngleModulus(heading-pose2d.Rotation().Degrees());
+ units::radians_per_second_t w(e.Degrees() / 180_deg);
+ Drive(vx, vy, w);
+}
+
+frc::Pose2d t{114_in, 104.64_in,0_rad};
+const std::vector<frc::Pose2d> waypoint{t};
+ 
+frc::Trajectory traj = frc::TrajectoryGenerator::GenerateTrajectory(waypoint, waypoints::configs::trajconfig);
+void Robot::waypointtestauto() {  
+  limelight.updateTracking();
+  units::time::second_t time = autoTimer.Get();
+  frc::Pose2d p;
+  if (frc::DriverStation::GetAlliance() ==
+      frc::DriverStation::Alliance::kBlue) {
+     if(time <3.0_s){
+       ShootSpeaker();
+     }else if(time > 3.0_s and time < 4.0_s){
+      p = traj.Sample(autoTimer.Get()).pose;
+      }else if (time > 4.0_s){
+        (p.X(), p.Y(), true);
+      }
+  } else if (frc::DriverStation::GetAlliance() ==
+             frc::DriverStation::Alliance::kRed) { // red
+    if (autoTimer.Get() < 3.0_s) {
+      diffDrive.ArcadeDrive(0.6, limelight.m_LimelightTurnCmd);
+    } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 6.0_s) {
+      ShootAmp();
+    } else if (autoTimer.Get() > 6.0_s && autoTimer.Get() < 8_s) {
+      diffDrive.ArcadeDrive(-0.65, 0.48);
+      intake.SetSpeed(1);
+    } else if (autoTimer.Get() > 8.0_s && autoTimer.Get() < 10.5_s) {
+      diffDrive.ArcadeDrive(0.65, -0.48);
+      intake.SetSpeed(1);
+    } else if (autoTimer.Get() > 10.5_s && autoTimer.Get() < 15_s) {
+      ShootAmp();
+    }
+  } else {
+    diffDrive.ArcadeDrive(0.0, 0.0);
+  }
+}
 
  
 void Robot::ampAuto() { // zac did this :)
@@ -627,19 +687,15 @@ void Robot::RobotPeriodic() {
   
   frc::Rotation2d gyroAngle = Pigeon.GetRotation2d();
 // Do some magic bullshit to convert number of rotations to inchs
-   frc::Pose2d pose2d = m_odometry.Update(
-      gyroAngle,
-      // i multiplied the position of the enconders by the number of rotations
-      // per inch to properly convert?
-      units::inch_t{m_leftEncoder.GetPosition().GetValueAsDouble() *
-                    constants::drive::rotperIn},
-      units::inch_t{m_rightEncoder.GetPosition().GetValueAsDouble() * 
-                    constants::drive::rotperIn});
-  // this gets our calculated X and Y pose through our odometry update above then puts it on drivers station
-  auto posX = pose2d.X().value();
-  auto posY = pose2d.Y().value();
-  frc::SmartDashboard::PutNumber("Pos X", posX);
-  frc::SmartDashboard::PutNumber("Pos Y", posY);
+ 
+   limelight.GetRobotPose();
+   pose2dUpdate;
+   // this gets our calculated X and Y pose through our odometry update above
+   // then puts it on drivers station
+   auto posX = pose2d.X().value();
+   auto posY = pose2d.Y().value();
+   frc::SmartDashboard::PutNumber("Pos X", posX);
+   frc::SmartDashboard::PutNumber("Pos Y", posY);
 }
 void Robot::TeleopInit() {}
 void Robot::DisabledPeriodic() {

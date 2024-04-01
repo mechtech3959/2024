@@ -45,7 +45,7 @@ private:
   };
 };
 
-/*
+
 class LL3DPose{
 
 public:
@@ -56,6 +56,7 @@ public:
 
   frc::Pose2d GetPose2d(){
     if(isVisable()){
+    // frc::Pose3d ps3 = frc::AprilTagPoseEstimate()
       return frc::Pose2d(  units::meter_t{pose3d.at(0)},
                             units::meter_t{pose3d.at(1)},
                             frc::Rotation2d{units::degree_t{pose3d.at(5)}}
@@ -76,4 +77,4 @@ public:
   std::vector<double> pose3d;
 
 };
-*/
+
