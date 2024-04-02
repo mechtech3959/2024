@@ -1,0 +1,29 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"paths": [
+				"${workspace}"
+			],
+			"windows": {
+				"command": ".\\gradlew.bat build"
+			},
+			"isFullBuild": true,
+			"group": "build",
+			"label": "build robot code"
+		}
+		{
+			"type": "shell",
+			"paths": [
+				"${workspace}"
+			],
+			"windows": {
+				"command": ".\\gradlew.bat frcUserProgramLinuxathenaDebugExecutable"
+			},
+			"isFullBuild": true,
+			"group": "build",
+			"label": "build robot code but faster"
+		}
+	]
+}
