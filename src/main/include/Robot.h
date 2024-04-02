@@ -175,12 +175,11 @@ public:
   // Shoot functions
   void ShootSpeaker();
   void ShootAmp();
-
-  // poseupdate
-  void poseupdater();
   void Drive(units::meters_per_second_t xSpeed,
              units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
              bool fieldRelative);
   frc::Rotation2d GetHeading();
   frc::Rotation2d GetGyroHeading();
+  // poseupdate
+  void poseupdater();
 };
