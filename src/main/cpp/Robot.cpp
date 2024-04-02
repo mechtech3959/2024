@@ -52,7 +52,7 @@ void Robot::Rainbow() {
 frc::Rotation2d Robot::GetHeading() { return m_odometry.GetPose().Rotation(); }
 
 frc::Rotation2d Robot::GetGyroHeading() {
-  return frc::Rotation2d(units::degree_t(Pigeon.GetYaw()));
+  return Pigeon.GetRotation2d();
 }
 
 void Robot::poseupdater() {
@@ -83,10 +83,10 @@ void Robot::Drive(units::meters_per_second_t xSpeed,
     m_vw_goal = rot;
 
   */
-  auto states = Kinematics.ToChassisSpeeds(
-      fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-                          xSpeed, ySpeed, rot, GetHeading())
-                    : frc::ChassisSpeeds{xSpeed, ySpeed, rot});
+    auto states = Kinematics.ToWheelSpeeds(frc::ChassisSpeeds::FromFieldRelativeSpeeds(
+                                   xSpeed, ySpeed, rot, GetHeading())
+                               : chassisSpeeds {xSpeed, ySpeed, rot});
+    chassisSpeeds.Discretize(xSpeed,ySpeed,rot)
 }
 void Robot::waypointtestauto() {
   limelight.updateTracking();
