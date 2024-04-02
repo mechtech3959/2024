@@ -6,11 +6,7 @@ void Robot::Green() { candle.SetLEDs(0, 255, 0); }
 void Robot::Red() { candle.SetLEDs(255, 0, 0); }
 void Robot::Yellow() { candle.SetLEDs(255, 255, 0); }
 void Robot::Blue() { candle.SetLEDs(0, 0, 255); }
-void Robot::Rainbow() {
-  // For every pixel
-  m_toAnimate = new ctre::phoenix::led::RainbowAnimation(1, 0.1, 150);
-  candle.Animate(*m_toAnimate);
-}
+void Robot::Rainbow() { candle.Animate(rainbow); }
 
 void Robot::ampAuto() { // zac did this :)
   limelight.updateTracking();
@@ -372,10 +368,7 @@ void Robot::RobotInit() {
   shooterMotorFollower.SetControl(ctre::phoenix6::controls::Follower{
       shooterMotorLeader.GetDeviceID(), true});
   config.stripType = ctre::phoenix::led::LEDStripType::RGB;
-  config.brightnessScalar = 1; // LEDs full brightness
-  // ctre::phoenix::ErrorCode faultsError = candle.GetFaults(faults); //fills
-  // current candle fault; returns
-
+  config.brightnessScalar = 1;
   // in init function
   ctre::phoenix6::configs::TalonFXConfiguration talonFXConfigs{};
 
@@ -466,24 +459,25 @@ void Robot::TeleopPeriodic() {
   if ((Roll < -2.3) or (Roll > 1)) {
     Rainbow();
   } else {
+    candle.ClearAnimation(0);
     if (frc::DriverStation::GetAlliance() ==
         frc::DriverStation::Alliance::kBlue) {
       Blue();
     } else {
       Red();
     }
-    Green();
+    // Green();
   }
 
   // Get inputs/controller mapping
-  double forw = -_controller.GetLeftY();
-  double spin = _controller.GetRightX();
-  double intakeSpeed = _controller.GetLeftTriggerAxis();
-  double shooterSpeed = _controller.GetRightTriggerAxis();
-  bool reverse = _controller.GetAButton();
-  bool shootAmp = _controller.GetLeftBumper();
-  bool shootSpeaker = _controller.GetRightBumper();
-  int pov = _controller.GetPOV();
+  double forw = -controller.GetLeftY();
+  double spin = controller.GetRightX();
+  double intakeSpeed = controller.GetLeftTriggerAxis();
+  double shooterSpeed = controller.GetRightTriggerAxis();
+  bool reverse = controller.GetAButton();
+  bool shootAmp = controller.GetLeftBumper();
+  bool shootSpeaker = controller.GetRightBumper();
+  int pov = controller.GetPOV();
 
   // Deadzone the joysticks
   if (fabs(forw) < 0.10)
@@ -493,16 +487,11 @@ void Robot::TeleopPeriodic() {
   // Set the differential drive to the commanded speed
   diffDrive.ArcadeDrive(forw, spin, true);
 
-  // create a Motion Magic request, voltage output
-  ctre::phoenix6::controls::MotionMagicVoltage m_request{0_tr};
-
+  ctre::phoenix6::controls::MotionMagicVoltage climb{0_tr};
   if (pov == 0 || pov == 45 || pov == 315)
-    climberMotor.SetControl(m_request.WithPosition(400_tr));
-  else if (pov == 135 || pov == 180 || pov == 225)
-    climberMotor.SetControl(m_request.WithPosition(0_tr));
-  // else
-  // climberMotor.Set(0);
-  // Reverse everything if the button is pressed
+    climberMotor.SetControl(climb.WithPosition(400_tr));
+  if (pov == 135 || pov == 180 || pov == 225)
+    climberMotor.SetControl(climb.WithPosition(0_tr));
   if (reverse) {
     intakeSpeed = -intakeSpeed;
     shooterSpeed = -shooterSpeed;
@@ -511,82 +500,33 @@ void Robot::TeleopPeriodic() {
     shooterMotorLeader.Set(constants::shooter::ampShootSpeed);
     intake.feedMotor.Set(constants::intake::feedMotorSpeed);
   }
-
   if (shootSpeaker) {
     shooterMotorLeader.Set(constants::shooter::speakerShootSpeed);
     intake.feedMotor.Set(constants::intake::feedMotorSpeed);
   }
-
   if (!shootAmp && !shootSpeaker) {
     shooterMotorLeader.Set(shooterSpeed);
     intake.SetSpeed(intakeSpeed);
   }
 }
-
 void Robot::DisabledInit() {
   autoTimer.Stop();
   autoTimer.Reset();
 }
-
 void Robot::RobotPeriodic() {
-  /*if (frc::DriverStation::Alliance::kBlue and
-          m_autoSelected == AutoRoutine::kMiddleAuto or
-      AutoRoutine::kMiddle3PcAuto) {
-    Pigeon.AddYaw(180);
-  } else if (frc::DriverStation::Alliance::kBlue and
-                 m_autoSelected == AutoRoutine::kSideAuto or
-             AutoRoutine::kdriveoutAuto) {
-    Pigeon.AddYaw(0); // test later
-  } else if (frc::DriverStation::Alliance::kBlue and
-             m_autoSelected == AutoRoutine::kAmpAuto) {
-    Pigeon.AddYaw(90); // maybe be right, double check
-  };
-  if (frc::DriverStation::Alliance::kRed and
-          m_autoSelected == AutoRoutine::kMiddleAuto or
-      AutoRoutine::kMiddle3PcAuto) {
-    Pigeon.AddYaw(0);
-  } else if (frc::DriverStation::Alliance::kRed and
-                 m_autoSelected == AutoRoutine::kSideAuto or
-             AutoRoutine::kdriveoutAuto) {
-    Pigeon.AddYaw(0); // test later
-  } else if (frc::DriverStation::Alliance::kRed and
-             m_autoSelected == AutoRoutine::kAmpAuto) {
-    Pigeon.AddYaw(-90); // maybe be right, double check
-  }; */
-
-  // The PDP returns the voltage in increments of 0.05 Volts.
   double voltage = pdh.GetVoltage();
   frc::SmartDashboard::PutNumber("Voltage", voltage);
-  // Retrieves the temperature of the PDP, in degrees Celsius.
-
   double temperatureCelsius = pdh.GetTemperature();
-
   frc::SmartDashboard::PutNumber("Temperature", temperatureCelsius);
-  // Get the total current of all channels.
-
   double totalCurrent = pdh.GetTotalCurrent();
-
   frc::SmartDashboard::PutNumber("Total Current", totalCurrent);
-
-  // Get the total power of all channels.
-
-  // Power is the bus voltage multiplied by the current with the auto Watts.
-
   double totalPower = pdh.GetTotalPower();
-
   frc::SmartDashboard::PutNumber("Total Power", totalPower);
-
-  // Get the total energy of all channels.
-
-  // Energy is the power summed over time with auto Joules.
-
   double totalEnergy = pdh.GetTotalEnergy();
-
   frc::SmartDashboard::PutNumber("Total Energy", totalEnergy);
   frc::SmartDashboard::PutNumber("Pitch", Pigeon.GetPitch().GetValueAsDouble());
   frc::SmartDashboard::PutNumber("Roll", Pigeon.GetRoll().GetValueAsDouble());
   frc::SmartDashboard::PutNumber("Yaw", Pigeon.GetYaw().GetValueAsDouble());
-
   frc::SmartDashboard::PutNumber("Shooter TX",
                                  LimelightHelpers::getTY("limelight-greenie"));
   frc::SmartDashboard::PutNumber("Shooter TY",
@@ -600,7 +540,8 @@ void Robot::DisabledPeriodic() {
   if ((Roll < -2.3) || (Roll > 1)) {
     Rainbow();
   } else {
-    Green();
+    candle.ClearAnimation(0);
+    // Green();
     Red();
   }
 }
