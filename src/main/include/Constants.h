@@ -26,4 +26,9 @@ constexpr int feedMotorID = 8;
 constexpr double pickupMotorSpeed = 1;
 constexpr double feedMotorSpeed = 1;
 } // namespace intake
+namespace climber {
+    constexpr int motorID = 33;
+
+    constexpr double speed = .25;
+}
 } // namespace constants
