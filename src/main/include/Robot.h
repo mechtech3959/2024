@@ -76,6 +76,9 @@ private:
   // Intitialize Limelight NetworkTables connection
   std::shared_ptr<nt::NetworkTable> table =
       nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
+// class member variable
+ctre::phoenix6::controls::MotionMagicVoltage m_motmag{0_tr};
+ctre::phoenix6::configs::TalonFXConfiguration talonFXConfigs{};
 
 public:
   // Initialize the Pigeon
