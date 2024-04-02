@@ -44,7 +44,8 @@ private:
       constants::shooter::motorOneID, constants::canBus};
   ctre::phoenix6::hardware::TalonFX shooterMotorFollower{
       constants::shooter::motorTwoID, constants::canBus};
-  ctre::phoenix6::hardware::TalonFX climberMotor{constants::climber::motorID, constants::canBus};
+  ctre::phoenix6::hardware::TalonFX climberMotor{constants::climber::motorID,
+                                                 constants::canBus};
 
   // Auto selection
   enum AutoRoutine {
@@ -76,9 +77,9 @@ private:
   // Intitialize Limelight NetworkTables connection
   std::shared_ptr<nt::NetworkTable> table =
       nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
-// class member variable
-ctre::phoenix6::controls::MotionMagicVoltage m_motmag{0_tr};
-ctre::phoenix6::configs::TalonFXConfiguration talonFXConfigs{};
+  // class member variable
+  ctre::phoenix6::controls::MotionMagicVoltage m_motmag{0_tr};
+  ctre::phoenix6::configs::TalonFXConfiguration talonFXConfigs{};
 
 public:
   // Initialize the Pigeon
