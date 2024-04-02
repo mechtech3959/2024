@@ -1,12 +1,12 @@
 #include "Robot.h"
 #include <ctre/phoenix/core/GadgeteerUartClient.h>
- 
+
 static constexpr int kLength = 300;
 
- 
 frc::AddressableLED m_led{0};
 
-std::array<frc::AddressableLED::LEDData, kLength> m_ledBuffer; // Reuse the buffer
+std::array<frc::AddressableLED::LEDData, kLength>
+    m_ledBuffer; // Reuse the buffer
 
 // Store what the last hue of the first pixel is
 
@@ -49,65 +49,59 @@ void Robot::Rainbow() {
   firstPixelHue %= 180;
 }
 
-frc::Rotation2d Robot::GetHeading() {
+frc::Rotation2d Robot::GetHeading() { return m_odometry.GetPose().Rotation(); }
 
-  return m_odometry.GetPose().Rotation();
+frc::Rotation2d Robot::GetGyroHeading() {
+  return frc::Rotation2d(units::degree_t(Pigeon.GetYaw()));
 }
 
-frc::Rotation2d Drivetrain::GetGryoHeading() {
-  return frc::Rotation2d(units::degree_t(m_gyro.GetYaw()));
-}
-
-void Robot::poseupdater(){
-  m_odometry.Update(
-      Pigeon.GetRotation2d(),
-    diffWPos.left,diffWPos.right);
+void Robot::poseupdater() {
+  m_odometry.Update(Pigeon.GetRotation2d(), diffWPos.left, diffWPos.right);
   pose2d = m_odometry.GetPose();
-
 }
 void Robot::Drive(units::meters_per_second_t xSpeed,
-                       units::meters_per_second_t ySpeed,
-                       units::radians_per_second_t rot, bool fieldRelative) {
-/*
-  auto states = Kinematics.ToChassisSpeeds (
+                  units::meters_per_second_t ySpeed,
+                  units::radians_per_second_t rot, bool fieldRelative) {
+  /*
+    auto states = Kinematics.ToChassisSpeeds (
+        fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
+                            xSpeed, ySpeed, rot, GetHeading())
+                      : frc::ChassisSpeeds{xSpeed, ySpeed, rot});
+
+    m_kinematics.DesaturateWheelSpeeds(&states,
+                                       constants::swerveConstants::MaxSpeed);
+
+    auto [fl, fr, bl, br] = states;
+
+    m_frontLeft.Set(fl);
+    m_frontRight.Set(fr);
+    m_backLeft.Set(bl);
+    m_backRight.Set(br);
+
+    m_vx_goal = xSpeed;
+    m_vy_goal = ySpeed;
+    m_vw_goal = rot;
+
+  */
+  auto states = Kinematics.ToChassisSpeeds(
       fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
                           xSpeed, ySpeed, rot, GetHeading())
                     : frc::ChassisSpeeds{xSpeed, ySpeed, rot});
-
-  m_kinematics.DesaturateWheelSpeeds(&states,
-                                     constants::swerveConstants::MaxSpeed);
-
-  auto [fl, fr, bl, br] = states;
-
-  m_frontLeft.Set(fl);
-  m_frontRight.Set(fr);
-  m_backLeft.Set(bl);
-  m_backRight.Set(br);
-
-  m_vx_goal = xSpeed;
-  m_vy_goal = ySpeed;
-  m_vw_goal = rot;
-
-*/
-auto states = Kinematics.ToChassisSpeeds(
-    fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-                        xSpeed, ySpeed, rot, GetHeading())
-                  : frc::ChassisSpeeds{xSpeed, ySpeed, rot});
 }
- void Robot::waypointtestauto() {  
+void Robot::waypointtestauto() {
   limelight.updateTracking();
   units::time::second_t time = autoTimer.Get();
   frc::Pose2d p;
   if (frc::DriverStation::GetAlliance() ==
       frc::DriverStation::Alliance::kBlue) {
-     if(time <3.0_s){
-       ShootSpeaker();
-     }else if(time > 3.0_s and time < 4.0_s){
+    if (time < 3.0_s) {
+      ShootSpeaker();
+    } else if (time > 3.0_s and time < 4.0_s) {
       p = traj.Sample(autoTimer.Get()).pose;
-      }else if (time > 4.0_s){
-      //diffDrive.(p.X(), p.Y(), true);
-      }}
-   else if (frc::DriverStation::GetAlliance() ==
+    } else if (time > 4.0_s) {
+      // diffDrive.(p.X(), p.Y(), true);
+    }
+  } else if (frc::DriverStation::GetAlliance() ==
              frc::DriverStation::Alliance::kRed) { // red
     if (autoTimer.Get() < 3.0_s) {
       diffDrive.ArcadeDrive(0.6, limelight.m_LimelightTurnCmd);
@@ -512,7 +506,7 @@ void Robot::RobotInit() {
 }
 
 void Robot::AutonomousInit() { autoTimer.Start(); }
-void Robot::AutonomousPeriodic() {  
+void Robot::AutonomousPeriodic() {
   m_autoSelected = m_autoChooser.GetSelected();
 
   if (frc::DriverStation::GetAlliance() ==
@@ -700,10 +694,10 @@ void Robot::RobotPeriodic() {
                                  LimelightHelpers::getTX("limelight-greenie"));
   frc::SmartDashboard::PutNumber("Shooter TA",
                                  LimelightHelpers::getTA("limelight-greenie"));
-  
+
   frc::Rotation2d gyroAngle = Pigeon.GetRotation2d();
   poseupdater();
-  //limelight.GetRobotPose();
+  // limelight.GetRobotPose();
 
   // this gets our calculated X and Y pose through our odometry update above
   // then puts it on drivers station

@@ -72,138 +72,146 @@ private:
       constants::shooter::motorOneID, constants::canBus};
   ctre::phoenix6::hardware::TalonFX shooterMotorFollower{
       constants::shooter::motorTwoID, constants::canBus};
-   // Initialize the Pigeon
-ctre::phoenix6::hardware::Pigeon2 Pigeon{constants::drive::PigeonID,
-                                         constants::canBus};
-// Initialize the Encoders
-ctre::phoenix6::hardware::CANcoder m_leftEncoder{
-    constants::drive::m_leftEncoderID, constants::canBus};
-ctre::phoenix6::hardware::CANcoder m_rightEncoder{
-    constants::drive::m_rightEncoderID, constants::canBus};
- 
-// Creating my kinematics object: track width of 27 inches
-frc::DifferentialDriveKinematics Kinematics{27_in};
-frc::ChassisSpeeds chassisSpeeds{2_mps, 0_mps,1_rad_per_s}; // SET WHAT THE THE DOCS SAID
-//double rightEncoderRotationsperMeter = m_rightEncoder.GetVelocity().GetValueAsDouble() * constants::drive::rotperM;
-//double leftEncoderRotationsperMeter = m_leftEncoder.GetVelocity().GetValueAsDouble() * constants::drive::rotperM;
+  // Initialize the Pigeon
+  ctre::phoenix6::hardware::Pigeon2 Pigeon{constants::drive::PigeonID,
+                                           constants::canBus};
+  // Initialize the Encoders
+  ctre::phoenix6::hardware::CANcoder m_leftEncoder{
+      constants::drive::m_leftEncoderID, constants::canBus};
+  ctre::phoenix6::hardware::CANcoder m_rightEncoder{
+      constants::drive::m_rightEncoderID, constants::canBus};
 
-frc::DifferentialDriveWheelSpeeds wheelSpeeds{
-    units::velocity::meters_per_second_t{
-        m_rightEncoder.GetVelocity().GetValueAsDouble() *
-        constants::drive::rotperM},
-    units::velocity::meters_per_second_t{
-        m_leftEncoder.GetVelocity().GetValueAsDouble() *
-        constants::drive::rotperM}};
-// DifferentialDriveWheelPositions
-frc::DifferentialDriveWheelPositions diffWPos{
-    units::meter_t(m_leftEncoder.GetPosition().GetValueAsDouble()),
-    units::meter_t(m_rightEncoder.GetPosition().GetValueAsDouble())};
-// Creating my odometry object.
-// Here, our starting pose is 0,0
-frc::DifferentialDriveOdometry m_odometry{
-    Pigeon.GetRotation2d(),
-    units::meter_t(m_leftEncoder.GetPosition().GetValueAsDouble() *
-                   constants::drive::rotperM),
-    units::meter_t(m_rightEncoder.GetPosition().GetValueAsDouble() *
-                  constants::drive::rotperM),
-    frc::Pose2d{0_in, 0_in, 0_rad}};
-frc::Pose2d pose2dUpdate = m_odometry.GetPose();
-frc::Pose2d pose2d;
-frc::Pose2d Xtraj = {m_odometry.GetPose().Translation(), Pigeon.GetRotation2d()};
-units::meters_per_second_t speed{1};
-units::meters_per_second_squared_t a{1};
-frc::TrajectoryConfig trajconfig{speed, a};
-frc::Pose2d t{};
-const std::vector<frc::Pose2d> waypoint{t};
+  // Creating my kinematics object: track width of 27 inches
+  frc::DifferentialDriveKinematics Kinematics{27_in};
+  frc::ChassisSpeeds chassisSpeeds{2_mps, 0_mps,
+                                   1_rad_per_s}; // SET WHAT THE THE DOCS SAID
+  // double rightEncoderRotationsperMeter =
+  // m_rightEncoder.GetVelocity().GetValueAsDouble() *
+  // constants::drive::rotperM; double leftEncoderRotationsperMeter =
+  // m_leftEncoder.GetVelocity().GetValueAsDouble() * constants::drive::rotperM;
 
-frc::Trajectory traj =
-    frc::TrajectoryGenerator::GenerateTrajectory(waypoint, trajconfig);
-// Using the default constructor of RamseteController. Here
-// the gains are initialized to 2.0 and 0.7.
-frc::RamseteController controller1;
-frc::ChassisSpeeds adjustedSpeeds{controller1.Calculate( pose2dUpdate, traj.Sample(3.4_s))};
+  frc::DifferentialDriveWheelSpeeds wheelSpeeds{
+      units::velocity::meters_per_second_t{
+          m_rightEncoder.GetVelocity().GetValueAsDouble() *
+          constants::drive::rotperM},
+      units::velocity::meters_per_second_t{
+          m_leftEncoder.GetVelocity().GetValueAsDouble() *
+          constants::drive::rotperM}};
+  // DifferentialDriveWheelPositions
+  frc::DifferentialDriveWheelPositions diffWPos{
+      units::meter_t(m_leftEncoder.GetPosition().GetValueAsDouble()),
+      units::meter_t(m_rightEncoder.GetPosition().GetValueAsDouble())};
+  // Creating my odometry object.
+  // Here, our starting pose is 0,0
+  frc::DifferentialDriveOdometry m_odometry{
+      Pigeon.GetRotation2d(),
+      units::meter_t(m_leftEncoder.GetPosition().GetValueAsDouble() *
+                     constants::drive::rotperM),
+      units::meter_t(m_rightEncoder.GetPosition().GetValueAsDouble() *
+                     constants::drive::rotperM),
+      frc::Pose2d{0_in, 0_in, 0_rad}};
+  frc::Pose2d pose2dUpdate = m_odometry.GetPose();
+  frc::Pose2d pose2d;
+  frc::Pose2d Xtraj = {m_odometry.GetPose().Translation(),
+                       Pigeon.GetRotation2d()};
+  units::meters_per_second_t speed{1};
+  units::meters_per_second_squared_t a{1};
+  frc::TrajectoryConfig trajconfig{speed, a};
+  frc::Pose2d t{};
+  const std::vector<frc::Pose2d> waypoint{t};
 
-// frc::DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.ToWheelSpeeds(adjustedSpeeds);
- //auto [Tleft, Tright] = kinematics.ToWheelSpeeds(adjustedSpeeds);
+  frc::Trajectory traj =
+      frc::TrajectoryGenerator::GenerateTrajectory(waypoint, trajconfig);
+  // Using the default constructor of RamseteController. Here
+  // the gains are initialized to 2.0 and 0.7.
+  frc::RamseteController controller1;
+  frc::ChassisSpeeds adjustedSpeeds{
+      controller1.Calculate(pose2dUpdate, traj.Sample(3.4_s))};
 
- // Using the secondary constructor of RamseteController where
- // the user can choose any other gains.
- // frc::RamseteController controller2{2.1, 0.8};
- // Initialize the field
- frc::Field2d Field;
+  // frc::DifferentialDriveWheelSpeeds wheelSpeeds =
+  // kinematics.ToWheelSpeeds(adjustedSpeeds);
+  // auto [Tleft, Tright] = kinematics.ToWheelSpeeds(adjustedSpeeds);
 
- // Auto selection
- enum AutoRoutine {
-   kAmpAuto,
-   kMiddleAuto,
-   kMiddle3PcAuto,
-   kSideAuto,
-   kdriveoutAuto,
-   kWallOnlySideAuto,
-   kWallShootSideAuto,
-   kWallOnlyAmpAuto,
-   kWallShootAmpAuto,
-   kTestAuto
- } m_autoSelected;
+  // Using the secondary constructor of RamseteController where
+  // the user can choose any other gains.
+  // frc::RamseteController controller2{2.1, 0.8};
+  // Initialize the field
+  frc::Field2d Field;
 
- // Auto chooser
- frc::SendableChooser<AutoRoutine> m_autoChooser;
- const std::string a_AmpAuto = "2 Piece Amp";
- const std::string a_MiddleAuto = "2 Piece Middle";
- const std::string a_Middle3PcAuto = "3 Piece Middle";
- const std::string a_SideAuto = "2 Piece Side";
- const std::string a_driveoutAuto = "1 Piece Side";
- const std::string a_WallOnlySideAuto = "Wall Only Side";
- const std::string a_WallShootSideAuto = "Wall Shoot Side";
- const std::string a_WallOnlyAmpAuto = "Wall Only Amp";
- const std::string a_WallShootAmpAuto = "Wall Shoot Amp";
- const std::string a_TestAuto = "secret auto";
+  // Auto selection
+  enum AutoRoutine {
+    kAmpAuto,
+    kMiddleAuto,
+    kMiddle3PcAuto,
+    kSideAuto,
+    kdriveoutAuto,
+    kWallOnlySideAuto,
+    kWallShootSideAuto,
+    kWallOnlyAmpAuto,
+    kWallShootAmpAuto,
+    kTestAuto
+  } m_autoSelected;
 
- // Intitialize Limelight NetworkTables connection
- std::shared_ptr<nt::NetworkTable> table =
-     nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
+  // Auto chooser
+  frc::SendableChooser<AutoRoutine> m_autoChooser;
+  const std::string a_AmpAuto = "2 Piece Amp";
+  const std::string a_MiddleAuto = "2 Piece Middle";
+  const std::string a_Middle3PcAuto = "3 Piece Middle";
+  const std::string a_SideAuto = "2 Piece Side";
+  const std::string a_driveoutAuto = "1 Piece Side";
+  const std::string a_WallOnlySideAuto = "Wall Only Side";
+  const std::string a_WallShootSideAuto = "Wall Shoot Side";
+  const std::string a_WallOnlyAmpAuto = "Wall Only Amp";
+  const std::string a_WallShootAmpAuto = "Wall Shoot Amp";
+  const std::string a_TestAuto = "secret auto";
 
- public:
- // Override standard functions
- void RobotInit() override;
- void RobotPeriodic() override;
- void AutonomousInit() override;
- void AutonomousPeriodic() override;
- void TeleopInit() override;
- void TeleopPeriodic() override;
- void DisabledInit() override;
- void DisabledPeriodic() override;
- void TestPeriodic() override;
- void SimulationInit() override;
- void SimulationPeriodic() override;
+  // Intitialize Limelight NetworkTables connection
+  std::shared_ptr<nt::NetworkTable> table =
+      nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
 
- // Auto routines
- void ampAuto();
- void middleAuto();
- void middle3PcAuto();
- void sideAuto();
- void driveoutAuto();
- void wallOnlySideAuto();
- void wallShootSideAuto();
- void wallOnlyAmpAuto();
- void wallShootAmpAuto();
- void testAuto();
- void waypointtestauto();
+public:
+  // Override standard functions
+  void RobotInit() override;
+  void RobotPeriodic() override;
+  void AutonomousInit() override;
+  void AutonomousPeriodic() override;
+  void TeleopInit() override;
+  void TeleopPeriodic() override;
+  void DisabledInit() override;
+  void DisabledPeriodic() override;
+  void TestPeriodic() override;
+  void SimulationInit() override;
+  void SimulationPeriodic() override;
 
- // LED functions
- void Rainbow();
- void Green();
- void Red();
- void Yellow();
- void Blue();
+  // Auto routines
+  void ampAuto();
+  void middleAuto();
+  void middle3PcAuto();
+  void sideAuto();
+  void driveoutAuto();
+  void wallOnlySideAuto();
+  void wallShootSideAuto();
+  void wallOnlyAmpAuto();
+  void wallShootAmpAuto();
+  void testAuto();
+  void waypointtestauto();
 
- // Shoot functions
- void ShootSpeaker();
- void ShootAmp();
+  // LED functions
+  void Rainbow();
+  void Green();
+  void Red();
+  void Yellow();
+  void Blue();
 
- // poseupdate
- void poseupdater();
- void Robot::Drive(units::meters_per_second_t xSpeed,
-                   units::meters_per_second_t ySpeed,
-                   units::radians_per_second_t rot, bool fieldRelative);
+  // Shoot functions
+  void ShootSpeaker();
+  void ShootAmp();
+
+  // poseupdate
+  void poseupdater();
+  void Drive(units::meters_per_second_t xSpeed,
+             units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
+             bool fieldRelative);
+  frc::Rotation2d GetHeading();
+  frc::Rotation2d GetGyroHeading();
 };
