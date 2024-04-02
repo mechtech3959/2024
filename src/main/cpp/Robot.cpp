@@ -83,10 +83,14 @@ void Robot::Drive(units::meters_per_second_t xSpeed,
     m_vw_goal = rot;
 
   */
-    auto states = Kinematics.ToWheelSpeeds(frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-                                   xSpeed, ySpeed, rot, GetHeading())
-                               : chassisSpeeds {xSpeed, ySpeed, rot});
-    chassisSpeeds.Discretize(xSpeed,ySpeed,rot)
+  auto stat =
+      chassisSpeeds.FromFieldRelativeSpeeds(xSpeed, ySpeed, rot, GetHeading());
+  /*frc::ChassisSpeeds::FromFieldRelativeSpeeds(
+    xSpeed, ySpeed, rot, GetHeading()));
+chassisSpeeds({xSpeed, ySpeed, rot});
+chassisSpeeds.Discretize(xSpeed, ySpeed, rot);*/
+  auto [xs,ys,rs] = stat;
+  diffDrive.TankDriveIK(xs, rs, false);
 }
 void Robot::waypointtestauto() {
   limelight.updateTracking();
