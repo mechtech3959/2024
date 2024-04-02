@@ -3,10 +3,10 @@
 #include "Constants.h"
 #include "Intake.h"
 #include "LimeLight.h"
-
+#include <ctre/phoenix/led/CANdle.h>
+#include <ctre/phoenix/led/RainbowAnimation.h>
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
-
 #include <frc/AddressableLED.h>
 #include <frc/DriverStation.h>
 #include <frc/PowerDistribution.h>
@@ -25,8 +25,7 @@
 
 class Robot : public frc::TimedRobot {
 private:
-  // Initialize stuff
-  frc::XboxController _controller{0};
+  frc::XboxController controller{0};
   frc::Timer autoTimer;
   frc::PowerDistribution pdh{};
   Intake intake{};
@@ -44,6 +43,18 @@ private:
       constants::shooter::motorOneID, constants::canBus};
   ctre::phoenix6::hardware::TalonFX shooterMotorFollower{
       constants::shooter::motorTwoID, constants::canBus};
+  // Initialize CTRE CANdle
+  ctre::phoenix::led::CANdle candle{40}; // creates a new candle with ID 40
+
+  // Configure the candle
+  // Set parameters like strip type, RGB, brightness, and other settings
+  ctre::phoenix::led::CANdleConfiguration config;
+  // Additional Configurations
+  // Configure behavior when losing communication
+  ctre::phoenix::ErrorCode losConfigResult = candle.ConfigLOSBehavior(true);
+
+  ctre::phoenix::led::RainbowAnimation rainbow{1, 1, 150};
+
   ctre::phoenix6::hardware::TalonFX climberMotor{constants::climber::motorID,
                                                  constants::canBus};
 
@@ -113,6 +124,7 @@ public:
 
   // LED functions
   void Rainbow();
+  void White();
   void Green();
   void Red();
   void Yellow();
