@@ -83,8 +83,7 @@ private:
 
   // Creating my kinematics object: track width of 27 inches
   frc::DifferentialDriveKinematics Kinematics{27_in};
-  frc::ChassisSpeeds chassisSpeeds{2_mps, 0_mps,
-                                   1_rad_per_s}; // SET WHAT THE THE DOCS SAID
+
   // double rightEncoderRotationsperMeter =
   // m_rightEncoder.GetVelocity().GetValueAsDouble() *
   // constants::drive::rotperM; double leftEncoderRotationsperMeter =
@@ -114,11 +113,10 @@ private:
   frc::Pose2d pose2d;
   frc::Pose2d Xtraj = {m_odometry.GetPose().Translation(),
                        Pigeon.GetRotation2d()};
-  units::meters_per_second_t speed{1};
-  units::meters_per_second_squared_t a{1};
-  frc::TrajectoryConfig trajconfig{speed, a};
-  frc::Pose2d t{};
-  const std::vector<frc::Pose2d> waypoint{t};
+
+  frc::TrajectoryConfig trajconfig{1_mps, 1_mps_sq};
+
+  const std::vector<frc::Pose2d> waypoint{};
 
   frc::Trajectory traj =
       frc::TrajectoryGenerator::GenerateTrajectory(waypoint, trajconfig);
@@ -139,30 +137,10 @@ private:
   frc::Field2d Field;
 
   // Auto selection
-  enum AutoRoutine {
-    kAmpAuto,
-    kMiddleAuto,
-    kMiddle3PcAuto,
-    kSideAuto,
-    kdriveoutAuto,
-    kWallOnlySideAuto,
-    kWallShootSideAuto,
-    kWallOnlyAmpAuto,
-    kWallShootAmpAuto,
-    kTestAuto
-  } m_autoSelected;
+  enum AutoRoutine { kTestAuto } m_autoSelected;
 
   // Auto chooser
   frc::SendableChooser<AutoRoutine> m_autoChooser;
-  const std::string a_AmpAuto = "2 Piece Amp";
-  const std::string a_MiddleAuto = "2 Piece Middle";
-  const std::string a_Middle3PcAuto = "3 Piece Middle";
-  const std::string a_SideAuto = "2 Piece Side";
-  const std::string a_driveoutAuto = "1 Piece Side";
-  const std::string a_WallOnlySideAuto = "Wall Only Side";
-  const std::string a_WallShootSideAuto = "Wall Shoot Side";
-  const std::string a_WallOnlyAmpAuto = "Wall Only Amp";
-  const std::string a_WallShootAmpAuto = "Wall Shoot Amp";
   const std::string a_TestAuto = "secret auto";
 
   // Intitialize Limelight NetworkTables connection
@@ -184,15 +162,6 @@ public:
   void SimulationPeriodic() override;
 
   // Auto routines
-  void ampAuto();
-  void middleAuto();
-  void middle3PcAuto();
-  void sideAuto();
-  void driveoutAuto();
-  void wallOnlySideAuto();
-  void wallShootSideAuto();
-  void wallOnlyAmpAuto();
-  void wallShootAmpAuto();
   void testAuto();
   void waypointtestauto();
 
