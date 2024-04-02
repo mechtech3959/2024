@@ -6,8 +6,9 @@
 
 #include <ctre/phoenix/led/CANdle.h>
 #include <ctre/phoenix/led/RainbowAnimation.h>
-#include <ctre/phoenix6/Pigeon2.hpp>
+#include <ctre/phoenix6/Pigeon2.hpp>#include <ctre/phoenix6/Pigeon2.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
+
 #include <frc/AddressableLED.h>
 #include <frc/DriverStation.h>
 #include <frc/PowerDistribution.h>
@@ -57,6 +58,8 @@ private:
   ctre::phoenix::ErrorCode losConfigResult = candle.ConfigLOSBehavior(true);
 
   ctre::phoenix::led::Animation *m_toAnimate = NULL;
+  ctre::phoenix6::hardware::TalonFX climberMotor{constants::climber::motorID,
+                                                 constants::canBus};
 
   // Auto selection
   enum AutoRoutine {
@@ -88,6 +91,9 @@ private:
   // Intitialize Limelight NetworkTables connection
   std::shared_ptr<nt::NetworkTable> table =
       nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
+  // class member variable
+  ctre::phoenix6::controls::MotionMagicVoltage m_motmag{0_tr};
+  ctre::phoenix6::configs::TalonFXConfiguration talonFXConfigs{};
 
 public:
   // Initialize the Pigeon
