@@ -188,7 +188,7 @@ void LimeLight::updateBackTracking() {
   const double MAX_STEER = 0.5f;
 
   double tx = LimelightHelpers::getTX("limelight-bakshot");
-  double ty = LimelightHelpers::getTY("limelight-bakshot");
+  // double ty = LimelightHelpers::getTY("limelight-bakshot");
   double ta = LimelightHelpers::getTA("limelight-bakshot");
   double tv = LimelightHelpers::getTV("limelight-bakshot");
   Note = LimelightHelpers::getFiducialID("limelight-bakshot");

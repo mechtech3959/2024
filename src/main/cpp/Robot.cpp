@@ -1,51 +1,15 @@
 #include "Robot.h"
 
-static constexpr int kLength = 300;
-
-frc::AddressableLED m_led{0};
-
-std::array<frc::AddressableLED::LEDData, kLength>
-    m_ledBuffer; // Reuse the buffer
-
-// Store what the last hue of the first pixel is
-
-int firstPixelHue = 0;
-void Robot::Green() {
-  for (int i = 0; i < kLength; i++) {
-    m_ledBuffer[i].SetRGB(0, 255, 0);
-  }
-}
-void Robot::Red() {
-  for (int i = 0; i < kLength; i++) {
-    m_ledBuffer[i].SetRGB(255, 0, 0);
-  }
-}
-void Robot::Yellow() {
-  for (int i = 0; i < kLength; i++) {
-    m_ledBuffer[i].SetRGB(255, 255, 0);
-  }
-}
-void Robot::Blue() {
-  for (int i = 0; i < kLength; i++) {
-    m_ledBuffer[i].SetRGB(0, 0, 255);
-  }
-}
+// Set the CANdle LEDs to white
+void Robot::White() { candle.SetLEDs(255, 255, 255); }
+void Robot::Green() { candle.SetLEDs(0, 255, 0); }
+void Robot::Red() { candle.SetLEDs(255, 0, 0); }
+void Robot::Yellow() { candle.SetLEDs(255, 255, 0); }
+void Robot::Blue() { candle.SetLEDs(0, 0, 255); }
 void Robot::Rainbow() {
   // For every pixel
-  for (int i = 0; i < kLength; i++) {
-    // Calculate the hue - hue is easier for rainbows because the color
-    // shape is a circle so only one value needs to precess
-    const auto pixelHue = (firstPixelHue + (i * 180 / kLength)) % 180;
-
-    // Set the value
-    m_ledBuffer[i].SetHSV(pixelHue, 255, 128);
-  }
-
-  // Increase by to make the rainbow "move"
-  firstPixelHue += 3;
-
-  // Check bounds
-  firstPixelHue %= 180;
+  m_toAnimate = new ctre::phoenix::led::RainbowAnimation(1, 0.1, 150);
+  candle.Animate(*m_toAnimate);
 }
 
 void Robot::ampAuto() { // zac did this :)
@@ -407,13 +371,13 @@ void Robot::RobotInit() {
   shooterMotorLeader.SetInverted(true);
   shooterMotorFollower.SetControl(ctre::phoenix6::controls::Follower{
       shooterMotorLeader.GetDeviceID(), true});
+  config.stripType = ctre::phoenix::led::LEDStripType::RGB;
+  config.brightnessScalar = 1; // LEDs full brightness
+  // ctre::phoenix::ErrorCode faultsError = candle.GetFaults(faults); //fills
+  // current candle fault; returns
 
   // Default to a length of 60, start empty output
   // Length is expensive to set, so only set it once, then just update data
-  m_led.SetLength(kLength);
-  m_led.SetData(m_ledBuffer);
-  m_led.Start();
-
   m_autoChooser.SetDefaultOption(a_AmpAuto, AutoRoutine::kAmpAuto);
   m_autoChooser.AddOption(a_MiddleAuto, AutoRoutine::kMiddleAuto);
   m_autoChooser.AddOption(a_Middle3PcAuto, AutoRoutine::kMiddle3PcAuto);
@@ -435,12 +399,8 @@ void Robot::AutonomousPeriodic() {
   if (frc::DriverStation::GetAlliance() ==
       frc::DriverStation::Alliance::kBlue) {
     Blue();
-    m_led.SetData(m_ledBuffer);
-    m_led.Start();
   } else {
     Red();
-    m_led.SetData(m_ledBuffer);
-    m_led.Start();
   }
 
   switch (m_autoSelected) {
@@ -483,8 +443,6 @@ void Robot::TeleopPeriodic() {
   double Roll = Pigeon.GetRoll().GetValueAsDouble();
   if ((Roll < -2.3) or (Roll > 1)) {
     Rainbow();
-    m_led.SetData(m_ledBuffer);
-    m_led.Start();
   } else {
     if (frc::DriverStation::GetAlliance() ==
         frc::DriverStation::Alliance::kBlue) {
@@ -492,10 +450,7 @@ void Robot::TeleopPeriodic() {
     } else {
       Red();
     }
-    m_led.SetData(m_ledBuffer);
     Green();
-    m_led.SetData(m_ledBuffer);
-    m_led.Start();
   }
 
   // Get inputs/controller mapping
@@ -539,10 +494,6 @@ void Robot::TeleopPeriodic() {
 void Robot::DisabledInit() {
   autoTimer.Stop();
   autoTimer.Reset();
-
-  m_led.SetLength(kLength);
-
-  m_led.SetData(m_ledBuffer);
 }
 
 void Robot::RobotPeriodic() {
@@ -570,7 +521,7 @@ void Robot::RobotPeriodic() {
              m_autoSelected == AutoRoutine::kAmpAuto) {
     Pigeon.AddYaw(-90); // maybe be right, double check
   }; */
- 
+
   // The PDP returns the voltage in increments of 0.05 Volts.
   double voltage = pdh.GetVoltage();
   frc::SmartDashboard::PutNumber("Voltage", voltage);
@@ -616,14 +567,9 @@ void Robot::DisabledPeriodic() {
   double Roll = Pigeon.GetRoll().GetValueAsDouble();
   if ((Roll < -2.3) || (Roll > 1)) {
     Rainbow();
-    m_led.SetData(m_ledBuffer);
-    m_led.Start();
   } else {
     Green();
-    m_led.SetData(m_ledBuffer);
     Red();
-    m_led.SetData(m_ledBuffer);
-    m_led.Start();
   }
 }
 void Robot::SimulationInit() {}
