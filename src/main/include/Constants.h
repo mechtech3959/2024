@@ -25,10 +25,10 @@
  */
 
 namespace DriveConstants {
-inline constexpr int kLeftMotor1Port = 2;
-inline constexpr int kLeftMotor2Port = 3;
-inline constexpr int kRightMotor1Port = 4;
-inline constexpr int kRightMotor2Port = 5;
+inline constexpr int kLeftMotor1Port = 3;
+inline constexpr int kLeftMotor2Port = 2;
+inline constexpr int kRightMotor1Port = 5;
+inline constexpr int kRightMotor2Port = 4;
 
 inline constexpr int kLeftEncoderPorts[]{0, 1};
 inline constexpr int kRightEncoderPorts[]{2, 3};
@@ -40,9 +40,7 @@ extern const frc::DifferentialDriveKinematics kDriveKinematics;
 
 inline constexpr int kEncoderCPR = 1024;
 inline constexpr units::meter_t kWheelDiameter = 6_in;
-inline constexpr auto kEncoderDistancePerPulse =
-    // Assumes the encoders are directly mounted on the wheel shafts
-    (kWheelDiameter * std::numbers::pi) / static_cast<double>(kEncoderCPR);
+inline constexpr double kRotationsPerMeter = 1.91370942525;
 
 // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
 // These characterization values MUST be determined either experimentally or
@@ -57,6 +55,13 @@ inline constexpr auto ka = 0.2 * 1_V * 1_s * 1_s / 1_m;
 inline constexpr double kPDriveVel = 8.5;
 } // namespace DriveConstants
 
+namespace ShooterConstants {
+inline constexpr double kAmpShootSpeed = 0.15;
+inline constexpr double kSpeakerShootSpeed = 1;
+inline constexpr int kLeftShooterMotorID = 15;
+inline constexpr int kRightShooterMotorID = 16;
+constexpr char kShooterCanBus[] = "rio";
+} // namespace ShooterConstants
 namespace AutoConstants {
 inline constexpr auto kMaxSpeed = 3_mps;
 inline constexpr auto kMaxAcceleration = 1_mps_sq;

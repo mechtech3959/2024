@@ -12,6 +12,7 @@
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
+#include "subsystems/ShooterSubsystem.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -21,12 +22,12 @@
  * commands, and button mappings) should be declared here.
  */
 class RobotContainer {
- public:
+public:
   RobotContainer();
 
   frc2::CommandPtr GetAutonomousCommand();
 
- private:
+private:
   // The driver's controller
   frc::XboxController m_driverController{OIConstants::kDriverControllerPort};
 
@@ -34,6 +35,7 @@ class RobotContainer {
 
   // The robot's subsystems
   DriveSubsystem m_drive;
+  ShooterSubsystem m_shooter;
 
   // RobotContainer-owned commands
   frc2::InstantCommand m_driveHalfSpeed{[this] { m_drive.SetMaxOutput(0.5); },

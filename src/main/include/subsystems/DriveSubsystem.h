@@ -116,10 +116,10 @@ private:
   // declared private and exposed only through public methods.
 
   // The motor controllers
-  rev::CANSparkMax m_left1{2, rev::CANSparkMax::MotorType::kBrushed};
-  rev::CANSparkMax m_left2{3, rev::CANSparkMax::MotorType::kBrushed};
-  rev::CANSparkMax m_right1{4, rev::CANSparkMax::MotorType::kBrushed};
-  rev::CANSparkMax m_right2{5, rev::CANSparkMax::MotorType::kBrushed};
+  rev::CANSparkMax m_left1;
+  rev::CANSparkMax m_left2;
+  rev::CANSparkMax m_right1;
+  rev::CANSparkMax m_right2;
 
   // The robot's drive
   frc::DifferentialDrive m_drive{[&](double output) { m_left1.Set(output); },
