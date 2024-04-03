@@ -1,6 +1,7 @@
 #pragma once
 
 namespace constants {
+constexpr bool competitionMode = false;
 // Set to 'CAN1' for CANivore, 'rio' for roboRIO
 constexpr char canBus[] = "rio";
 namespace drive {

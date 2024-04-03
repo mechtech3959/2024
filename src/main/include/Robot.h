@@ -53,7 +53,9 @@ private:
   // Configure behavior when losing communication
   ctre::phoenix::ErrorCode losConfigResult = candle.ConfigLOSBehavior(true);
 
-  ctre::phoenix::led::RainbowAnimation rainbow{1, 1, 150};
+  ctre::phoenix::led::RainbowAnimation rainbow{
+      constants::competitionMode ? 1 : 0.5,
+      constants::competitionMode ? 1 : 0.5, 150};
 
   ctre::phoenix6::hardware::TalonFX climberMotor{constants::climber::motorID,
                                                  constants::canBus};
