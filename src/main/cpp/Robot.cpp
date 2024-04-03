@@ -1,197 +1,68 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 #include "Robot.h"
-#include <ctre/phoenix/core/GadgeteerUartClient.h>
 
-frc::Rotation2d Robot::GetHeading() { return m_odometry.GetPose().Rotation(); }
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <frc2/command/CommandScheduler.h>
 
-frc::Rotation2d Robot::GetGyroHeading() { return Pigeon.GetRotation2d(); }
+void Robot::RobotInit() {}
 
-void Robot::poseupdater() {
-  m_odometry.Update(Pigeon.GetRotation2d(), diffWPos.left, diffWPos.right);
-  pose2d = m_odometry.GetPose();
-}
+/**
+ * This function is called every 20 ms, no matter the mode. Use
+ * this for items like diagnostics that you want to run during disabled,
+ * autonomous, teleoperated and test.
+ *
+ * <p> This runs after the mode specific periodic functions, but before
+ * LiveWindow and SmartDashboard integrated updating.
+ */
+void Robot::RobotPeriodic() { frc2::CommandScheduler::GetInstance().Run(); }
 
-void Robot::waypointtestauto() {
-  limelight.updateTracking();
-  units::time::second_t time = autoTimer.Get();
-  frc::Pose2d p;
-  if (frc::DriverStation::GetAlliance() ==
-      frc::DriverStation::Alliance::kBlue) {
-    // if (time < 3.0_s) {
-    // ShootSpeaker();
-    // } else if (time > 3.0_s and time < 4.0_s) {
+/**
+ * This function is called once each time the robot enters Disabled mode. You
+ * can use it to reset any subsystem information you want to clear when the
+ * robot is disabled.
+ */
+void Robot::DisabledInit() {}
 
-    // ramseteCommand.Schedule();
-    std::cout << "test";
-    // p = traj.Sample(autoTimer.Get()).pose;
-    // diffDrive.ArcadeDrive(p.X().value(), p.Y().value(), true);
-    // std::cout << p.X().value() << " y " << p.Y().value() << std::endl;
-    // } else if (time > 4.0_s) {
-    // }
-  } else if (frc::DriverStation::GetAlliance() ==
-             frc::DriverStation::Alliance::kRed) { // red
-    if (autoTimer.Get() < 3.0_s) {
-      diffDrive.ArcadeDrive(0.6, limelight.m_LimelightTurnCmd);
-    } else if (autoTimer.Get() > 3.0_s && autoTimer.Get() < 6.0_s) {
-      ShootAmp();
-    } else if (autoTimer.Get() > 6.0_s && autoTimer.Get() < 8_s) {
-      diffDrive.ArcadeDrive(-0.65, 0.48);
-      intake.SetSpeed(1);
-    } else if (autoTimer.Get() > 8.0_s && autoTimer.Get() < 10.5_s) {
-      diffDrive.ArcadeDrive(0.65, -0.48);
-      intake.SetSpeed(1);
-    } else if (autoTimer.Get() > 10.5_s && autoTimer.Get() < 15_s) {
-      ShootAmp();
-    }
-  } else {
-    diffDrive.ArcadeDrive(0.0, 0.0);
-  }
-}
-
-void Robot::ShootSpeaker() {
-  shooterMotorLeader.Set(constants::shooter::speakerShootSpeed);
-  intake.feedMotor.Set(constants::intake::feedMotorSpeed);
-}
-
-void Robot::ShootAmp() {
-  shooterMotorLeader.Set(constants::shooter::ampShootSpeed);
-  intake.feedMotor.Set(constants::intake::feedMotorSpeed);
-}
-
-void Robot::RobotInit() {
-
-  leftFrontMotor.RestoreFactoryDefaults();
-  leftRearMotor.RestoreFactoryDefaults();
-  rightFrontMotor.RestoreFactoryDefaults();
-  rightRearMotor.RestoreFactoryDefaults();
-  m_leftEncoder.SetPosition(0_tr);
-  m_rightEncoder.SetPosition(0_tr);
-  leftFrontMotor.SetSmartCurrentLimit(30);
-  leftRearMotor.SetSmartCurrentLimit(30);
-  rightFrontMotor.SetSmartCurrentLimit(30);
-  rightRearMotor.SetSmartCurrentLimit(30);
-  leftFrontMotor.Follow(leftRearMotor);
-  rightRearMotor.Follow(rightFrontMotor);
-
-  // Set motors to go the correct direction
-  rightFrontMotor.SetInverted(false);
-  rightRearMotor.SetInverted(false);
-  leftFrontMotor.SetInverted(true);
-  leftRearMotor.SetInverted(true);
-
-  Pigeon.SetYaw(0_deg);
-
-  shooterMotorLeader.GetConfigurator().Apply(
-      ctre::phoenix6::configs::TalonFXConfiguration{});
-  shooterMotorFollower.GetConfigurator().Apply(
-      ctre::phoenix6::configs::TalonFXConfiguration{});
-  shooterMotorLeader.SetInverted(true);
-  shooterMotorFollower.SetControl(ctre::phoenix6::controls::Follower{
-      shooterMotorLeader.GetDeviceID(), true});
-
-  auto [linearVelocity, vy, angularVelocity] = kinematics.ToChassisSpeeds(
-      wheelSpeeds); // Converting Wheel Speeds to Chassis Speeds
-
-  m_autoChooser.AddOption(a_TestAuto, AutoRoutine::kTestAuto);
-
-  frc::SmartDashboard::PutData("Auto Modes", &m_autoChooser);
-}
-
-void Robot::AutonomousInit() {
-  autoTimer.Start();
-
-  ramseteCommand.Schedule();
-}
-void Robot::AutonomousPeriodic() {
-  // waypointtestauto();
-  frc::SmartDashboard::PutNumber("Auto Timer", autoTimer.Get().value());
-}
-
-void Robot::TeleopPeriodic() {
-  // Get inputs/controller mapping
-  double forw = -_controller.GetLeftY();
-  double spin = _controller.GetRightX();
-  double intakeSpeed = _controller.GetLeftTriggerAxis();
-  double shooterSpeed = _controller.GetRightTriggerAxis();
-  bool reverse = _controller.GetAButton();
-  bool shootAmp = _controller.GetLeftBumper();
-  bool shootSpeaker = _controller.GetRightBumper();
-
-  // Deadzone the joysticks
-  if (fabs(forw) < 0.10)
-    forw = 0;
-  if (fabs(spin) < 0.10)
-    spin = 0;
-  // Set the differential drive to the commanded speed
-  diffDrive.ArcadeDrive(forw, spin, true);
-
-  // Reverse everything if the button is pressed
-  if (reverse) {
-    intakeSpeed = -intakeSpeed;
-    shooterSpeed = -shooterSpeed;
-  }
-  if (shootAmp) {
-    shooterMotorLeader.Set(constants::shooter::ampShootSpeed);
-    intake.feedMotor.Set(constants::intake::feedMotorSpeed);
-  }
-
-  if (shootSpeaker) {
-    shooterMotorLeader.Set(constants::shooter::speakerShootSpeed);
-    intake.feedMotor.Set(constants::intake::feedMotorSpeed);
-  }
-
-  if (!shootAmp && !shootSpeaker) {
-    shooterMotorLeader.Set(shooterSpeed);
-    intake.SetSpeed(intakeSpeed);
-  }
-}
-
-void Robot::DisabledInit() {
-  autoTimer.Stop();
-  autoTimer.Reset();
-}
-
-void Robot::RobotPeriodic() {
-  // The PDP returns the voltage in increments of 0.05 Volts.
-  double voltage = pdh.GetVoltage();
-  frc::SmartDashboard::PutNumber("Voltage", voltage);
-  double temperatureCelsius = pdh.GetTemperature();
-  frc::SmartDashboard::PutNumber("Temperature", temperatureCelsius);
-  double totalCurrent = pdh.GetTotalCurrent();
-  frc::SmartDashboard::PutNumber("Total Current", totalCurrent);
-  double totalPower = pdh.GetTotalPower();
-  frc::SmartDashboard::PutNumber("Total Power", totalPower);
-  double leftEncoderValue = m_leftEncoder.GetPosition().GetValueAsDouble();
-  frc::SmartDashboard::PutNumber("Left Encoder Value", leftEncoderValue);
-  double rightEncoderValue = m_rightEncoder.GetPosition().GetValueAsDouble();
-  frc::SmartDashboard::PutNumber("Right Encoder Value", rightEncoderValue);
-  double totalEnergy = pdh.GetTotalEnergy();
-  frc::SmartDashboard::PutNumber("Total Energy", totalEnergy);
-  frc::SmartDashboard::PutNumber("Pitch", Pigeon.GetPitch().GetValueAsDouble());
-  frc::SmartDashboard::PutNumber("Roll", Pigeon.GetRoll().GetValueAsDouble());
-  frc::SmartDashboard::PutNumber("Yaw", Pigeon.GetYaw().GetValueAsDouble());
-  frc::SmartDashboard::PutNumber("Shooter TX",
-                                 LimelightHelpers::getTY("limelight-greenie"));
-  frc::SmartDashboard::PutNumber("Shooter TY",
-                                 LimelightHelpers::getTX("limelight-greenie"));
-  frc::SmartDashboard::PutNumber("Shooter TA",
-                                 LimelightHelpers::getTA("limelight-greenie"));
-  frc::Rotation2d gyroAngle = Pigeon.GetRotation2d();
-  poseupdater();
-  frc2::CommandScheduler::GetInstance().Run();
-  // limelight.GetRobotPose();
-
-  // this gets our calculated X and Y pose through our odometry update above
-  // then puts it on drivers station
-  auto posX = pose2d.X().value();
-  auto posY = pose2d.Y().value();
-  frc::SmartDashboard::PutNumber("Pos X", posX);
-  frc::SmartDashboard::PutNumber("Pos Y", posY);
-}
-void Robot::TeleopInit() {}
 void Robot::DisabledPeriodic() {}
-void Robot::SimulationInit() {}
-void Robot::SimulationPeriodic() {}
+
+/**
+ * This autonomous runs the autonomous command selected by your {@link
+ * RobotContainer} class.
+ */
+void Robot::AutonomousInit() {
+  m_autonomousCommand = m_container.GetAutonomousCommand();
+
+  if (m_autonomousCommand) {
+    m_autonomousCommand->Schedule();
+  }
+}
+
+void Robot::AutonomousPeriodic() {}
+
+void Robot::TeleopInit() {
+  // This makes sure that the autonomous stops running when
+  // teleop starts running. If you want the autonomous to
+  // continue until interrupted by another command, remove
+  // this line or comment it out.
+  if (m_autonomousCommand) {
+    m_autonomousCommand->Cancel();
+    m_autonomousCommand.reset();
+  }
+}
+
+/**
+ * This function is called periodically during operator control.
+ */
+void Robot::TeleopPeriodic() {}
+
+/**
+ * This function is called periodically during test mode.
+ */
 void Robot::TestPeriodic() {}
+
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }
 #endif
