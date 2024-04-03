@@ -55,7 +55,7 @@ private:
 
   ctre::phoenix::led::RainbowAnimation rainbow{
       constants::competitionMode ? 1 : 0.5,
-      constants::competitionMode ? 1 : 0.5, 150};
+      constants::competitionMode ? 1 : 0.5, 278};
 
   ctre::phoenix6::hardware::TalonFX climberMotor{constants::climber::motorID,
                                                  constants::canBus};
