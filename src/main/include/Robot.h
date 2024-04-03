@@ -136,7 +136,8 @@ private:
   // Intitialize Limelight NetworkTables connection
   std::shared_ptr<nt::NetworkTable> table =
       nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
-
+  LimeLight Greenie{"limelight-greenie"};
+  LimeLight Bakshot{"limelight-bakshot"};
   void waypointtestauto();
 
   // Shoot functions
@@ -146,10 +147,11 @@ private:
   frc::Rotation2d GetGyroHeading();
   // poseupdate
   void poseupdater();
+  void setPose(frc::Pose2d pose);
 
-public:
-  // Override standard functions
-  void RobotInit() override;
+      public :
+      // Override standard functions
+      void RobotInit() override;
   void RobotPeriodic() override;
   void AutonomousInit() override;
   void AutonomousPeriodic() override;

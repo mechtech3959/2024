@@ -4,7 +4,10 @@
 frc::Rotation2d Robot::GetHeading() { return m_odometry.GetPose().Rotation(); }
 
 frc::Rotation2d Robot::GetGyroHeading() { return Pigeon.GetRotation2d(); }
-
+void Robot::setPose(frc::Pose2d pose){
+  m_odometry.ResetPosition(GetGyroHeading(), diffWPos.left,
+                           diffWPos.right,pose);
+}
 void Robot::poseupdater() {
   m_odometry.Update(Pigeon.GetRotation2d(), diffWPos.left, diffWPos.right);
   pose2d = m_odometry.GetPose();
@@ -177,7 +180,11 @@ void Robot::RobotPeriodic() {
                                  LimelightHelpers::getTA("limelight-greenie"));
   frc::Rotation2d gyroAngle = Pigeon.GetRotation2d();
   poseupdater();
+  limelight.updateTracking();
+  if (limelight.m_LimelightHasTarget)  setPose(Greenie.GetRobotPose());
+  
   frc2::CommandScheduler::GetInstance().Run();
+   
   // limelight.GetRobotPose();
 
   // this gets our calculated X and Y pose through our odometry update above
@@ -190,7 +197,8 @@ void Robot::RobotPeriodic() {
 void Robot::TeleopInit() {}
 void Robot::DisabledPeriodic() {}
 void Robot::SimulationInit() {}
-void Robot::SimulationPeriodic() {}
+void Robot::SimulationPeriodic() { //poseupdater();
+ }
 void Robot::TestPeriodic() {}
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }
