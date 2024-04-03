@@ -9,9 +9,12 @@
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/InstantCommand.h>
+#include <memory>
+#include <pathplanner/lib/auto/NamedCommands.h>
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
+#include "subsystems/IntakeSubsystem.h"
 #include "subsystems/ShooterSubsystem.h"
 
 /**
@@ -36,12 +39,16 @@ private:
   // The robot's subsystems
   DriveSubsystem m_drive;
   ShooterSubsystem m_shooter;
+  IntakeSubsystem m_intake;
 
   // RobotContainer-owned commands
   frc2::InstantCommand m_driveHalfSpeed{[this] { m_drive.SetMaxOutput(0.5); },
                                         {}};
   frc2::InstantCommand m_driveFullSpeed{[this] { m_drive.SetMaxOutput(1); },
                                         {}};
+  frc2::InstantCommand m_pickupStart{[this] { m_intake.Pickup(); },
+                                     {&m_intake}};
+  frc2::InstantCommand m_pickupStop{[this] { m_intake.Stop(); }, {&m_intake}};
 
   void ConfigureButtonBindings();
 };

@@ -12,7 +12,7 @@ public:
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
-  void Periodic() override;
+  // void Periodic() override;
 
   /**
    * Shoots at the predefined amp shoot speed
@@ -25,11 +25,21 @@ public:
   void ShootSpeaker();
 
   /**
+   * Reverses the shooter
+   */
+  void Reverse();
+
+  /**
+   * Stops the shooter
+   */
+  void Stop();
+
+  /**
    * Shoots at the commanded speed
    *
    * @param speed the commanded shoot speed
    */
-  void Shoot(double speed);
+  // void Shoot(double speed);
 
 private:
   // The motor controllers

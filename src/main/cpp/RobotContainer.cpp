@@ -19,6 +19,16 @@
 #include "Constants.h"
 
 RobotContainer::RobotContainer() {
+  pathplanner::NamedCommands::registerCommand(
+      "shootin' me britches",
+      frc2::cmd::Run(
+          [this] {
+            (m_driverController.GetRightTriggerAxis() > 0.1)
+                ? m_driverController.GetAButton() ? m_shooter.Reverse()
+                                                  : m_shooter.ShootSpeaker()
+                : m_shooter.Stop();
+          },
+          {&m_shooter}));
   // Initialize all of your commands and subsystems here
 
   // Configure the button bindings
@@ -32,8 +42,21 @@ RobotContainer::RobotContainer() {
       },
       {&m_drive}));
   m_shooter.SetDefaultCommand(frc2::cmd::Run(
-      [this] { m_shooter.Shoot(m_driverController.GetRightTriggerAxis()); },
+      [this] {
+        (m_driverController.GetRightTriggerAxis() > 0.1)
+            ? m_driverController.GetAButton() ? m_shooter.Reverse()
+                                              : m_shooter.ShootSpeaker()
+            : m_shooter.Stop();
+      },
       {&m_shooter}));
+  m_intake.SetDefaultCommand(frc2::cmd::Run(
+      [this] {
+        (m_driverController.GetLeftTriggerAxis() > 0.1)
+            ? m_driverController.GetAButton() ? m_intake.Reverse()
+                                              : m_intake.Pickup()
+            : m_intake.Stop();
+      },
+      {&m_intake}));
 }
 
 void RobotContainer::ConfigureButtonBindings() {

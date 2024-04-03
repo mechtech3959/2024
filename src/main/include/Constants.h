@@ -23,15 +23,18 @@
  * command-specific namespaces within this header, which can then be used where
  * they are needed.
  */
+namespace GeneralConstants {
+constexpr char kCanBus[] = "rio";
+}
 
 namespace DriveConstants {
-inline constexpr int kLeftMotor1Port = 3;
-inline constexpr int kLeftMotor2Port = 2;
-inline constexpr int kRightMotor1Port = 5;
-inline constexpr int kRightMotor2Port = 4;
+inline constexpr int kLeftFrontMotorID = 2;
+inline constexpr int kLeftRearMotorID = 3;
+inline constexpr int kRightFrontMotorID = 4;
+inline constexpr int kRightRearMotorID = 5;
 
-inline constexpr int kLeftEncoderPorts[]{0, 1};
-inline constexpr int kRightEncoderPorts[]{2, 3};
+inline constexpr int kLeftEncoderID = 31;
+inline constexpr int kRightEncoderID = 30;
 inline constexpr bool kLeftEncoderReversed = false;
 inline constexpr bool kRightEncoderReversed = true;
 
@@ -58,10 +61,19 @@ inline constexpr double kPDriveVel = 8.5;
 namespace ShooterConstants {
 inline constexpr double kAmpShootSpeed = 0.15;
 inline constexpr double kSpeakerShootSpeed = 1;
-inline constexpr int kLeftShooterMotorID = 15;
-inline constexpr int kRightShooterMotorID = 16;
-constexpr char kShooterCanBus[] = "rio";
+inline constexpr int kLeftShooterMotorID = 9;
+inline constexpr int kRightShooterMotorID = 10;
 } // namespace ShooterConstants
+
+namespace IntakeConstants {
+inline constexpr double kPickupMotorSpeed = 1;
+inline constexpr double kFeedMotorSpeed = 1;
+inline constexpr int kPickupMotorID = 7;
+inline constexpr int kFeedMotorID = 8;
+inline constexpr unsigned int kPickupMotorCurrentLimit = 20;
+inline constexpr unsigned int kFeedMotorCurrentLimit = 20;
+} // namespace IntakeConstants
+
 namespace AutoConstants {
 inline constexpr auto kMaxSpeed = 3_mps;
 inline constexpr auto kMaxAcceleration = 1_mps_sq;

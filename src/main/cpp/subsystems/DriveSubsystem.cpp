@@ -10,11 +10,12 @@
 using namespace DriveConstants;
 
 DriveSubsystem::DriveSubsystem()
-    : m_left1{kLeftMotor1Port, rev::CANSparkMax::MotorType::kBrushed},
-      m_left2{kLeftMotor2Port, rev::CANSparkMax::MotorType::kBrushed},
-      m_right1{kRightMotor1Port, rev::CANSparkMax::MotorType::kBrushed},
-      m_right2{kRightMotor2Port, rev::CANSparkMax::MotorType::kBrushed},
-      m_leftEncoder{30}, m_rightEncoder{31}, m_gyro{32},
+    : m_left1{kLeftFrontMotorID, rev::CANSparkMax::MotorType::kBrushed},
+      m_left2{kLeftRearMotorID, rev::CANSparkMax::MotorType::kBrushed},
+      m_right1{kRightFrontMotorID, rev::CANSparkMax::MotorType::kBrushed},
+      m_right2{kRightRearMotorID, rev::CANSparkMax::MotorType::kBrushed},
+      m_leftEncoder{kLeftEncoderID}, m_rightEncoder{kRightEncoderID},
+      m_gyro{32, GeneralConstants::kCanBus},
       m_odometry{m_gyro.GetRotation2d(), units::meter_t{0}, units::meter_t{0}} {
   wpi::SendableRegistry::AddChild(&m_drive, &m_left1);
   wpi::SendableRegistry::AddChild(&m_drive, &m_right1);
