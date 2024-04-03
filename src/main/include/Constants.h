@@ -10,9 +10,10 @@ constexpr int leftRearMotorID = 3;
 constexpr int rightFrontMotorID = 4;
 constexpr int rightRearMotorID = 5;
 constexpr int PigeonID = 32;
-constexpr int m_leftEncoderID = 30;  // set once attached
-constexpr int m_rightEncoderID = 31; // set once attached
-constexpr units::inch_t kWidth =26.935_in; // remeasure needs to be wheel to wheel width
+constexpr int m_leftEncoderID = 31;  // set once attached
+constexpr int m_rightEncoderID = 30; // set once attached
+constexpr units::inch_t kWidth =
+    26.935_in; // remeasure needs to be wheel to wheel width
 constexpr double rotperIn = 0.0740288628; // rotation per inch
 constexpr double rotperM = 1.91370942525; // rotation per inch
 

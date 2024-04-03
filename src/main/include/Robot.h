@@ -82,59 +82,49 @@ private:
       constants::drive::m_rightEncoderID, constants::canBus};
 
   // Creating my kinematics object: track width of 27 inches
-  frc::DifferentialDriveKinematics Kinematics{27_in};
-
-  // double rightEncoderRotationsperMeter =
-  // m_rightEncoder.GetVelocity().GetValueAsDouble() *
-  // constants::drive::rotperM; double leftEncoderRotationsperMeter =
-  // m_leftEncoder.GetVelocity().GetValueAsDouble() * constants::drive::rotperM;
+  frc::DifferentialDriveKinematics kinematics{27_in};
 
   frc::DifferentialDriveWheelSpeeds wheelSpeeds{
       units::velocity::meters_per_second_t{
-          m_rightEncoder.GetVelocity().GetValueAsDouble() *
+          -m_rightEncoder.GetVelocity().GetValueAsDouble() /
           constants::drive::rotperM},
       units::velocity::meters_per_second_t{
-          m_leftEncoder.GetVelocity().GetValueAsDouble() *
+          m_leftEncoder.GetVelocity().GetValueAsDouble() /
           constants::drive::rotperM}};
-  // DifferentialDriveWheelPositions
+
   frc::DifferentialDriveWheelPositions diffWPos{
-      units::meter_t(m_leftEncoder.GetPosition().GetValueAsDouble()),
-      units::meter_t(m_rightEncoder.GetPosition().GetValueAsDouble())};
+      units::meter_t(m_leftEncoder.GetPosition().GetValueAsDouble() /
+                     constants::drive::rotperM),
+      units::meter_t(-m_rightEncoder.GetPosition().GetValueAsDouble() /
+                     constants::drive::rotperM)};
   // Creating my odometry object.
   // Here, our starting pose is 0,0
   frc::DifferentialDriveOdometry m_odometry{
       Pigeon.GetRotation2d(),
-      units::meter_t(m_leftEncoder.GetPosition().GetValueAsDouble() *
+      units::meter_t(m_leftEncoder.GetPosition().GetValueAsDouble() /
                      constants::drive::rotperM),
-      units::meter_t(m_rightEncoder.GetPosition().GetValueAsDouble() *
+      units::meter_t(-m_rightEncoder.GetPosition().GetValueAsDouble() /
                      constants::drive::rotperM),
       frc::Pose2d{0_in, 0_in, 0_rad}};
   frc::Pose2d pose2dUpdate = m_odometry.GetPose();
   frc::Pose2d pose2d;
-  frc::Pose2d Xtraj = {m_odometry.GetPose().Translation(),
-                       Pigeon.GetRotation2d()};
 
-  frc::TrajectoryConfig trajconfig{1_mps, 1_mps_sq};
+  frc::TrajectoryConfig config{1_mps, 1_mps_sq};
+  frc::Trajectory traj = frc::TrajectoryGenerator::GenerateTrajectory(
+      frc::Pose2d{0_m, 0_m, 0_deg},
+      {frc::Translation2d{0.125_m, 0.125_m}, frc::Translation2d{0.5_m, 0.3_m}},
+      frc::Pose2d{1_m, 0_m, 0_deg}, config);
 
-  const std::vector<frc::Pose2d> waypoint{};
-
-  frc::Trajectory traj =
-      frc::TrajectoryGenerator::GenerateTrajectory(waypoint, trajconfig);
-  // Using the default constructor of RamseteController. Here
-  // the gains are initialized to 2.0 and 0.7.
-  frc::RamseteController controller1;
-  frc::ChassisSpeeds adjustedSpeeds{
-      controller1.Calculate(pose2dUpdate, traj.Sample(3.4_s))};
-
-  // frc::DifferentialDriveWheelSpeeds wheelSpeeds =
-  // kinematics.ToWheelSpeeds(adjustedSpeeds);
-  // auto [Tleft, Tright] = kinematics.ToWheelSpeeds(adjustedSpeeds);
-
-  // Using the secondary constructor of RamseteController where
-  // the user can choose any other gains.
-  // frc::RamseteController controller2{2.1, 0.8};
-  // Initialize the field
-  frc::Field2d Field;
+  frc2::CommandPtr ramseteCommand{frc2::RamseteCommand(
+      traj, [this] { return m_odometry.GetPose(); }, frc::RamseteController{},
+      frc::SimpleMotorFeedforward<units::meters>{0.22_V, 1.98 * 1_V * 1_s / 1_m,
+                                                 0.2 * 1_V * 1_s * 1_s / 1_m},
+      kinematics, [this] { return wheelSpeeds; }, frc::PIDController{1, 0, 0},
+      frc::PIDController{1, 0, 0},
+      [this](auto left, auto right) {
+        diffDrive.TankDrive(left.value() / 12, right.value() / 12);
+        std::cout << left.value();
+      })};
 
   // Auto selection
   enum AutoRoutine { kTestAuto } m_autoSelected;
@@ -146,6 +136,16 @@ private:
   // Intitialize Limelight NetworkTables connection
   std::shared_ptr<nt::NetworkTable> table =
       nt::NetworkTableInstance::GetDefault().GetTable("limelight-greenie");
+
+  void waypointtestauto();
+
+  // Shoot functions
+  void ShootSpeaker();
+  void ShootAmp();
+  frc::Rotation2d GetHeading();
+  frc::Rotation2d GetGyroHeading();
+  // poseupdate
+  void poseupdater();
 
 public:
   // Override standard functions
@@ -160,26 +160,4 @@ public:
   void TestPeriodic() override;
   void SimulationInit() override;
   void SimulationPeriodic() override;
-
-  // Auto routines
-  void testAuto();
-  void waypointtestauto();
-
-  // LED functions
-  void Rainbow();
-  void Green();
-  void Red();
-  void Yellow();
-  void Blue();
-
-  // Shoot functions
-  void ShootSpeaker();
-  void ShootAmp();
-  void Drive(units::meters_per_second_t xSpeed,
-             units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
-             bool fieldRelative);
-  frc::Rotation2d GetHeading();
-  frc::Rotation2d GetGyroHeading();
-  // poseupdate
-  void poseupdater();
 };

@@ -1,54 +1,6 @@
 #include "Robot.h"
 #include <ctre/phoenix/core/GadgeteerUartClient.h>
 
-static constexpr int kLength = 300;
-
-frc::AddressableLED m_led{0};
-
-std::array<frc::AddressableLED::LEDData, kLength>
-    m_ledBuffer; // Reuse the buffer
-
-// Store what the last hue of the first pixel is
-
-int firstPixelHue = 0;
-void Robot::Green() {
-  for (int i = 0; i < kLength; i++) {
-    m_ledBuffer[i].SetRGB(0, 255, 0);
-  }
-}
-void Robot::Red() {
-  for (int i = 0; i < kLength; i++) {
-    m_ledBuffer[i].SetRGB(255, 0, 0);
-  }
-}
-void Robot::Yellow() {
-  for (int i = 0; i < kLength; i++) {
-    m_ledBuffer[i].SetRGB(255, 255, 0);
-  }
-}
-void Robot::Blue() {
-  for (int i = 0; i < kLength; i++) {
-    m_ledBuffer[i].SetRGB(0, 0, 255);
-  }
-}
-void Robot::Rainbow() {
-  // For every pixel
-  for (int i = 0; i < kLength; i++) {
-    // Calculate the hue - hue is easier for rainbows because the color
-    // shape is a circle so only one value needs to precess
-    const auto pixelHue = (firstPixelHue + (i * 180 / kLength)) % 180;
-
-    // Set the value
-    m_ledBuffer[i].SetHSV(pixelHue, 255, 128);
-  }
-
-  // Increase by to make the rainbow "move"
-  firstPixelHue += 3;
-
-  // Check bounds
-  firstPixelHue %= 180;
-}
-
 frc::Rotation2d Robot::GetHeading() { return m_odometry.GetPose().Rotation(); }
 
 frc::Rotation2d Robot::GetGyroHeading() { return Pigeon.GetRotation2d(); }
@@ -57,35 +9,24 @@ void Robot::poseupdater() {
   m_odometry.Update(Pigeon.GetRotation2d(), diffWPos.left, diffWPos.right);
   pose2d = m_odometry.GetPose();
 }
-void Robot::Drive(units::meters_per_second_t xSpeed,
-                  units::meters_per_second_t ySpeed,
-                  units::radians_per_second_t rot, bool fieldRelative) {
 
-  auto states = Kinematics.ToWheelSpeeds(
-      fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-                          xSpeed, ySpeed, rot, GetHeading())
-                    : frc::ChassisSpeeds{xSpeed, ySpeed, rot});
-
-  auto [left, right] = states;
-
-  leftFrontMotor.Set(left.value());
-  rightFrontMotor.Set(right.value());
-
-  // chassisSpeeds.Discretize(xSpeed, ySpeed, rot)
-}
 void Robot::waypointtestauto() {
   limelight.updateTracking();
   units::time::second_t time = autoTimer.Get();
   frc::Pose2d p;
   if (frc::DriverStation::GetAlliance() ==
       frc::DriverStation::Alliance::kBlue) {
-    if (time < 3.0_s) {
-      ShootSpeaker();
-    } else if (time > 3.0_s and time < 4.0_s) {
-      p = traj.Sample(autoTimer.Get()).pose;
-    } else if (time > 4.0_s) {
-      // diffDrive.(p.X(), p.Y(), true);
-    }
+    // if (time < 3.0_s) {
+    // ShootSpeaker();
+    // } else if (time > 3.0_s and time < 4.0_s) {
+
+    // ramseteCommand.Schedule();
+    std::cout << "test";
+    // p = traj.Sample(autoTimer.Get()).pose;
+    // diffDrive.ArcadeDrive(p.X().value(), p.Y().value(), true);
+    // std::cout << p.X().value() << " y " << p.Y().value() << std::endl;
+    // } else if (time > 4.0_s) {
+    // }
   } else if (frc::DriverStation::GetAlliance() ==
              frc::DriverStation::Alliance::kRed) { // red
     if (autoTimer.Get() < 3.0_s) {
@@ -117,10 +58,13 @@ void Robot::ShootAmp() {
 }
 
 void Robot::RobotInit() {
+
   leftFrontMotor.RestoreFactoryDefaults();
   leftRearMotor.RestoreFactoryDefaults();
   rightFrontMotor.RestoreFactoryDefaults();
   rightRearMotor.RestoreFactoryDefaults();
+  m_leftEncoder.SetPosition(0_tr);
+  m_rightEncoder.SetPosition(0_tr);
   leftFrontMotor.SetSmartCurrentLimit(30);
   leftRearMotor.SetSmartCurrentLimit(30);
   rightFrontMotor.SetSmartCurrentLimit(30);
@@ -144,13 +88,7 @@ void Robot::RobotInit() {
   shooterMotorFollower.SetControl(ctre::phoenix6::controls::Follower{
       shooterMotorLeader.GetDeviceID(), true});
 
-  // Default to a length of 60, start empty output
-  // Length is expensive to set, so only set it once, then just update data
-  m_led.SetLength(kLength);
-  m_led.SetData(m_ledBuffer);
-  m_led.Start();
-
-  auto [linearVelocity, vy, angularVelocity] = Kinematics.ToChassisSpeeds(
+  auto [linearVelocity, vy, angularVelocity] = kinematics.ToChassisSpeeds(
       wheelSpeeds); // Converting Wheel Speeds to Chassis Speeds
 
   m_autoChooser.AddOption(a_TestAuto, AutoRoutine::kTestAuto);
@@ -158,19 +96,13 @@ void Robot::RobotInit() {
   frc::SmartDashboard::PutData("Auto Modes", &m_autoChooser);
 }
 
-void Robot::AutonomousInit() { autoTimer.Start(); }
+void Robot::AutonomousInit() {
+  autoTimer.Start();
+
+  ramseteCommand.Schedule();
+}
 void Robot::AutonomousPeriodic() {
-  waypointtestauto();
-  if (frc::DriverStation::GetAlliance() ==
-      frc::DriverStation::Alliance::kBlue) {
-    Blue();
-    m_led.SetData(m_ledBuffer);
-    m_led.Start();
-  } else {
-    Red();
-    m_led.SetData(m_ledBuffer);
-    m_led.Start();
-  }
+  // waypointtestauto();
   frc::SmartDashboard::PutNumber("Auto Timer", autoTimer.Get().value());
 }
 
@@ -245,6 +177,7 @@ void Robot::RobotPeriodic() {
                                  LimelightHelpers::getTA("limelight-greenie"));
   frc::Rotation2d gyroAngle = Pigeon.GetRotation2d();
   poseupdater();
+  frc2::CommandScheduler::GetInstance().Run();
   // limelight.GetRobotPose();
 
   // this gets our calculated X and Y pose through our odometry update above
