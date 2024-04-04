@@ -47,13 +47,14 @@ wpi.sim.addGui().defaultEnabled = true
 wpi.sim.addDriverstation()
 
 model {
-     toolChains {
+     /* toolChains {
         visualCpp(VisualCpp) {
             // Specify the installDir if Visual Studio cannot be located
             // installDir "C:/Apps/Microsoft Visual Studio 10.0"
                 installDir "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools"
         }
      }
+     */
     components {
         frcUserProgram(NativeExecutableSpec) {
             targetPlatform wpi.platforms.roborio

@@ -38,7 +38,7 @@ inline constexpr int kRightEncoderID = 30;
 inline constexpr bool kLeftEncoderReversed = false;
 inline constexpr bool kRightEncoderReversed = true;
 
-inline constexpr auto kTrackwidth = 0.69_m;
+inline constexpr auto kTrackwidth = 22.5_in;
 extern const frc::DifferentialDriveKinematics kDriveKinematics;
 
 inline constexpr int kEncoderCPR = 1024;

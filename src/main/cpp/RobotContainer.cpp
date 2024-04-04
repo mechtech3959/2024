@@ -68,7 +68,7 @@ RobotContainer::RobotContainer() {
       {&m_intake}));
 
   m_led.SetDefaultCommand(
-      frc2::cmd::Run([this] { m_led.Rainbow(); }, {&m_led}));
+      frc2::cmd::RunOnce([this] { m_led.Rainbow(); }, {&m_led}));
 
   m_climber.SetDefaultCommand(frc2::cmd::Run(
       [this] {
@@ -94,7 +94,6 @@ frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   // Load the path you want to follow using its name in the GUI
   auto path = PathPlannerPath::fromPathFile("ampNgo");
   auto path2 = PathPlannerPath::fromPathFile("ampNreturn");
-
 
   // Create a path following command using AutoBuilder. This will also trigger
   // event markers.

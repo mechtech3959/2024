@@ -9,6 +9,7 @@
 #include <frc/controller/SimpleMotorFeedforward.h>
 #include <frc/geometry/Rotation2d.h>
 #include <frc/kinematics/DifferentialDriveWheelSpeeds.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <memory>
 #include <pathplanner/lib/auto/AutoBuilder.h>
 #include <pathplanner/lib/auto/NamedCommands.h>
@@ -81,8 +82,12 @@ void DriveSubsystem::Periodic() {
       m_gyro.GetRotation2d(),
       units::meter_t{m_leftEncoder.GetPosition().GetValueAsDouble() /
                      kRotationsPerMeter},
-      units::meter_t{m_rightEncoder.GetPosition().GetValueAsDouble() /
+      units::meter_t{-m_rightEncoder.GetPosition().GetValueAsDouble() /
                      kRotationsPerMeter});
+  frc::SmartDashboard::PutNumber(
+      "LeftyEnc", m_leftEncoder.GetPosition().GetValueAsDouble());
+  frc::SmartDashboard::PutNumber(
+      "RightyEnc", -m_rightEncoder.GetPosition().GetValueAsDouble());
 }
 
 void DriveSubsystem::ArcadeDrive(double fwd, double rot) {
@@ -102,7 +107,7 @@ void DriveSubsystem::ResetEncoders() {
 
 double DriveSubsystem::GetAverageEncoderDistance() {
   return (m_leftEncoder.GetPosition().GetValueAsDouble() +
-          m_rightEncoder.GetPosition().GetValueAsDouble()) /
+          -m_rightEncoder.GetPosition().GetValueAsDouble()) /
          2.0 / kRotationsPerMeter;
 }
 
@@ -131,7 +136,7 @@ frc::DifferentialDriveWheelSpeeds DriveSubsystem::GetWheelSpeeds() {
       units::meters_per_second_t{
           m_leftEncoder.GetVelocity().GetValueAsDouble() / kRotationsPerMeter},
       units::meters_per_second_t{
-          m_rightEncoder.GetVelocity().GetValueAsDouble() /
+          -m_rightEncoder.GetVelocity().GetValueAsDouble() /
           kRotationsPerMeter}};
 }
 
@@ -142,7 +147,7 @@ frc::ChassisSpeeds DriveSubsystem::GetChassisSpeeds() {
 void DriveSubsystem::DriveChassisSpeeds(frc::ChassisSpeeds speeds) {
   auto [left, right] = m_kinematics.ToWheelSpeeds(speeds);
 
-  // TankDriveVolts(m_feedforward.cal)
+  TankDriveVolts(m_feedforward.Calculate(left), m_feedforward.Calculate(right));
 }
 
 void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {
@@ -150,7 +155,7 @@ void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {
       m_gyro.GetRotation2d(),
       units::meter_t{m_leftEncoder.GetPosition().GetValueAsDouble() /
                      kRotationsPerMeter},
-      units::meter_t{m_rightEncoder.GetPosition().GetValueAsDouble() /
+      units::meter_t{-m_rightEncoder.GetPosition().GetValueAsDouble() /
                      kRotationsPerMeter},
       pose);
 }
