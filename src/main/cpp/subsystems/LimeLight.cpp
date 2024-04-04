@@ -1,8 +1,8 @@
 #include "Limelight.h"
 #include "Robot.h"
-
-LimeLight::LimeLight(std::string name) {
-  m_limelight = nt::NetworkTableInstance::GetDefault().GetTable(name);
+ 
+ LimeLight::LimeLight(std::string name) {
+ m_limelight = nt::NetworkTableInstance::GetDefault().GetTable(name);
 }
 
 bool LimeLight::IsTargetVisible() {
