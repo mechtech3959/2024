@@ -6,6 +6,7 @@
 
 #include <utility>
 
+#include <frc/DriverStation.h>
 #include <frc/controller/PIDController.h>
 #include <frc/controller/RamseteController.h>
 #include <frc/shuffleboard/Shuffleboard.h>
@@ -15,20 +16,26 @@
 #include <frc2/command/Commands.h>
 #include <frc2/command/RamseteCommand.h>
 #include <frc2/command/button/JoystickButton.h>
+#include <memory>
+#include <pathplanner/lib/auto/AutoBuilder.h>
+#include <pathplanner/lib/auto/NamedCommands.h>
+#include <pathplanner/lib/util/ReplanningConfig.h>
 
 #include "Constants.h"
 
+using namespace pathplanner;
+
 RobotContainer::RobotContainer() {
-  pathplanner::NamedCommands::registerCommand(
-      "shootin' me britches",
-      frc2::cmd::Run(
-          [this] {
-            (m_driverController.GetRightTriggerAxis() > 0.1)
-                ? m_driverController.GetAButton() ? m_shooter.Reverse()
-                                                  : m_shooter.ShootSpeaker()
-                : m_shooter.Stop();
-          },
-          {&m_shooter}));
+  NamedCommands::registerCommand(
+      "Shoot Speaker", frc2::cmd::Run(
+                           [this] {
+                             (m_driverController.GetRightTriggerAxis() > 0.1)
+                                 ? m_driverController.GetAButton()
+                                       ? m_shooter.Reverse()
+                                       : m_shooter.ShootSpeaker()
+                                 : m_shooter.Stop();
+                           },
+                           {&m_shooter}));
   // Initialize all of your commands and subsystems here
 
   // Configure the button bindings

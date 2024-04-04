@@ -4,8 +4,15 @@
 
 #include "subsystems/DriveSubsystem.h"
 
+#include <frc/DriverStation.h>
+#include <frc/controller/PIDController.h>
+#include <frc/controller/SimpleMotorFeedforward.h>
 #include <frc/geometry/Rotation2d.h>
 #include <frc/kinematics/DifferentialDriveWheelSpeeds.h>
+#include <memory>
+#include <pathplanner/lib/auto/AutoBuilder.h>
+#include <pathplanner/lib/auto/NamedCommands.h>
+#include <pathplanner/lib/util/ReplanningConfig.h>
 
 using namespace DriveConstants;
 
@@ -16,7 +23,8 @@ DriveSubsystem::DriveSubsystem()
       m_right2{kRightRearMotorID, rev::CANSparkMax::MotorType::kBrushed},
       m_leftEncoder{kLeftEncoderID}, m_rightEncoder{kRightEncoderID},
       m_gyro{32, GeneralConstants::kCanBus},
-      m_odometry{m_gyro.GetRotation2d(), units::meter_t{0}, units::meter_t{0}} {
+      m_odometry{m_gyro.GetRotation2d(), units::meter_t{0}, units::meter_t{0}},
+      m_kinematics{kTrackwidth}, m_feedforward{ks, kv, ka} {
   wpi::SendableRegistry::AddChild(&m_drive, &m_left1);
   wpi::SendableRegistry::AddChild(&m_drive, &m_right1);
 
@@ -26,7 +34,6 @@ DriveSubsystem::DriveSubsystem()
   m_right2.RestoreFactoryDefaults();
   m_left2.Follow(m_left1);
   m_right2.Follow(m_right1);
-
   // We need to invert one side of the drivetrain so that positive voltages
   // result in both sides moving forward. Depending on how your robot's
   // gearbox is constructed, you might have to invert the left side instead.
@@ -37,6 +44,35 @@ DriveSubsystem::DriveSubsystem()
   // m_rightEncoder.SetDistancePerPulse(kEncoderDistancePerPulse.value());
 
   ResetEncoders();
+
+  // Configure the AutoBuilder last
+  pathplanner::AutoBuilder::configureRamsete(
+      [this]() { return GetPose(); }, // Robot pose supplier
+      [this](frc::Pose2d pose) {
+        ResetOdometry(pose);
+      }, // Method to reset odometry (will be called if your auto has a starting
+         // pose)
+      [this]() {
+        return GetChassisSpeeds();
+      }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+      [this](frc::ChassisSpeeds speeds) {
+        DriveChassisSpeeds(speeds);
+      }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+      pathplanner::ReplanningConfig(), // Default path replanning config. See
+                                       // the API for the options here
+      []() {
+        // Boolean supplier that controls when the path will be mirrored for the
+        // red alliance This will flip the path being followed to the red side
+        // of the field. THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+        auto alliance = frc::DriverStation::GetAlliance();
+        if (alliance) {
+          return alliance.value() == frc::DriverStation::Alliance::kRed;
+        }
+        return false;
+      },
+      this // Reference to this subsystem to set requirements
+  );
 }
 
 void DriveSubsystem::Periodic() {
@@ -97,6 +133,16 @@ frc::DifferentialDriveWheelSpeeds DriveSubsystem::GetWheelSpeeds() {
       units::meters_per_second_t{
           m_rightEncoder.GetVelocity().GetValueAsDouble() /
           kRotationsPerMeter}};
+}
+
+frc::ChassisSpeeds DriveSubsystem::GetChassisSpeeds() {
+  return m_kinematics.ToChassisSpeeds(GetWheelSpeeds());
+}
+
+void DriveSubsystem::DriveChassisSpeeds(frc::ChassisSpeeds speeds) {
+  auto [left, right] = m_kinematics.ToWheelSpeeds(speeds);
+
+  // TankDriveVolts(m_feedforward.cal)
 }
 
 void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {

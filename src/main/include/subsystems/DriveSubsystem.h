@@ -6,9 +6,11 @@
 
 #include <ctre/phoenix6/CANCoder.hpp>
 #include <ctre/phoenix6/Pigeon2.hpp>
+#include <frc/controller/SimpleMotorFeedforward.h>
 #include <frc/drive/DifferentialDrive.h>
 #include <frc/geometry/Pose2d.h>
 #include <frc/kinematics/DifferentialDriveOdometry.h>
+#include <frc/kinematics/Kinematics.h>
 #include <frc2/command/SubsystemBase.h>
 #include <rev/CANSparkMax.h>
 #include <units/voltage.h>
@@ -105,6 +107,20 @@ public:
   frc::DifferentialDriveWheelSpeeds GetWheelSpeeds();
 
   /**
+   * Drives the bot with specified chassis speeds
+   *
+   * @param speeds Chassis speeds to drive
+   */
+  void DriveChassisSpeeds(frc::ChassisSpeeds speeds);
+
+  /**
+   * Returns the current chassis speeds of the robot.
+   *
+   * @return The current chassis speeds.
+   */
+  frc::ChassisSpeeds GetChassisSpeeds();
+
+  /**
    * Resets the odometry to the specified pose.
    *
    * @param pose The pose to which to set the odometry.
@@ -136,4 +152,7 @@ private:
 
   // Odometry class for tracking robot pose
   frc::DifferentialDriveOdometry m_odometry;
+  frc::DifferentialDriveKinematics m_kinematics;
+
+  frc::SimpleMotorFeedforward<units::meters> m_feedforward;
 };
