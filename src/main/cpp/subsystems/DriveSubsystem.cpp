@@ -26,7 +26,8 @@ DriveSubsystem::DriveSubsystem()
       m_leftEncoder{kLeftEncoderID}, m_rightEncoder{kRightEncoderID},
       m_gyro{32, GeneralConstants::kCanBus},
       m_odometry{m_gyro.GetRotation2d(), units::meter_t{0}, units::meter_t{0}},
-      m_kinematics{kTrackwidth}, m_feedforward{ks, kv, ka} {
+      m_kinematics{kTrackwidth}, m_leftFeedforward{kSLeft, kVLeft, kALeft},
+      m_rightFeedforward{kSRight, kVRight, kARight} {
   wpi::SendableRegistry::AddChild(&m_drive, &m_left1);
   wpi::SendableRegistry::AddChild(&m_drive, &m_right1);
 
@@ -76,12 +77,12 @@ DriveSubsystem::DriveSubsystem()
       this // Reference to this subsystem to set requirements
   );
 }
-void DriveSubsystem::visionUpdate() { 
+void DriveSubsystem::visionUpdate() {
   LimeLight Greenie{"limelight-greenie"};
   LimeLight Bakshot{"limelight-bakshot"};
   Greenie.updateTracking();
   if (Greenie.m_LimelightHasTarget)
-   ResetOdometry(Greenie.GetRobotPose());
+    ResetOdometry(Greenie.GetRobotPose());
 }
 void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
@@ -155,7 +156,8 @@ frc::ChassisSpeeds DriveSubsystem::GetChassisSpeeds() {
 void DriveSubsystem::DriveChassisSpeeds(frc::ChassisSpeeds speeds) {
   auto [left, right] = m_kinematics.ToWheelSpeeds(speeds);
 
-  TankDriveVolts(m_feedforward.Calculate(left), m_feedforward.Calculate(right));
+  TankDriveVolts(m_leftFeedforward.Calculate(left),
+                 m_rightFeedforward.Calculate(right));
 }
 
 void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {

@@ -127,9 +127,7 @@ public:
    */
   void ResetOdometry(frc::Pose2d pose);
 
-
   void visionUpdate();
-
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be
@@ -158,5 +156,6 @@ private:
   frc::DifferentialDriveOdometry m_odometry;
   frc::DifferentialDriveKinematics m_kinematics;
 
-  frc::SimpleMotorFeedforward<units::meters> m_feedforward;
+  frc::SimpleMotorFeedforward<units::meters> m_leftFeedforward;
+  frc::SimpleMotorFeedforward<units::meters> m_rightFeedforward;
 };

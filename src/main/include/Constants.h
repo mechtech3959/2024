@@ -50,9 +50,12 @@ inline constexpr double kRotationsPerMeter = 1.91370942525;
 // theoretically for *your* robot's drive. The Robot Characterization
 // Toolsuite provides a convenient tool for obtaining these values for your
 // robot.
-inline constexpr auto ks = 0.22_V;
-inline constexpr auto kv = 1.98 * 1_V * 1_s / 1_m;
-inline constexpr auto ka = 0.2 * 1_V * 1_s * 1_s / 1_m;
+inline constexpr auto kSRight = 0.63521_V;
+inline constexpr auto kVRight = 0.76431 * 1_V * 1_s / 1_m;
+inline constexpr auto kARight = 0.24851 * 1_V * 1_s * 1_s / 1_m;
+inline constexpr auto kSLeft = 0.68968_V;
+inline constexpr auto kVLeft = 0.73885 * 1_V * 1_s / 1_m;
+inline constexpr auto kALeft = 0.20709 * 1_V * 1_s * 1_s / 1_m;
 
 // Example value only - as above, this must be tuned for your drive!
 inline constexpr double kPDriveVel = 8.5;
