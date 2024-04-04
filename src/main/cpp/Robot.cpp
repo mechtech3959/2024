@@ -345,10 +345,10 @@ void Robot::RobotInit() {
   leftRearMotor.RestoreFactoryDefaults();
   rightFrontMotor.RestoreFactoryDefaults();
   rightRearMotor.RestoreFactoryDefaults();
-  leftFrontMotor.SetSmartCurrentLimit(30);
-  leftRearMotor.SetSmartCurrentLimit(30);
-  rightFrontMotor.SetSmartCurrentLimit(30);
-  rightRearMotor.SetSmartCurrentLimit(30);
+  leftFrontMotor.SetSmartCurrentLimit(40);
+  leftRearMotor.SetSmartCurrentLimit(40);
+  rightFrontMotor.SetSmartCurrentLimit(40);
+  rightRearMotor.SetSmartCurrentLimit(40);
   leftFrontMotor.Follow(leftRearMotor);
   rightRearMotor.Follow(rightFrontMotor);
 
@@ -489,7 +489,7 @@ void Robot::TeleopPeriodic() {
 
   ctre::phoenix6::controls::MotionMagicVoltage climb{0_tr};
   if (pov == 0 || pov == 45 || pov == 315)
-    climberMotor.SetControl(climb.WithPosition(400_tr));
+    climberMotor.SetControl(climb.WithPosition(200_tr));
   if (pov == 135 || pov == 180 || pov == 225)
     climberMotor.SetControl(climb.WithPosition(0_tr));
   if (reverse) {
