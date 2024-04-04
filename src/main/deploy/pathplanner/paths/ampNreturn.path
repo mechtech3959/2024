@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9376348662607235,
-        "y": 6.905793271046002
+        "x": 1.9813491055553545,
+        "y": 7.036539787365289
       },
       "isLocked": false,
       "linkedName": "ampN"
@@ -45,7 +45,7 @@
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": -171.869897645844,
+    "rotation": -177.61727562949628,
     "velocity": 0
   },
   "useDefaultConstraints": true
