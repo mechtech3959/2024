@@ -34,7 +34,7 @@ public:
    */
   void Stop();
 
-  /**
+   /**
    * Shoots at the commanded speed
    *
    * @param speed the commanded shoot speed

@@ -16,6 +16,8 @@
 #include "subsystems/IntakeSubsystem.h"
 #include "subsystems/LEDSubsystem.h"
 #include "subsystems/ShooterSubsystem.h"
+#include "LimeLight.h"
+#include "LimelightHelpers.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since

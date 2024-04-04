@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystems/DriveSubsystem.h"
+#include "LimeLight.h"
 
 #include <frc/DriverStation.h>
 #include <frc/controller/PIDController.h>
@@ -75,7 +76,13 @@ DriveSubsystem::DriveSubsystem()
       this // Reference to this subsystem to set requirements
   );
 }
-
+void DriveSubsystem::visionUpdate() { 
+  LimeLight Greenie{"limelight-greenie"};
+  LimeLight Bakshot{"limelight-bakshot"};
+  Greenie.updateTracking();
+  if (Greenie.m_LimelightHasTarget)
+   ResetOdometry(Greenie.GetRobotPose());
+}
 void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
   m_odometry.Update(
@@ -88,6 +95,7 @@ void DriveSubsystem::Periodic() {
       "LeftyEnc", m_leftEncoder.GetPosition().GetValueAsDouble());
   frc::SmartDashboard::PutNumber(
       "RightyEnc", -m_rightEncoder.GetPosition().GetValueAsDouble());
+  visionUpdate();
 }
 
 void DriveSubsystem::ArcadeDrive(double fwd, double rot) {
