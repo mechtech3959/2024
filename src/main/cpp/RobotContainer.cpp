@@ -36,6 +36,8 @@ RobotContainer::RobotContainer() {
                                  : m_shooter.Stop();
                            },
                            {&m_shooter}));
+  NamedCommands::registerCommand("shootspeaker", frc2::cmd::Run([this] { m_shooter.ShootSpeaker(); }));
+  NamedCommands::registerCommand("intake",frc2::cmd::Run([this] { m_intake.Feed(); }));
   // Initialize all of your commands and subsystems here
 
   // Configure the button bindings

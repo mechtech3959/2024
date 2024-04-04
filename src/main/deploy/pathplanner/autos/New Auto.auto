@@ -6,6 +6,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "shootspeaker"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "ampNgo"
@@ -15,6 +21,12 @@
           "type": "path",
           "data": {
             "pathName": "ampNreturn"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake"
           }
         }
       ]
