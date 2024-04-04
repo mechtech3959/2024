@@ -87,3 +87,14 @@ inline constexpr auto kRamseteZeta = 0.7 / 1_rad;
 namespace OIConstants {
 inline constexpr int kDriverControllerPort = 0;
 } // namespace OIConstants
+
+namespace LEDConstants {
+inline constexpr unsigned int kNumLEDs = 89;
+inline constexpr bool kCompetitionMode = false;
+inline constexpr unsigned int kCANdleID = 40;
+} // namespace LEDConstants
+
+namespace ClimberConstants {
+inline constexpr unsigned int kClimberMotorID = 33;
+inline constexpr double speed = 1;
+} // namespace ClimberConstants

@@ -11,8 +11,10 @@
 #include <frc2/command/InstantCommand.h>
 
 #include "Constants.h"
+#include "subsystems/ClimberSubsystem.h"
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/IntakeSubsystem.h"
+#include "subsystems/LEDSubsystem.h"
 #include "subsystems/ShooterSubsystem.h"
 
 /**
@@ -38,6 +40,8 @@ private:
   DriveSubsystem m_drive;
   ShooterSubsystem m_shooter;
   IntakeSubsystem m_intake;
+  LEDSubsystem m_led;
+  ClimberSubsystem m_climber;
 
   // RobotContainer-owned commands
   frc2::InstantCommand m_driveHalfSpeed{[this] { m_drive.SetMaxOutput(0.5); },

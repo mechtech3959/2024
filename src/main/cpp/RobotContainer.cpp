@@ -48,6 +48,7 @@ RobotContainer::RobotContainer() {
                             -m_driverController.GetRightX());
       },
       {&m_drive}));
+
   m_shooter.SetDefaultCommand(frc2::cmd::Run(
       [this] {
         (m_driverController.GetRightTriggerAxis() > 0.1)
@@ -56,6 +57,7 @@ RobotContainer::RobotContainer() {
             : m_shooter.Stop();
       },
       {&m_shooter}));
+
   m_intake.SetDefaultCommand(frc2::cmd::Run(
       [this] {
         (m_driverController.GetLeftTriggerAxis() > 0.1)
@@ -64,6 +66,19 @@ RobotContainer::RobotContainer() {
             : m_intake.Stop();
       },
       {&m_intake}));
+
+  m_led.SetDefaultCommand(
+      frc2::cmd::Run([this] { m_led.Rainbow(); }, {&m_led}));
+
+  m_climber.SetDefaultCommand(frc2::cmd::Run(
+      [this] {
+        int pov = m_driverController.GetPOV();
+        if (pov == 0 || pov == 45 || pov == 315)
+          m_climber.Extend();
+        if (pov == 135 || pov == 180 || pov == 225)
+          m_climber.Retract();
+      },
+      {&m_climber}));
 }
 
 void RobotContainer::ConfigureButtonBindings() {
