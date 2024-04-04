@@ -22,7 +22,7 @@
 #include <pathplanner/lib/util/ReplanningConfig.h>
 
 #include "Constants.h"
-
+ 
 using namespace pathplanner;
 
 RobotContainer::RobotContainer() {
@@ -38,8 +38,12 @@ RobotContainer::RobotContainer() {
                            {&m_shooter}));
   NamedCommands::registerCommand(
       "shootspeaker", frc2::cmd::Run([this] { m_shooter.ShootSpeaker(); }));
+  NamedCommands::registerCommand(
+      "shootstop", frc2::cmd::Run([this] { m_shooter.Stop(); }));
   NamedCommands::registerCommand("intake",
                                  frc2::cmd::Run([this] { m_intake.Feed(); }));
+  NamedCommands::registerCommand("intakestop",
+                                 frc2::cmd::Run([this] { m_intake.Stop(); }));
   // Initialize all of your commands and subsystems here
 
   // Configure the button bindings

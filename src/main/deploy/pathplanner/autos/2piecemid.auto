@@ -16,9 +16,9 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "speaker go"
+                  "name": "shootstop"
                 }
               },
               {
@@ -26,14 +26,33 @@
                 "data": {
                   "name": "intake"
                 }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "speaker go"
+                }
               }
             ]
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "speakerNreturn"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "speakerNreturn"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakestop"
+                }
+              }
+            ]
           }
         },
         {
