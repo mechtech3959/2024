@@ -9,7 +9,7 @@
 #include <frc/TimedRobot.h>
 #include <frc2/command/CommandPtr.h>
 
-#include "RobotContainer.h"
+#include "SysIdRoutineBot.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -17,15 +17,19 @@ class Robot : public frc::TimedRobot {
   void RobotPeriodic() override;
   void DisabledInit() override;
   void DisabledPeriodic() override;
+  void DisabledExit() override;
   void AutonomousInit() override;
   void AutonomousPeriodic() override;
+  void AutonomousExit() override;
   void TeleopInit() override;
   void TeleopPeriodic() override;
+  void TeleopExit() override;
+  void TestInit() override;
   void TestPeriodic() override;
+  void TestExit() override;
 
  private:
-  // Have it empty by default
   std::optional<frc2::CommandPtr> m_autonomousCommand;
 
-  RobotContainer m_container;
+  SysIdRoutineBot m_container;
 };
