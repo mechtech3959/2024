@@ -29,6 +29,7 @@
 using namespace pathplanner;
 
 RobotContainer::RobotContainer() {
+  m_drive.setPose();
   NamedCommands::registerCommand(
       "Shoot Speaker", frc2::cmd::RunOnce(
                            [this] {
@@ -122,13 +123,13 @@ frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   // event markers.
   // return AutoBuilder::followPath(path);
   return PathPlannerAuto("center4note").ToPtr();
-}
+    }
 
 frc2::CommandPtr RobotContainer::PutDashboardCommand() {
   return frc2::cmd::Run([this] {
     frc::SmartDashboard::PutNumber("X", m_drive.poseXY().X().value());
     frc::SmartDashboard::PutNumber("Y", m_drive.poseXY().Y().value());
-    double voltage = pdh.GetVoltage();
+     double voltage = pdh.GetVoltage();
     frc::SmartDashboard::PutNumber("Voltage", voltage);
     double temperatureCelsius = pdh.GetTemperature();
     frc::SmartDashboard::PutNumber("Temperature", temperatureCelsius);

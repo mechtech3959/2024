@@ -14,6 +14,7 @@
 #include "Constants.h"
 #include "LimeLight.h"
 #include "LimelightHelpers.h"
+#include "frc/DataLogManager.h"
 #include "subsystems/ClimberSubsystem.h"
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/IntakeSubsystem.h"
@@ -97,4 +98,4 @@ private:
   frc2::InstantCommand m_stopIntake{[this] { m_intake.Stop(); }, {&m_intake}};
 
   void ConfigureButtonBindings();
-};
+ };
