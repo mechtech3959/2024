@@ -39,14 +39,16 @@ RobotContainer::RobotContainer() {
                                  : m_shooter.Stop();
                            },
                            {&m_shooter}));
+  NamedCommands::registerCommand("shootspeaker", frc2::cmd::RunOnce([this] {
+                                   m_shooter.ShootSpeaker();
+                                   frc2::cmd::Wait(2_s);
+                                 }));
   NamedCommands::registerCommand(
-      "shootspeaker", frc2::cmd::Run([this] { m_shooter.ShootSpeaker(); }));
-  NamedCommands::registerCommand("shootstop",
-                                 frc2::cmd::Run([this] { m_shooter.Stop(); }));
-  NamedCommands::registerCommand("intake",
-                                 frc2::cmd::Run([this] { m_intake.Feed(); }));
-  NamedCommands::registerCommand("intakestop",
-                                 frc2::cmd::Run([this] { m_intake.Stop(); }));
+      "shootstop", frc2::cmd::RunOnce([this] { m_shooter.Stop(); }));
+  NamedCommands::registerCommand(
+      "intake", frc2::cmd::RunOnce([this] { m_intake.Feed(); }));
+  NamedCommands::registerCommand(
+      "intakestop", frc2::cmd::RunOnce([this] { m_intake.Stop(); }));
   // Initialize all of your commands and subsystems here
 
   // Configure the button bindings
@@ -59,15 +61,15 @@ RobotContainer::RobotContainer() {
                             -m_driverController.GetRightX());
       },
       {&m_drive}));
-
-  m_shooter.SetDefaultCommand(frc2::cmd::Run(
-      [this] {
-        (m_driverController.GetRightTriggerAxis() > 0.1)
-            ? m_driverController.GetAButton() ? m_shooter.Reverse()
-                                              : m_shooter.ShootSpeaker()
-            : m_shooter.Stop();
-      },
-      {&m_shooter}));
+  /*
+    m_shooter.SetDefaultCommand(frc2::cmd::Run(
+        [this] {
+          (m_driverController.GetRightTriggerAxis() > 0.1)
+              ? m_driverController.GetAButton() ? m_shooter.Reverse()
+                                                : m_shooter.ShootSpeaker()
+              : m_shooter.Stop();
+        },
+        {&m_shooter}));
 
   m_intake.SetDefaultCommand(frc2::cmd::Run(
       [this] {
@@ -77,7 +79,7 @@ RobotContainer::RobotContainer() {
             : m_intake.Stop();
       },
       {&m_intake}));
-
+*/
   m_led.SetDefaultCommand(
       frc2::cmd::RunOnce([this] { m_led.Rainbow(); }, {&m_led}));
 
@@ -102,6 +104,13 @@ void RobotContainer::ConfigureButtonBindings() {
       .OnTrue(&m_driveHalfSpeed)
       .OnFalse(&m_driveFullSpeed);
   frc2::POVButton{&m_driverController, 0}.OnTrue(&m_extendClimber);
+  frc2::POVButton{&m_driverController, 180}.OnFalse(&m_retractClimber);
+  m_driverController.RightTrigger()
+      .OnTrue(&m_shootSpeaker)
+      .OnFalse(&m_shootStop);
+  m_driverController.LeftTrigger()
+      .OnTrue(&m_startIntake)
+      .OnFalse(&m_stopIntake);
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
@@ -112,7 +121,7 @@ frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   // Create a path following command using AutoBuilder. This will also trigger
   // event markers.
   // return AutoBuilder::followPath(path);
-  return PathPlannerAuto("amp side 2 piece").ToPtr();
+  return PathPlannerAuto("center4note").ToPtr();
 }
 
 frc2::CommandPtr RobotContainer::PutDashboardCommand() {
