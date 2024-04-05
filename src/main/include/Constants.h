@@ -100,4 +100,7 @@ inline constexpr unsigned int kCANdleID = 40;
 namespace ClimberConstants {
 inline constexpr unsigned int kClimberMotorID = 33;
 inline constexpr double speed = 1;
+inline constexpr double kOutputRotations = 2;
+inline constexpr double kGearRatio = 100;
+inline constexpr auto kMotorRotations = kOutputRotations * kGearRatio * 1_tr;
 } // namespace ClimberConstants

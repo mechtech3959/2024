@@ -27,9 +27,9 @@ ClimberSubsystem::ClimberSubsystem()
 }
 
 void ClimberSubsystem::Extend() {
-  ctre::phoenix6::controls::MotionMagicVoltage m_motmag{200_tr};
+  m_motor.SetControl(m_motmag.WithPosition(kMotorRotations));
 }
 
 void ClimberSubsystem::Retract() {
-  ctre::phoenix6::controls::MotionMagicVoltage m_motmag{0_tr};
+  m_motor.SetControl(m_motmag.WithPosition(0_tr));
 }
