@@ -6,15 +6,22 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "shootspeaker"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 3.0
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "shootspeaker"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 2.0
+                }
+              }
+            ]
           }
         },
         {
@@ -36,20 +43,20 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "speaker go"
+                  "pathName": "ampNgo"
                 }
               }
             ]
           }
         },
         {
-          "type": "parallel",
+          "type": "race",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "speakerNreturn"
+                  "pathName": "ampNreturn"
                 }
               },
               {
@@ -65,12 +72,6 @@
           "type": "named",
           "data": {
             "name": "shootspeaker"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 3.0
           }
         }
       ]

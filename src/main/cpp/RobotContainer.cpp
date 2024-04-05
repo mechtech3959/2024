@@ -39,14 +39,14 @@ RobotContainer::RobotContainer() {
                                  : m_shooter.Stop();
                            },
                            {&m_shooter}));
-  NamedCommands::registerCommand("shootspeaker", frc2::cmd::RunOnce([this] {
-                                   m_shooter.ShootSpeaker();
-                                   frc2::WaitCommand(3.0_s);
-                                 }));
-  NamedCommands::registerCommand("intake", frc2::cmd::RunOnce([this] {
-                                   m_intake.Feed();
-                                   frc2::WaitCommand(2.0_s);
-                                 }));
+  NamedCommands::registerCommand(
+      "shootspeaker", frc2::cmd::Run([this] { m_shooter.ShootSpeaker(); }));
+  NamedCommands::registerCommand("shootstop",
+                                 frc2::cmd::Run([this] { m_shooter.Stop(); }));
+  NamedCommands::registerCommand("intake",
+                                 frc2::cmd::Run([this] { m_intake.Feed(); }));
+  NamedCommands::registerCommand("intakestop",
+                                 frc2::cmd::Run([this] { m_intake.Stop(); }));
   // Initialize all of your commands and subsystems here
 
   // Configure the button bindings
