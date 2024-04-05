@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <frc/PowerDistribution.h>
 #include <frc/controller/PIDController.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc2/command/CommandPtr.h>
@@ -32,6 +33,8 @@ public:
 
   frc2::CommandPtr GetAutonomousCommand();
 
+  frc2::CommandPtr PutDashboardCommand();
+
 private:
   // The driver's controller
   frc2::CommandXboxController m_driverController{
@@ -45,6 +48,8 @@ private:
   IntakeSubsystem m_intake;
   LEDSubsystem m_led;
   ClimberSubsystem m_climber;
+
+  frc::PowerDistribution pdh{};
 
   // RobotContainer-owned commands
   frc2::InstantCommand m_driveHalfSpeed{[this] { m_drive.SetMaxOutput(0.5); },

@@ -114,3 +114,30 @@ frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   // return AutoBuilder::followPath(path);
   return PathPlannerAuto("amp side 2 piece").ToPtr();
 }
+
+frc2::CommandPtr RobotContainer::PutDashboardCommand() {
+  return frc2::cmd::Run([this] {
+    double voltage = pdh.GetVoltage();
+    frc::SmartDashboard::PutNumber("Voltage", voltage);
+    double temperatureCelsius = pdh.GetTemperature();
+    frc::SmartDashboard::PutNumber("Temperature", temperatureCelsius);
+    double totalCurrent = pdh.GetTotalCurrent();
+    frc::SmartDashboard::PutNumber("Total Current", totalCurrent);
+    double totalPower = pdh.GetTotalPower();
+    frc::SmartDashboard::PutNumber("Total Power", totalPower);
+    double totalEnergy = pdh.GetTotalEnergy();
+    frc::SmartDashboard::PutNumber("Total Energy", totalEnergy);
+    frc::SmartDashboard::PutNumber(
+        "Pitch", m_drive.GetPigeon().GetPitch().GetValueAsDouble());
+    frc::SmartDashboard::PutNumber(
+        "Roll", m_drive.GetPigeon().GetRoll().GetValueAsDouble());
+    frc::SmartDashboard::PutNumber(
+        "Yaw", m_drive.GetPigeon().GetYaw().GetValueAsDouble());
+    frc::SmartDashboard::PutNumber(
+        "Shooter TX", LimelightHelpers::getTY("limelight-greenie"));
+    frc::SmartDashboard::PutNumber(
+        "Shooter TY", LimelightHelpers::getTX("limelight-greenie"));
+    frc::SmartDashboard::PutNumber(
+        "Shooter TA", LimelightHelpers::getTA("limelight-greenie"));
+  });
+}

@@ -135,6 +135,10 @@ ctre::phoenix6::hardware::CANcoder &DriveSubsystem::GetRightEncoder() {
   return m_rightEncoder;
 }
 
+ctre::phoenix6::hardware::Pigeon2 &DriveSubsystem::GetPigeon() {
+  return m_gyro;
+}
+
 void DriveSubsystem::SetMaxOutput(double maxOutput) {
   m_drive.SetMaxOutput(maxOutput);
 }

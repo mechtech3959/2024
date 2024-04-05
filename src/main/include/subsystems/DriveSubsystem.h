@@ -70,6 +70,8 @@ public:
    */
   ctre::phoenix6::hardware::CANcoder &GetRightEncoder();
 
+  ctre::phoenix6::hardware::Pigeon2 &GetPigeon();
+
   /**
    * Sets the max output of the drive.  Useful for scaling the drive to drive
    * more slowly.
