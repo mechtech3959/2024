@@ -180,3 +180,6 @@ void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {
                      kRotationsPerMeter},
       pose);
 }
+frc::Pose2d DriveSubsystem::poseXY(){
+  return m_odometry.GetPose();
+}

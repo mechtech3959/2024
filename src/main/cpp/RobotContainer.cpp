@@ -126,6 +126,8 @@ frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
 
 frc2::CommandPtr RobotContainer::PutDashboardCommand() {
   return frc2::cmd::Run([this] {
+    frc::SmartDashboard::PutNumber("X", m_drive.poseXY().X().value());
+    frc::SmartDashboard::PutNumber("Y", m_drive.poseXY().Y().value());
     double voltage = pdh.GetVoltage();
     frc::SmartDashboard::PutNumber("Voltage", voltage);
     double temperatureCelsius = pdh.GetTemperature();
@@ -148,5 +150,5 @@ frc2::CommandPtr RobotContainer::PutDashboardCommand() {
         "Shooter TY", LimelightHelpers::getTX("limelight-greenie"));
     frc::SmartDashboard::PutNumber(
         "Shooter TA", LimelightHelpers::getTA("limelight-greenie"));
-   });
+  });
 }
