@@ -27,7 +27,7 @@ ClimberSubsystem::ClimberSubsystem()
 }
 
 void ClimberSubsystem::Extend() {
-  ctre::phoenix6::controls::MotionMagicVoltage m_motmag{400_tr};
+  ctre::phoenix6::controls::MotionMagicVoltage m_motmag{200_tr};
 }
 
 void ClimberSubsystem::Retract() {

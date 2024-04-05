@@ -4,20 +4,20 @@
 
 #pragma once
 
-#include <frc/XboxController.h>
 #include <frc/controller/PIDController.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/InstantCommand.h>
+#include <frc2/command/button/CommandXboxController.h>
 
 #include "Constants.h"
+#include "LimeLight.h"
+#include "LimelightHelpers.h"
 #include "subsystems/ClimberSubsystem.h"
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/IntakeSubsystem.h"
 #include "subsystems/LEDSubsystem.h"
 #include "subsystems/ShooterSubsystem.h"
-#include "LimeLight.h"
-#include "LimelightHelpers.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -34,7 +34,8 @@ public:
 
 private:
   // The driver's controller
-  frc::XboxController m_driverController{OIConstants::kDriverControllerPort};
+  frc2::CommandXboxController m_driverController{
+      OIConstants::kDriverControllerPort};
 
   // The robot's subsystems and commands are defined here...
 
@@ -53,6 +54,8 @@ private:
   frc2::InstantCommand m_pickupStart{[this] { m_intake.Pickup(); },
                                      {&m_intake}};
   frc2::InstantCommand m_pickupStop{[this] { m_intake.Stop(); }, {&m_intake}};
+  frc2::InstantCommand m_extendClimber{[this] { m_climber.Extend(); },
+                                       {&m_climber}};
 
   void ConfigureButtonBindings();
 };

@@ -5,6 +5,7 @@
 #include "subsystems/DriveSubsystem.h"
 #include "LimeLight.h"
 
+#include <chrono>
 #include <frc/DriverStation.h>
 #include <frc/controller/PIDController.h>
 #include <frc/controller/SimpleMotorFeedforward.h>
@@ -15,6 +16,7 @@
 #include <pathplanner/lib/auto/AutoBuilder.h>
 #include <pathplanner/lib/auto/NamedCommands.h>
 #include <pathplanner/lib/util/ReplanningConfig.h>
+#include <thread>
 
 using namespace DriveConstants;
 
@@ -35,6 +37,7 @@ DriveSubsystem::DriveSubsystem()
   m_left2.RestoreFactoryDefaults();
   m_right1.RestoreFactoryDefaults();
   m_right2.RestoreFactoryDefaults();
+  std::this_thread::sleep_for(std::chrono::seconds(1));
   m_left2.Follow(m_left1);
   m_right2.Follow(m_right1);
   // We need to invert one side of the drivetrain so that positive voltages
@@ -97,10 +100,10 @@ void DriveSubsystem::Periodic() {
   frc::SmartDashboard::PutNumber(
       "RightyEnc", -m_rightEncoder.GetPosition().GetValueAsDouble());
   visionUpdate();
-  auto X = m_odometry.GetPose().X().;
+  auto X = m_odometry.GetPose().X();
   auto Y = m_odometry.GetPose().Y();
- // frc::SmartDashboard::Put("X Pos:", X);
- // frc::SmartDashboard::PutData("Y Pos:", Y);
+  // frc::SmartDashboard::Put("X Pos:", X);
+  // frc::SmartDashboard::PutData("Y Pos:", Y);
 }
 
 void DriveSubsystem::ArcadeDrive(double fwd, double rot) {
@@ -109,7 +112,7 @@ void DriveSubsystem::ArcadeDrive(double fwd, double rot) {
 
 void DriveSubsystem::TankDriveVolts(units::volt_t left, units::volt_t right) {
   m_left1.SetVoltage(left);
-  m_right1.SetVoltage(right);
+  m_right1.SetVoltage(-right);
   m_drive.Feed();
 }
 
