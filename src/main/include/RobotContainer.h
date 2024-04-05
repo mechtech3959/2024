@@ -51,16 +51,50 @@ private:
 
   frc::PowerDistribution pdh{};
 
-  // RobotContainer-owned commands
+  // Set drive to half speed
   frc2::InstantCommand m_driveHalfSpeed{[this] { m_drive.SetMaxOutput(0.5); },
                                         {}};
+
+  // Set drive to full speed
   frc2::InstantCommand m_driveFullSpeed{[this] { m_drive.SetMaxOutput(1); },
                                         {}};
+
+  // Run the intake
   frc2::InstantCommand m_pickupStart{[this] { m_intake.Pickup(); },
                                      {&m_intake}};
+
+  // Stop the intake
   frc2::InstantCommand m_pickupStop{[this] { m_intake.Stop(); }, {&m_intake}};
+
+  // Extend the climber
   frc2::InstantCommand m_extendClimber{[this] { m_climber.Extend(); },
                                        {&m_climber}};
+
+  // Retract the climber
+  frc2::InstantCommand m_retractClimber{[this] { m_climber.Retract(); },
+                                        {&m_climber}};
+
+  // Run the shooter with inverts
+  frc2::InstantCommand m_shootSpeaker{[this] {
+                                        m_driverController.GetAButton()
+                                            ? m_shooter.Reverse()
+                                            : m_shooter.ShootSpeaker();
+                                      },
+                                      {&m_shooter}};
+
+  // Stop the shooter
+  frc2::InstantCommand m_shootStop{[this] { m_shooter.Stop(); }, {&m_shooter}};
+
+  // Start the intake with inverts
+  frc2::InstantCommand m_startIntake{[this] {
+                                       m_driverController.GetAButton()
+                                           ? m_intake.Reverse()
+                                           : m_intake.Pickup();
+                                     },
+                                     {&m_intake}};
+
+  // Stop the intake
+  frc2::InstantCommand m_stopIntake{[this] { m_intake.Stop(); }, {&m_intake}};
 
   void ConfigureButtonBindings();
 };
