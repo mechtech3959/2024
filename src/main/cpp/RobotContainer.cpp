@@ -31,7 +31,8 @@
 using namespace pathplanner;
 
 RobotContainer::RobotContainer() {
-  frc::Pose2d pathstartpose = PathPlannerAuto::getStartingPoseFromAutoFile(std::to_string(reinterpret_cast<uintptr_t>(chooser.GetSelected())));
+  frc::Pose2d pathstartpose = PathPlannerAuto::getStartingPoseFromAutoFile(
+      chooser.GetSelected()->GetName());
 
   m_drive.setPose(pathstartpose);
   NamedCommands::registerCommand(
@@ -135,16 +136,11 @@ frc2::CommandPtr RobotContainer::PutDashboardCommand() {
   return frc2::cmd::Run([this] {
     frc::SmartDashboard::PutNumber("X", m_drive.poseXY().X().value());
     frc::SmartDashboard::PutNumber("Y", m_drive.poseXY().Y().value());
-    double voltage = pdh.GetVoltage();
-    frc::SmartDashboard::PutNumber("Voltage", voltage);
-    double temperatureCelsius = pdh.GetTemperature();
-    frc::SmartDashboard::PutNumber("Temperature", temperatureCelsius);
-    double totalCurrent = pdh.GetTotalCurrent();
-    frc::SmartDashboard::PutNumber("Total Current", totalCurrent);
-    double totalPower = pdh.GetTotalPower();
-    frc::SmartDashboard::PutNumber("Total Power", totalPower);
-    double totalEnergy = pdh.GetTotalEnergy();
-    frc::SmartDashboard::PutNumber("Total Energy", totalEnergy);
+    frc::SmartDashboard::PutNumber("Voltage", pdh.GetVoltage());
+    frc::SmartDashboard::PutNumber("Temperature", pdh.GetTemperature());
+    frc::SmartDashboard::PutNumber("Total Current", pdh.GetTotalCurrent());
+    frc::SmartDashboard::PutNumber("Total Power", pdh.GetTotalPower());
+    frc::SmartDashboard::PutNumber("Total Energy", pdh.GetTotalEnergy());
     frc::SmartDashboard::PutNumber(
         "Pitch", m_drive.GetPigeon().GetPitch().GetValueAsDouble());
     frc::SmartDashboard::PutNumber(
