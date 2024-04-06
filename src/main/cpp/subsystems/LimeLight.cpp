@@ -36,8 +36,8 @@ frc::Pose2d LimeLight::GetRobotPose() {
 
   if (IsTargetVisible()) {
     // translate 3d pose to 2d pose
-    units::inch_t x{data.at(0)};
-    units::inch_t y{data.at(1)};
+    units::meter_t x{data.at(0)};
+    units::meter_t y{data.at(1)};
     units::degree_t heading{data.at(5)};
 
     return frc::Pose2d(x, y, frc::Rotation2d(heading));
@@ -92,23 +92,23 @@ units::inch_t LimeLight::Distance() {
   double limelightMountAngleDegrees = 56.4;
 
   // distance from the center of the Limelight lens to the floor
-  double limelightLensHeightInches = 21.5;
+  double limelightLensHeightCM = 54.61; // 21.5 in 54.61 cm
   // 26 in for ring ll
 
   // distance from the targets to the floor
-  double speakerHeightInches = 57.13;
-  double ampHeightInches = 53.38;
+  double speakerHeightCM = 146.1102; // 57.13 in 145.1102 cm
+  double ampHeigtCM = 135.5852;    // 53.38 in 135.5852 cm
 
   double angleToGoalDegrees =
       limelightMountAngleDegrees + targetOffsetAngle_Vertical;
   double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
 
   double distanceFromLimelightToSpeakerInches =
-      (speakerHeightInches - limelightLensHeightInches) /
+      (speakerHeightCM - limelightLensHeightCM) /
       tan(angleToGoalRadians);
 
   double distanceFromLimelightToAmpInches =
-      (ampHeightInches - limelightLensHeightInches) / tan(angleToGoalRadians);
+      (ampHeigtCM - limelightLensHeightCM) / tan(angleToGoalRadians);
 }
 
 void LimeLight::SendData(std::string name, LoggingLevel verbose) {
