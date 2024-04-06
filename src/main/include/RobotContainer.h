@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "pathplanner/lib/auto/AutoBuilder.h"
 #include <frc/PowerDistribution.h>
 #include <frc/controller/PIDController.h>
 #include <frc/smartdashboard/SendableChooser.h>
@@ -97,4 +98,6 @@ private:
   frc2::InstantCommand m_stopIntake{[this] { m_intake.Stop(); }, {&m_intake}};
 
   void ConfigureButtonBindings();
+
+  frc::SendableChooser<frc2::Command *> chooser;
 };

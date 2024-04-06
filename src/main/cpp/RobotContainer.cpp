@@ -10,6 +10,8 @@
 #include <frc/controller/PIDController.h>
 #include <frc/controller/RamseteController.h>
 #include <frc/shuffleboard/Shuffleboard.h>
+
+// #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/trajectory/Trajectory.h>
 #include <frc/trajectory/TrajectoryGenerator.h>
 #include <frc/trajectory/constraint/DifferentialDriveVoltageConstraint.h>
@@ -39,16 +41,17 @@ RobotContainer::RobotContainer() {
                                  : m_shooter.Stop();
                            },
                            {&m_shooter}));
-  NamedCommands::registerCommand("shootspeaker", frc2::cmd::RunOnce([this] {
-                                   m_shooter.ShootSpeaker();
-                                   frc2::cmd::Wait(2_s);
-                                 }));
+  NamedCommands::registerCommand(
+      "shootspeaker", frc2::cmd::RunOnce([this] { m_shooter.ShootSpeaker(); }));
   NamedCommands::registerCommand(
       "shootstop", frc2::cmd::RunOnce([this] { m_shooter.Stop(); }));
   NamedCommands::registerCommand(
       "intake", frc2::cmd::RunOnce([this] { m_intake.Feed(); }));
   NamedCommands::registerCommand(
       "intakestop", frc2::cmd::RunOnce([this] { m_intake.Stop(); }));
+  chooser = AutoBuilder::buildAutoChooser();
+  frc::SmartDashboard::PutData("Auto Chooser", &chooser);
+
   // Initialize all of your commands and subsystems here
 
   // Configure the button bindings
@@ -121,7 +124,8 @@ frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   // Create a path following command using AutoBuilder. This will also trigger
   // event markers.
   // return AutoBuilder::followPath(path);
-  return PathPlannerAuto("center4note").ToPtr();
+  return frc2::CommandPtr{
+      std::unique_ptr<frc2::Command>{chooser.GetSelected()}};
 }
 
 frc2::CommandPtr RobotContainer::PutDashboardCommand() {
