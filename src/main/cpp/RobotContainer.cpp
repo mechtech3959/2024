@@ -31,6 +31,7 @@
 using namespace pathplanner;
 
 RobotContainer::RobotContainer() {
+  m_drive.setPose();
   NamedCommands::registerCommand(
       "Shoot Speaker", frc2::cmd::RunOnce(
                            [this] {

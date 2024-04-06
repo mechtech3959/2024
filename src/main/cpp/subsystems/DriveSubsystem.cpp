@@ -183,3 +183,19 @@ void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {
 frc::Pose2d DriveSubsystem::poseXY(){
   return m_odometry.GetPose();
 }
+void DriveSubsystem::setPose()
+  {
+    frc::Pose2d p{1.32_m, 5.50_m, 0_deg};
+    m_odometry.ResetPosition(
+        0_deg,
+        units::meter_t{m_leftEncoder.GetPosition().GetValueAsDouble() /
+                       1.91370942525},
+        units::meter_t{-m_rightEncoder.GetPosition().GetValueAsDouble() /
+                       1.91370942525},
+        p);
+  }
+
+ 
+ 
+ 
+  

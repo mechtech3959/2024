@@ -15,6 +15,7 @@
 #include "Constants.h"
 #include "LimeLight.h"
 #include "LimelightHelpers.h"
+#include "frc/DataLogManager.h"
 #include "subsystems/ClimberSubsystem.h"
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/IntakeSubsystem.h"
