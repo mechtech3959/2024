@@ -31,7 +31,9 @@
 using namespace pathplanner;
 
 RobotContainer::RobotContainer() {
-  m_drive.setPose();
+  frc::Pose2d pathstartpose = PathPlannerAuto::getStartingPoseFromAutoFile(std::to_string(reinterpret_cast<uintptr_t>(chooser.GetSelected())));
+
+  m_drive.setPose(pathstartpose);
   NamedCommands::registerCommand(
       "Shoot Speaker", frc2::cmd::RunOnce(
                            [this] {

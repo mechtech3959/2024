@@ -132,7 +132,7 @@ public:
   void visionUpdate();
 
   frc::Pose2d poseXY();
-  void setPose();
+  void setPose(frc::Pose2d p);
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be
