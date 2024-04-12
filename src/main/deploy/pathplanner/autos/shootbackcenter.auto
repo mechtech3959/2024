@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.4096302478319247,
+      "y": 5.570593998330854
+    },
+    "rotation": -178.45727816130537
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "shootspeaker"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "speaker go"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
