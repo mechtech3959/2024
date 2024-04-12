@@ -3,45 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7543128599770712,
-        "y": 4.428212820389605
+        "x": 8.288745946861262,
+        "y": 2.4313569347859425
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.2627490769185123,
-        "y": 3.475996401858314
+        "x": 6.846572251703061,
+        "y": 1.848940634818207
       },
       "isLocked": false,
-      "linkedName": "sourceS"
+      "linkedName": "Cent2"
     },
     {
       "anchor": {
-        "x": 4.442949426439393,
-        "y": 1.0538961618463785
+        "x": 3.546213218552563,
+        "y": 2.0061005887777545
       },
       "prevControl": {
-        "x": 3.2041592011111946,
-        "y": 1.5161313205509297
+        "x": 5.0438551327553105,
+        "y": 1.211056115805926
       },
       "nextControl": {
-        "x": 5.032496601223697,
-        "y": 0.8339158727477579
+        "x": 1.7748568057305567,
+        "y": 2.9464502894116587
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.27,
-        "y": 0.79
+        "x": 0.7543128599770712,
+        "y": 4.428212820389605
       },
       "prevControl": {
-        "x": 5.672238408080419,
-        "y": 0.79
+        "x": 1.308995050422533,
+        "y": 3.6239236442436855
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "centS"
+      "linkedName": "sourceS"
     }
   ],
   "rotationTargets": [],
@@ -58,10 +58,10 @@
     "rotation": 0,
     "rotateFast": false
   },
-  "reversed": true,
+  "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 120.01836742760909,
+    "rotation": -162.3874221570761,
     "velocity": 0
   },
   "useDefaultConstraints": true

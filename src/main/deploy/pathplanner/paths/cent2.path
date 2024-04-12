@@ -8,40 +8,40 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.2627490769185123,
-        "y": 3.475996401858314
+        "x": 1.2837757163350165,
+        "y": 3.436617005560825
       },
       "isLocked": false,
       "linkedName": "sourceS"
     },
     {
       "anchor": {
-        "x": 4.442949426439393,
-        "y": 1.0538961618463785
+        "x": 4.239565956609391,
+        "y": 1.7472488999032059
       },
       "prevControl": {
-        "x": 3.2041592011111946,
-        "y": 1.5161313205509297
+        "x": 2.7511687455807343,
+        "y": 1.978366479255482
       },
       "nextControl": {
-        "x": 5.032496601223697,
-        "y": 0.8339158727477579
+        "x": 5.335831155875633,
+        "y": 1.5770213844891927
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.27,
-        "y": 0.79
+        "x": 8.288745946861262,
+        "y": 2.4313569347859425
       },
       "prevControl": {
-        "x": 5.672238408080419,
-        "y": 0.79
+        "x": 6.5561798495304,
+        "y": 1.798013461957758
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "centS"
+      "linkedName": "Cent2"
     }
   ],
   "rotationTargets": [],
@@ -61,7 +61,7 @@
   "reversed": true,
   "folder": null,
   "previewStartingState": {
-    "rotation": 120.01836742760909,
+    "rotation": 120.06858282186245,
     "velocity": 0
   },
   "useDefaultConstraints": true
