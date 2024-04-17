@@ -52,6 +52,9 @@ public:
   void Drive(units::meters_per_second_t xSpeed,
              units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
              bool fieldRelative = true);
+  void Fdrive(units::meters_per_second_t xSpeed,
+             units::meters_per_second_t ySpeed, units::radians_per_second_t rot,
+             bool fieldRelative = false);
   void DrivePos(units::meter_t x, units::meter_t y, units::degree_t heading);
 
   void DriveXY(units::meters_per_second_t xSpeed,
@@ -59,9 +62,16 @@ public:
     m_targetHeading = heading;
     DriveXY(xSpeed, ySpeed);
   };
+  void FdriveXY(units::meters_per_second_t xSpeed,
+               units::meters_per_second_t ySpeed, units::degree_t heading) {
+    m_targetHeading = heading;
+    FdriveXY(xSpeed, ySpeed);
+  };
 
   void DriveXY(units::meters_per_second_t xSpeed,
                units::meters_per_second_t ySpeed);
+  void FdriveXY(units::meters_per_second_t xSpeed,
+                units::meters_per_second_t ySpeed);
 
   units::radians_per_second_t CalcRotationSpeed(units::degree_t targetAngle,
                                                 units::degree_t currentHeading);

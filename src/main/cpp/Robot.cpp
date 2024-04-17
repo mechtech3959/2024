@@ -105,6 +105,9 @@ void Robot::Drive() {
   if (driver.GetBButtonPressed()) {
     driveMode = DriveMode::VelocityMode;
   }
+  if(driver.GetStartButtonPressed()){
+    driveMode = DriveMode::woah;
+  }
 
   switch (driveMode) {
   case DriveMode::VelocityMode:
@@ -132,6 +135,16 @@ void Robot::Drive() {
                      m_yspeedLimiter.Calculate(pow(drivey, 1)) *
                          constants::swerveConstants::MaxSpeed * scale);
     break;
+  case DriveMode::woah:
+    if (sqrt(hx * hx + hy * hy) >
+        0.9) // make sure the joystick is begin used by calculating magnitude
+    {
+      m_swerve.SetTargetHeading(frc::Rotation2d(hx, hy).Degrees());
+      frc::SmartDashboard::PutNumber("Heading Stick Value",
+                                     sqrt(hx * hx + hy * hy));
+    }
+    m_swerve.FdriveXY(drivex* constants::swerveConstants::MaxSpeed,drivey * constants::swerveConstants::MaxSpeed);
+     break;
   default:
     break;
   }
