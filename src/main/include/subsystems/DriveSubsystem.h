@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ctre/phoenix6/CANCoder.hpp>
+#include <ctre/phoenix6/CANcoder.hpp>
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <frc/controller/SimpleMotorFeedforward.h>
 #include <frc/drive/DifferentialDrive.h>
