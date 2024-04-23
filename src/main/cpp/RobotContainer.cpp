@@ -35,16 +35,6 @@ RobotContainer::RobotContainer() {
 
   m_drive.setPose(pathstartpose);
   NamedCommands::registerCommand(
-      "Shoot Speaker", frc2::cmd::RunOnce(
-                           [this] {
-                             (m_driverController.GetRightTriggerAxis() > 0.1)
-                                 ? m_driverController.GetAButton()
-                                       ? m_shooter.Reverse()
-                                       : m_shooter.ShootSpeaker()
-                                 : m_shooter.Stop();
-                           },
-                           {&m_shooter}));
-  NamedCommands::registerCommand(
       "shootspeaker", frc2::cmd::RunOnce([this] { m_shooter.ShootSpeaker(); }));
   NamedCommands::registerCommand(
       "shootstop", frc2::cmd::RunOnce([this] { m_shooter.Stop(); }));
@@ -55,18 +45,8 @@ RobotContainer::RobotContainer() {
   chooser = AutoBuilder::buildAutoChooser();
   frc::SmartDashboard::PutData("Auto Chooser", &chooser);
 
-  // Initialize all of your commands and subsystems here
-
   // Configure the button bindings
   ConfigureButtonBindings();
-
-  // Set up default drive command
-  m_drive.SetDefaultCommand(frc2::cmd::Run(
-      [this] {
-        m_drive.ArcadeDrive(-m_driverController.GetLeftY(),
-                            -m_driverController.GetRightX());
-      },
-      {&m_drive}));
 
   m_led.SetDefaultCommand(
       frc2::cmd::RunOnce([this] { m_led.Rainbow(); }, {&m_led}));
@@ -124,4 +104,15 @@ frc2::CommandPtr RobotContainer::PutDashboardCommand() {
     frc::SmartDashboard::PutNumber(
         "Shooter TA", LimelightHelpers::getTA("limelight-greenie"));
   });
+}
+void RobotContainer::TeleopInit() {
+  // Set up default drive command
+  m_drive.SetDefaultCommand(frc2::cmd::Run(
+      [this] {
+        m_drive.ArcadeDrive(-m_driverController.GetLeftY(),
+                            -m_driverController.GetRightX());
+      },
+      {&m_drive}));
+  m_shootStop.Schedule();
+  m_stopIntake.Schedule();
 }

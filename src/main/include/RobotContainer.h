@@ -37,6 +37,7 @@ public:
 
   frc2::CommandPtr PutDashboardCommand();
 
+  void TeleopInit();
 private:
   // The driver's controller
   frc2::CommandXboxController m_driverController{
