@@ -30,26 +30,24 @@
 using namespace pathplanner;
 
 RobotContainer::RobotContainer() {
-  frc::Pose2d pathstartpose = PathPlannerAuto::getStartingPoseFromAutoFile(
-      chooser.GetSelected()->GetName());
+  
+ m_drive.Periodic();
+ NamedCommands::registerCommand(
+     "shootspeaker", frc2::cmd::RunOnce([this] { m_shooter.ShootSpeaker(); }));
+ NamedCommands::registerCommand(
+     "shootstop", frc2::cmd::RunOnce([this] { m_shooter.Stop(); }));
+ NamedCommands::registerCommand(
+     "intake", frc2::cmd::RunOnce([this] { m_intake.Feed(); }));
+ NamedCommands::registerCommand(
+     "intakestop", frc2::cmd::RunOnce([this] { m_intake.Stop(); }));
+ chooser = AutoBuilder::buildAutoChooser();
+ frc::SmartDashboard::PutData("Auto Chooser", &chooser);
 
-  m_drive.setPose(pathstartpose);
-  NamedCommands::registerCommand(
-      "shootspeaker", frc2::cmd::RunOnce([this] { m_shooter.ShootSpeaker(); }));
-  NamedCommands::registerCommand(
-      "shootstop", frc2::cmd::RunOnce([this] { m_shooter.Stop(); }));
-  NamedCommands::registerCommand(
-      "intake", frc2::cmd::RunOnce([this] { m_intake.Feed(); }));
-  NamedCommands::registerCommand(
-      "intakestop", frc2::cmd::RunOnce([this] { m_intake.Stop(); }));
-  chooser = AutoBuilder::buildAutoChooser();
-  frc::SmartDashboard::PutData("Auto Chooser", &chooser);
+ // Configure the button bindings
+ ConfigureButtonBindings();
 
-  // Configure the button bindings
-  ConfigureButtonBindings();
-
-  m_led.SetDefaultCommand(
-      frc2::cmd::RunOnce([this] { m_led.Rainbow(); }, {&m_led}));
+ m_led.SetDefaultCommand(
+     frc2::cmd::RunOnce([this] { m_led.Rainbow(); }, {&m_led}));
 }
 
 void RobotContainer::ConfigureButtonBindings() {
@@ -82,6 +80,12 @@ frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
       std::unique_ptr<frc2::Command>{chooser.GetSelected()}};
 }
 
+void RobotContainer::GetAutonomousPos(){
+ frc::Pose2d pathstartpose =
+PathPlannerAuto::getStartingPoseFromAutoFile(chooser.GetSelected()->GetName());
+
+m_drive.ResetOdometry(pathstartpose);
+}
 frc2::CommandPtr RobotContainer::PutDashboardCommand() {
   return frc2::cmd::Run([this] {
     frc::SmartDashboard::PutNumber("X", m_drive.poseXY().X().value());

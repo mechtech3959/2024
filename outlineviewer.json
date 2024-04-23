@@ -1,0 +1,64 @@
+{
+  "Clients": {
+    "open": true
+  },
+  "Connections": {
+    "open": true
+  },
+  "NT3@10.39.59.19:57894": {
+    "Publishers": {
+      "open": true
+    },
+    "open": true
+  },
+  "NT3@10.39.59.89:35850": {
+    "Publishers": {
+      "open": true
+    },
+    "open": true
+  },
+  "NetworkTables Settings": {
+    "mode": "Client (NT4)",
+    "serverTeam": "10.39.59.2"
+  },
+  "Server": {
+    "Publishers": {
+      "open": true
+    },
+    "Subscribers": {
+      "open": true
+    },
+    "open": true
+  },
+  "Transitory Values": {
+    "open": false
+  },
+  "retained": {
+    "CameraPublisher": {
+      "limelight-bakshot": {
+        "open": true
+      },
+      "limelight-greenie": {
+        "open": true
+      },
+      "open": true
+    }
+  },
+  "transitory": {
+    "FMSInfo": {
+      "open": true
+    },
+    "LiveWindow": {
+      "open": true
+    },
+    "PathPlanner": {
+      "open": true
+    },
+    "Shuffleboard": {
+      "open": true
+    },
+    "SmartDashboard": {
+      "open": true
+    }
+  }
+}

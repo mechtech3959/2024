@@ -100,7 +100,7 @@ private:
   frc2::InstantCommand m_stopIntake{[this] { m_intake.Stop(); }, {&m_intake}};
 
   void ConfigureButtonBindings();
+  void GetAutonomousPos();
 
   frc::SendableChooser<frc2::Command *> chooser;
-  
 };

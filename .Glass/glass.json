@@ -1,0 +1,23 @@
+{
+  "NetworkTables": {
+    "transitory": {
+      "CameraPublisher": {
+        "open": true
+      },
+      "LiveWindow": {
+        "open": true
+      }
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Auto Chooser": "String Chooser"
+    }
+  },
+  "NetworkTables Log": {
+    "visible": true
+  },
+  "NetworkTables Settings": {
+    "mode": "Client (NT3)",
+    "serverTeam": "10.39.59.1"
+  }
+}

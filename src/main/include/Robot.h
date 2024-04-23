@@ -26,6 +26,7 @@ public:
 private:
   // Have it empty by default
   std::optional<frc2::CommandPtr> m_autonomousCommand;
+
   std::optional<frc2::CommandPtr> m_dashboardCommand;
 
   RobotContainer m_container;
