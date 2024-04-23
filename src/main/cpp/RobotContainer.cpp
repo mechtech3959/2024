@@ -11,7 +11,6 @@
 #include <frc/controller/RamseteController.h>
 #include <frc/shuffleboard/Shuffleboard.h>
 
-// #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/trajectory/Trajectory.h>
 #include <frc/trajectory/TrajectoryGenerator.h>
 #include <frc/trajectory/constraint/DifferentialDriveVoltageConstraint.h>
@@ -68,66 +67,37 @@ RobotContainer::RobotContainer() {
                             -m_driverController.GetRightX());
       },
       {&m_drive}));
-  /*
-    m_shooter.SetDefaultCommand(frc2::cmd::Run(
-        [this] {
-          (m_driverController.GetRightTriggerAxis() > 0.1)
-              ? m_driverController.GetAButton() ? m_shooter.Reverse()
-                                                : m_shooter.ShootSpeaker()
-              : m_shooter.Stop();
-        },
-        {&m_shooter}));
 
-  m_intake.SetDefaultCommand(frc2::cmd::Run(
-      [this] {
-        (m_driverController.GetLeftTriggerAxis() > 0.1)
-            ? m_driverController.GetAButton() ? m_intake.Reverse()
-                                              : m_intake.Pickup()
-            : m_intake.Stop();
-      },
-      {&m_intake}));
-*/
   m_led.SetDefaultCommand(
       frc2::cmd::RunOnce([this] { m_led.Rainbow(); }, {&m_led}));
-
-  //  m_climber.SetDefaultCommand(frc2::cmd::Run(
-  /*      [this] { */ /*
-            if (m_driverController.)
-              .Extend();
-            if (m_driverController.GetPOV() == 135 ||
-                m_driverController.GetPOV() == 180 ||
-                m_driverController.GetPOV() == 225)
-              m_climber.Retract();
-          */
-  //      },
-  //      {&m_climber}));
 }
 
 void RobotContainer::ConfigureButtonBindings() {
-  // Configure your button bindings here
-
   // While holding the shoulder button, drive at half speed
   m_driverController.RightBumper()
       .OnTrue(&m_driveHalfSpeed)
       .OnFalse(&m_driveFullSpeed);
+
+  // Extend the climber if DPad Up is pushed
   frc2::POVButton{&m_driverController, 0}.OnTrue(&m_extendClimber);
+
+  // Retract the climber if DPad Down is pushed
   frc2::POVButton{&m_driverController, 180}.OnFalse(&m_retractClimber);
+
+  // If the right trigger is pushed run the shooter, else stop it
   m_driverController.RightTrigger()
       .OnTrue(&m_shootSpeaker)
       .OnFalse(&m_shootStop);
+
+  // If the left trigger is pushed run the intake, else stop it
   m_driverController.LeftTrigger()
       .OnTrue(&m_startIntake)
       .OnFalse(&m_stopIntake);
 }
 
+// Returns a CommandPtr to the selected autonomous routine
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   // Load the path you want to follow using its name in the GUI
-  // auto path = PathPlannerPath::fromPathFile("ampNgo");
-  // auto path2 = PathPlannerPath::fromPathFile("ampNreturn");
-
-  // Create a path following command using AutoBuilder. This will also trigger
-  // event markers.
-  // return AutoBuilder::followPath(path);
   return frc2::CommandPtr{
       std::unique_ptr<frc2::Command>{chooser.GetSelected()}};
 }
