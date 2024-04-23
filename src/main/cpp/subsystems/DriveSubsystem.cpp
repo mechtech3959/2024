@@ -99,9 +99,8 @@ void DriveSubsystem::Periodic() {
       "LeftyEnc", m_leftEncoder.GetPosition().GetValueAsDouble());
   frc::SmartDashboard::PutNumber(
       "RightyEnc", -m_rightEncoder.GetPosition().GetValueAsDouble());
-  visionUpdate();
-  auto X = m_odometry.GetPose().X();
-  auto Y = m_odometry.GetPose().Y();
+   //auto X = m_odometry.GetPose().X();
+  //auto Y = m_odometry.GetPose().Y();
   // frc::SmartDashboard::Put("X Pos:", X);
   // frc::SmartDashboard::PutData("Y Pos:", Y);
 }

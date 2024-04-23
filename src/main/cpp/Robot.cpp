@@ -18,6 +18,9 @@ void Robot::RobotInit() {}
  * LiveWindow and SmartDashboard integrated updating.
  */
 void Robot::RobotPeriodic() { frc2::CommandScheduler::GetInstance().Run();
+  m_dashboardCommand = m_container.PutDashboardCommand();
+  m_dashboardCommand->Schedule();
+  
  }
 
 /**
@@ -35,7 +38,6 @@ void Robot::DisabledPeriodic() {}
  */
 void Robot::AutonomousInit() {
   m_autonomousCommand = m_container.GetAutonomousCommand();
- 
   if (m_autonomousCommand) {
     m_autonomousCommand->Schedule();
   }
