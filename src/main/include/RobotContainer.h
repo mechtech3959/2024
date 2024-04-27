@@ -1,6 +1,5 @@
 #pragma once
 
-#include "pathplanner/lib/auto/AutoBuilder.h"
 #include <frc/PowerDistribution.h>
 #include <frc/controller/PIDController.h>
 #include <frc/smartdashboard/SendableChooser.h>
@@ -9,9 +8,6 @@
 #include <frc2/command/button/CommandXboxController.h>
 
 #include "Constants.h"
-#include "LimeLight.h"
-#include "LimelightHelpers.h"
-#include "frc/DataLogManager.h"
 #include "subsystems/ClimberSubsystem.h"
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/IntakeSubsystem.h"

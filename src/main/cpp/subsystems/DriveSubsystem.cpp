@@ -1,5 +1,6 @@
 #include "subsystems/DriveSubsystem.h"
 #include "LimeLight.h"
+#include "Constants.h"
 
 #include <chrono>
 #include <frc/DriverStation.h>
@@ -28,21 +29,21 @@ DriveSubsystem::DriveSubsystem()
   wpi::SendableRegistry::AddChild(&m_drive, &m_left1);
   wpi::SendableRegistry::AddChild(&m_drive, &m_right1);
 
+  // Restore all drive motor configurations to factory defaults
   m_left1.RestoreFactoryDefaults();
   m_left2.RestoreFactoryDefaults();
   m_right1.RestoreFactoryDefaults();
   m_right2.RestoreFactoryDefaults();
+  // Sleep for one second so we don't overload the CAN bus when setting up
+  // followers
+  // If we don't do this follower setup will randomly fail and half of the
+  // drivetrain will only run on one motor
   std::this_thread::sleep_for(std::chrono::seconds(1));
   m_left2.Follow(m_left1);
   m_right2.Follow(m_right1);
-  // We need to invert one side of the drivetrain so that positive voltages
-  // result in both sides moving forward. Depending on how your robot's
-  // gearbox is constructed, you might have to invert the left side instead.
+  // Invert the left side so positive voltages move both sides in the same
+  // direction
   m_left1.SetInverted(true);
-
-  // Set the distance per pulse for the encoders
-  // m_leftEncoder.SetDistancePerPulse(kEncoderDistancePerPulse.value());
-  // m_rightEncoder.SetDistancePerPulse(kEncoderDistancePerPulse.value());
 
   ResetEncoders();
 
@@ -75,6 +76,7 @@ DriveSubsystem::DriveSubsystem()
       this // Reference to this subsystem to set requirements
   );
 }
+
 void DriveSubsystem::visionUpdate() {
   LimeLight Greenie{"limelight-greenie"};
   LimeLight Bakshot{"limelight-bakshot"};
@@ -82,6 +84,7 @@ void DriveSubsystem::visionUpdate() {
   if (Greenie.m_LimelightHasTarget)
     ResetOdometry(Greenie.GetRobotPose());
 }
+
 void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
   m_odometry.Update(

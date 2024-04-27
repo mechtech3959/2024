@@ -11,15 +11,11 @@
 #include <rev/CANSparkMax.h>
 #include <units/voltage.h>
 
-#include "Constants.h"
-
 class DriveSubsystem : public frc2::SubsystemBase {
 public:
   DriveSubsystem();
 
-  /**
-   * Will be called periodically whenever the CommandScheduler runs.
-   */
+  // Will be called periodically whenever the CommandScheduler runs.
   void Periodic() override;
 
   // Subsystem methods go here.
@@ -40,9 +36,7 @@ public:
    */
   void TankDriveVolts(units::volt_t left, units::volt_t right);
 
-  /**
-   * Resets the drive encoders to currently read a position of 0.
-   */
+  // Resets the drive encoders to currently read a position of 0.
   void ResetEncoders();
 
   /**
@@ -131,29 +125,22 @@ public:
   void setPose(frc::Pose2d p);
 
 private:
-  // Components (e.g. motor controllers and sensors) should generally be
-  // declared private and exposed only through public methods.
+  // Declare our motor controllers, encoders, drivetrain, and gyro
 
-  // The motor controllers
   rev::CANSparkMax m_left1;
   rev::CANSparkMax m_left2;
   rev::CANSparkMax m_right1;
   rev::CANSparkMax m_right2;
 
-  // The robot's drive
   frc::DifferentialDrive m_drive{[&](double output) { m_left1.Set(output); },
                                  [&](double output) { m_right1.Set(output); }};
 
-  // The left-side drive encoder
   ctre::phoenix6::hardware::CANcoder m_leftEncoder;
 
-  // The right-side drive encoder
   ctre::phoenix6::hardware::CANcoder m_rightEncoder;
 
-  // The gyro sensor
   ctre::phoenix6::hardware::Pigeon2 m_gyro;
 
-  // Odometry class for tracking robot pose
   frc::DifferentialDriveOdometry m_odometry;
   frc::DifferentialDriveKinematics m_kinematics;
 

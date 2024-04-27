@@ -1,5 +1,7 @@
 #include "RobotContainer.h"
+#include "LimelightHelpers.h"
 
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/DriverStation.h>
 #include <frc/controller/PIDController.h>
 #include <frc/controller/RamseteController.h>

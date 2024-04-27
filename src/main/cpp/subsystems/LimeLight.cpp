@@ -1,5 +1,5 @@
 #include "LimeLight.h"
-#include "Robot.h"
+#include "LimelightHelpers.h"
 
 LimeLight::LimeLight(std::string name) {
   m_limelight = nt::NetworkTableInstance::GetDefault().GetTable(name);

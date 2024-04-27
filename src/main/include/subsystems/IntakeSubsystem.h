@@ -3,35 +3,23 @@
 #include <frc2/command/SubsystemBase.h>
 #include <rev/CANSparkMax.h>
 
-#include "Constants.h"
-
 class IntakeSubsystem : public frc2::SubsystemBase {
 public:
   IntakeSubsystem();
 
-  /**
-   * Will be called periodically whenever the CommandScheduler runs.
-   */
+  // Will be called periodically whenever the CommandScheduler runs.
   // void Periodic() override;
 
-  /**
-   * Pick up a note
-   */
+  // Pick up a note
   void Pickup();
 
-  /**
-   * Feed a note for shooting
-   */
+  // Feed a note for shooting
   void Feed();
 
-  /**
-   * Reverse the intake
-   */
+  // Reverse the intake
   void Reverse();
 
-  /**
-   * Stop the intake
-   */
+  // Stop the intake
   void Stop();
 
 private:

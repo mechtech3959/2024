@@ -3,8 +3,6 @@
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <frc2/command/SubsystemBase.h>
 
-#include "Constants.h"
-
 class ClimberSubsystem : public frc2::SubsystemBase {
 public:
   ClimberSubsystem();

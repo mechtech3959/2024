@@ -4,8 +4,6 @@
 #include <ctre/phoenix/led/RainbowAnimation.h>
 #include <frc2/command/SubsystemBase.h>
 
-#include "Constants.h"
-
 class LEDSubsystem : public frc2::SubsystemBase {
 public:
   LEDSubsystem();
