@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 #include "subsystems/DriveSubsystem.h"
 #include "LimeLight.h"
 
@@ -12,7 +8,6 @@
 #include <frc/geometry/Rotation2d.h>
 #include <frc/kinematics/DifferentialDriveWheelSpeeds.h>
 #include <frc/smartdashboard/SmartDashboard.h>
-#include <memory>
 #include <pathplanner/lib/auto/AutoBuilder.h>
 #include <pathplanner/lib/auto/NamedCommands.h>
 #include <pathplanner/lib/util/ReplanningConfig.h>
@@ -28,7 +23,7 @@ DriveSubsystem::DriveSubsystem()
       m_leftEncoder{kLeftEncoderID}, m_rightEncoder{kRightEncoderID},
       m_gyro{32, GeneralConstants::kCanBus},
       m_odometry{m_gyro.GetRotation2d(), units::meter_t{0}, units::meter_t{0}},
-      m_kinematics{kTrackwidth}, m_leftFeedforward{kSLeft, kVLeft, kALeft},
+      m_kinematics{kTrackWidth}, m_leftFeedforward{kSLeft, kVLeft, kALeft},
       m_rightFeedforward{kSRight, kVRight, kARight} {
   wpi::SendableRegistry::AddChild(&m_drive, &m_left1);
   wpi::SendableRegistry::AddChild(&m_drive, &m_right1);

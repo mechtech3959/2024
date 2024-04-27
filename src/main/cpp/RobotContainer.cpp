@@ -1,16 +1,9 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 #include "RobotContainer.h"
-
-#include <utility>
 
 #include <frc/DriverStation.h>
 #include <frc/controller/PIDController.h>
 #include <frc/controller/RamseteController.h>
 #include <frc/shuffleboard/Shuffleboard.h>
-
 #include <frc/trajectory/Trajectory.h>
 #include <frc/trajectory/TrajectoryGenerator.h>
 #include <frc/trajectory/constraint/DifferentialDriveVoltageConstraint.h>
@@ -25,29 +18,26 @@
 #include <pathplanner/lib/commands/PathPlannerAuto.h>
 #include <pathplanner/lib/util/ReplanningConfig.h>
 
-#include "Constants.h"
-
 using namespace pathplanner;
 
 RobotContainer::RobotContainer() {
-  
- m_drive.Periodic();
- NamedCommands::registerCommand(
-     "shootspeaker", frc2::cmd::RunOnce([this] { m_shooter.ShootSpeaker(); }));
- NamedCommands::registerCommand(
-     "shootstop", frc2::cmd::RunOnce([this] { m_shooter.Stop(); }));
- NamedCommands::registerCommand(
-     "intake", frc2::cmd::RunOnce([this] { m_intake.Feed(); }));
- NamedCommands::registerCommand(
-     "intakestop", frc2::cmd::RunOnce([this] { m_intake.Stop(); }));
- chooser = AutoBuilder::buildAutoChooser();
- frc::SmartDashboard::PutData("Auto Chooser", &chooser);
+  m_drive.Periodic();
+  NamedCommands::registerCommand(
+      "shootspeaker", frc2::cmd::RunOnce([this] { m_shooter.ShootSpeaker(); }));
+  NamedCommands::registerCommand(
+      "shootstop", frc2::cmd::RunOnce([this] { m_shooter.Stop(); }));
+  NamedCommands::registerCommand(
+      "intake", frc2::cmd::RunOnce([this] { m_intake.Feed(); }));
+  NamedCommands::registerCommand(
+      "intakestop", frc2::cmd::RunOnce([this] { m_intake.Stop(); }));
+  chooser = AutoBuilder::buildAutoChooser();
+  frc::SmartDashboard::PutData("Auto Chooser", &chooser);
 
- // Configure the button bindings
- ConfigureButtonBindings();
+  // Configure the button bindings
+  ConfigureButtonBindings();
 
- m_led.SetDefaultCommand(
-     frc2::cmd::RunOnce([this] { m_led.Rainbow(); }, {&m_led}));
+  m_led.SetDefaultCommand(
+      frc2::cmd::RunOnce([this] { m_led.Rainbow(); }, {&m_led}));
 }
 
 void RobotContainer::ConfigureButtonBindings() {
@@ -73,18 +63,18 @@ void RobotContainer::ConfigureButtonBindings() {
       .OnFalse(&m_stopIntake);
 }
 
-// Returns a CommandPtr to the selected autonomous routine
+/// Returns a CommandPtr to the selected autonomous routine
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   // Load the path you want to follow using its name in the GUI
   return frc2::CommandPtr{
       std::unique_ptr<frc2::Command>{chooser.GetSelected()}};
 }
 
-void RobotContainer::GetAutonomousPos(){
- frc::Pose2d pathstartpose =
-PathPlannerAuto::getStartingPoseFromAutoFile(chooser.GetSelected()->GetName());
+void RobotContainer::GetAutonomousPos() {
+  frc::Pose2d pathstartpose = PathPlannerAuto::getStartingPoseFromAutoFile(
+      chooser.GetSelected()->GetName());
 
-m_drive.ResetOdometry(pathstartpose);
+  m_drive.ResetOdometry(pathstartpose);
 }
 frc2::CommandPtr RobotContainer::PutDashboardCommand() {
   return frc2::cmd::Run([this] {

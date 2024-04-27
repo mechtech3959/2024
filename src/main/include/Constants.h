@@ -1,9 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
-#include <numbers>
-
 #include <frc/kinematics/DifferentialDriveKinematics.h>
 #include <frc/trajectory/constraint/DifferentialDriveKinematicsConstraint.h>
 #include <units/acceleration.h>
@@ -38,18 +32,13 @@ inline constexpr int kRightEncoderID = 30;
 inline constexpr bool kLeftEncoderReversed = false;
 inline constexpr bool kRightEncoderReversed = true;
 
-inline constexpr auto kTrackwidth = 22.5_in;
+inline constexpr auto kTrackWidth = 22.5_in;
 extern const frc::DifferentialDriveKinematics kDriveKinematics;
 
 inline constexpr int kEncoderCPR = 1024;
 inline constexpr units::meter_t kWheelDiameter = 6_in;
 inline constexpr double kRotationsPerMeter = 1.91370942525;
 
-// These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
-// These characterization values MUST be determined either experimentally or
-// theoretically for *your* robot's drive. The Robot Characterization
-// Toolsuite provides a convenient tool for obtaining these values for your
-// robot.
 inline constexpr auto kSRight = 0.63521_V;
 inline constexpr auto kVRight = 0.76431 * 1_V * 1_s / 1_m;
 inline constexpr auto kARight = 0.24851 * 1_V * 1_s * 1_s / 1_m;

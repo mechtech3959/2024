@@ -9,29 +9,19 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 public:
   ShooterSubsystem();
 
-  /**
-   * Will be called periodically whenever the CommandScheduler runs.
-   */
+  // Will be called periodically whenever the CommandScheduler runs.
   // void Periodic() override;
 
-  /**
-   * Shoots at the predefined amp shoot speed
-   */
+  // Shoots at the predefined amp shoot speed
   void ShootAmp();
 
-  /**
-   * Shoots at the predefined speaker shoot speed
-   */
+  // Shoots at the predefined speaker shoot speed
   void ShootSpeaker();
 
-  /**
-   * Reverses the shooter
-   */
+  // Reverses the shooter
   void Reverse();
 
-  /**
-   * Stops the shooter
-   */
+  // Stops the shooter
   void Stop();
 
    /**

@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 #include "Robot.h"
 
 #include <frc/smartdashboard/SmartDashboard.h>
@@ -22,7 +18,7 @@ void Robot::RobotPeriodic() {
   if (m_dashboardCommand)
     m_dashboardCommand->Schedule();
   frc2::CommandScheduler::GetInstance().Run();
- }
+}
 
 /**
  * This function is called once each time the robot enters Disabled mode. You
@@ -47,10 +43,6 @@ void Robot::AutonomousInit() {
 void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
-  // This makes sure that the autonomous stops running when
-  // teleop starts running. If you want the autonomous to
-  // continue until interrupted by another command, remove
-  // this line or comment it out.
   if (m_autonomousCommand) {
     m_autonomousCommand->Cancel();
     m_autonomousCommand.reset();
