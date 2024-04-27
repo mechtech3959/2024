@@ -94,10 +94,10 @@ void DriveSubsystem::Periodic() {
       "LeftyEnc", m_leftEncoder.GetPosition().GetValueAsDouble());
   frc::SmartDashboard::PutNumber(
       "RightyEnc", -m_rightEncoder.GetPosition().GetValueAsDouble());
-   //auto X = m_odometry.GetPose().X();
-  //auto Y = m_odometry.GetPose().Y();
-  // frc::SmartDashboard::Put("X Pos:", X);
-  // frc::SmartDashboard::PutData("Y Pos:", Y);
+  // auto X = m_odometry.GetPose().X();
+  // auto Y = m_odometry.GetPose().Y();
+  //  frc::SmartDashboard::Put("X Pos:", X);
+  //  frc::SmartDashboard::PutData("Y Pos:", Y);
 }
 
 void DriveSubsystem::ArcadeDrive(double fwd, double rot) {
@@ -174,11 +174,8 @@ void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {
                      kRotationsPerMeter},
       pose);
 }
-frc::Pose2d DriveSubsystem::poseXY(){
-  return m_odometry.GetPose();
-}
-void DriveSubsystem::setPose(frc::Pose2d p )
-  {
+frc::Pose2d DriveSubsystem::poseXY() { return m_odometry.GetPose(); }
+void DriveSubsystem::setPose(frc::Pose2d p) {
   // frc::Pose2d p{1.32_m, 5.50_m, 0_deg};
   m_odometry.ResetPosition(
       p.Rotation(),
@@ -187,9 +184,4 @@ void DriveSubsystem::setPose(frc::Pose2d p )
       units::meter_t{-m_rightEncoder.GetPosition().GetValueAsDouble() /
                      1.91370942525},
       p);
-  }
-
- 
- 
- 
-  
+}

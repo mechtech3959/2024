@@ -2,5 +2,5 @@
 
 using namespace DriveConstants;
 
-const frc::DifferentialDriveKinematics DriveConstants::kDriveKinematics(
-    kTrackWidth);
+const frc::DifferentialDriveKinematics
+    DriveConstants::kDriveKinematics(kTrackWidth);

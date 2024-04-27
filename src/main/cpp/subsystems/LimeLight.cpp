@@ -1,8 +1,8 @@
 #include "LimeLight.h"
 #include "Robot.h"
- 
- LimeLight::LimeLight(std::string name) {
- m_limelight = nt::NetworkTableInstance::GetDefault().GetTable(name);
+
+LimeLight::LimeLight(std::string name) {
+  m_limelight = nt::NetworkTableInstance::GetDefault().GetTable(name);
 }
 
 bool LimeLight::IsTargetVisible() {
@@ -97,15 +97,14 @@ units::inch_t LimeLight::Distance() {
 
   // distance from the targets to the floor
   double speakerHeightCM = 146.1102; // 57.13 in 145.1102 cm
-  double ampHeigtCM = 135.5852;    // 53.38 in 135.5852 cm
+  double ampHeigtCM = 135.5852;      // 53.38 in 135.5852 cm
 
   double angleToGoalDegrees =
       limelightMountAngleDegrees + targetOffsetAngle_Vertical;
   double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
 
   double distanceFromLimelightToSpeakerInches =
-      (speakerHeightCM - limelightLensHeightCM) /
-      tan(angleToGoalRadians);
+      (speakerHeightCM - limelightLensHeightCM) / tan(angleToGoalRadians);
 
   double distanceFromLimelightToAmpInches =
       (ampHeigtCM - limelightLensHeightCM) / tan(angleToGoalRadians);

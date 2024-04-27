@@ -262,8 +262,8 @@ getPythonScriptData(const std::string &limelightName = "") {
 inline const double INVALID_TARGET = 0.0;
 class SingleTargetingResultClass {
 public:
-  SingleTargetingResultClass(){};
-  ~SingleTargetingResultClass(){};
+  SingleTargetingResultClass() {};
+  ~SingleTargetingResultClass() {};
   double m_TargetXPixels{INVALID_TARGET};
   double m_TargetYPixels{INVALID_TARGET};
 

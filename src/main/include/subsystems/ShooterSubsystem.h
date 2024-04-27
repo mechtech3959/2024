@@ -24,7 +24,7 @@ public:
   // Stops the shooter
   void Stop();
 
-   /**
+  /**
    * Shoots at the commanded speed
    *
    * @param speed the commanded shoot speed
