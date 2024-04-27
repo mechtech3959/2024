@@ -23,7 +23,7 @@ private:
   frc::SlewRateLimiter<units::scalar> m_yspeedLimiter{1.5 / 1_s};
   frc::SlewRateLimiter<units::scalar> m_rotLimiter{3 / 1_s};
 
-  enum DriveMode { VelocityMode, HeadingControl, TargetTracking } driveMode;
+  enum DriveMode { VelocityMode, HeadingControl, TargetTracking,woah } driveMode;
 
   constants::swerveConstants::SwerveConfig config;
   Drivetrain m_swerve{config};
