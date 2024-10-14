@@ -18,12 +18,14 @@ ClimberSubsystem::ClimberSubsystem()
 
   // set Motion Magic settings
   auto &motionMagicConfigs = m_config.MotionMagic;
+
   motionMagicConfigs.MotionMagicCruiseVelocity =
       80; // Target cruise velocity of 80 rps
   motionMagicConfigs.MotionMagicAcceleration =
       160; // Target acceleration of 160 rps/s (0.5 seconds)
   motionMagicConfigs.MotionMagicJerk =
       1600; // Target jerk of 1600 rps/s/s (0.1 seconds)
+
   m_motor.GetConfigurator().Apply(m_config);
 }
 

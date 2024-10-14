@@ -1,24 +1,11 @@
-#include "RobotContainer.h"
-#include "LimelightHelpers.h"
-
 #include <frc/smartdashboard/SmartDashboard.h>
-#include <frc/DriverStation.h>
-#include <frc/controller/PIDController.h>
-#include <frc/controller/RamseteController.h>
-#include <frc/shuffleboard/Shuffleboard.h>
-#include <frc/trajectory/Trajectory.h>
-#include <frc/trajectory/TrajectoryGenerator.h>
-#include <frc/trajectory/constraint/DifferentialDriveVoltageConstraint.h>
-#include <frc2/command/Commands.h>
-#include <frc2/command/RamseteCommand.h>
-#include <frc2/command/WaitCommand.h>
-#include <frc2/command/button/JoystickButton.h>
 #include <frc2/command/button/POVButton.h>
-#include <memory>
 #include <pathplanner/lib/auto/AutoBuilder.h>
 #include <pathplanner/lib/auto/NamedCommands.h>
 #include <pathplanner/lib/commands/PathPlannerAuto.h>
-#include <pathplanner/lib/util/ReplanningConfig.h>
+
+#include "LimelightHelpers.h"
+#include "RobotContainer.h"
 
 using namespace pathplanner;
 
@@ -78,6 +65,7 @@ void RobotContainer::GetAutonomousPos() {
 
   m_drive.ResetOdometry(pathstartpose);
 }
+
 frc2::CommandPtr RobotContainer::PutDashboardCommand() {
   return frc2::cmd::Run([this] {
     frc::SmartDashboard::PutNumber("X", m_drive.poseXY().X().value());
@@ -101,6 +89,7 @@ frc2::CommandPtr RobotContainer::PutDashboardCommand() {
         "Shooter TA", LimelightHelpers::getTA("limelight-greenie"));
   });
 }
+
 void RobotContainer::TeleopInit() {
   // Set up default drive command
   m_drive.SetDefaultCommand(frc2::cmd::Run(

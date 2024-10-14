@@ -1,7 +1,7 @@
-#include "Robot.h"
-
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/CommandScheduler.h>
+
+#include "Robot.h"
 
 void Robot::RobotInit() {}
 
@@ -47,6 +47,7 @@ void Robot::TeleopInit() {
     m_autonomousCommand->Cancel();
     m_autonomousCommand.reset();
   }
+
   m_container.TeleopInit();
 }
 
