@@ -36,30 +36,6 @@ public:
    */
   void TankDriveVolts(units::volt_t left, units::volt_t right);
 
-  // Resets the drive encoders to currently read a position of 0.
-  void ResetEncoders();
-
-  /**
-   * Gets the average distance of the TWO encoders.
-   *
-   * @return the average of the TWO encoder readings
-   */
-  double GetAverageEncoderDistance();
-
-  /**
-   * Gets the left drive encoder.
-   *
-   * @return the left drive encoder
-   */
-  ctre::phoenix6::hardware::CANcoder &GetLeftEncoder();
-
-  /**
-   * Gets the right drive encoder.
-   *
-   * @return the right drive encoder
-   */
-  ctre::phoenix6::hardware::CANcoder &GetRightEncoder();
-
   ctre::phoenix6::hardware::Pigeon2 &GetPigeon();
 
   /**
@@ -69,20 +45,6 @@ public:
    * @param maxOutput the maximum output to which the drive will be constrained
    */
   void SetMaxOutput(double maxOutput);
-
-  /**
-   * Returns the heading of the robot.
-   *
-   * @return the robot's heading in degrees, from -180 to 180
-   */
-  units::degree_t GetHeading() const;
-
-  /**
-   * Returns the turn rate of the robot.
-   *
-   * @return The turn rate of the robot, in degrees per second
-   */
-  double GetTurnRate();
 
   /**
    * Returns the currently-estimated pose of the robot.
@@ -99,20 +61,6 @@ public:
   frc::DifferentialDriveWheelSpeeds GetWheelSpeeds();
 
   /**
-   * Drives the bot with specified chassis speeds
-   *
-   * @param speeds Chassis speeds to drive
-   */
-  void DriveChassisSpeeds(frc::ChassisSpeeds speeds);
-
-  /**
-   * Returns the current chassis speeds of the robot.
-   *
-   * @return The current chassis speeds.
-   */
-  frc::ChassisSpeeds GetChassisSpeeds();
-
-  /**
    * Resets the odometry to the specified pose.
    *
    * @param pose The pose to which to set the odometry.
@@ -120,9 +68,6 @@ public:
   void ResetOdometry(frc::Pose2d pose);
 
   void visionUpdate();
-
-  frc::Pose2d poseXY();
-  void setPose(frc::Pose2d p);
 
 private:
   // Declare our motor controllers, encoders, drivetrain, and gyro

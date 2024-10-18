@@ -1,6 +1,6 @@
 #include "subsystems/DriveSubsystem.h"
-#include "LimeLight.h"
 #include "Constants.h"
+#include "LimeLight.h"
 
 #include <chrono>
 #include <frc/DriverStation.h>
@@ -45,36 +45,26 @@ DriveSubsystem::DriveSubsystem()
   // direction
   m_left1.SetInverted(true);
 
-  ResetEncoders();
+  m_leftEncoder.SetPosition(0_tr);
+  m_rightEncoder.SetPosition(0_tr);
 
   // Configure the AutoBuilder last
   pathplanner::AutoBuilder::configureRamsete(
-      [this]() { return GetPose(); }, // Robot pose supplier
-      [this](frc::Pose2d pose) {
-        ResetOdometry(pose);
-      }, // Method to reset odometry (will be called if your auto has a starting
-         // pose)
-      [this]() {
-        return GetChassisSpeeds();
-      }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+      [this]() { return GetPose(); },
+      [this](frc::Pose2d pose) { ResetOdometry(pose); },
+      [this]() { return m_kinematics.ToChassisSpeeds(GetWheelSpeeds()); },
       [this](frc::ChassisSpeeds speeds) {
-        DriveChassisSpeeds(speeds);
-      }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-      pathplanner::ReplanningConfig(), // Default path replanning config. See
-                                       // the API for the options here
-      []() {
-        // Boolean supplier that controls when the path will be mirrored for the
-        // red alliance This will flip the path being followed to the red side
-        // of the field. THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+        auto [left, right] = m_kinematics.ToWheelSpeeds(speeds);
 
-        auto alliance = frc::DriverStation::GetAlliance();
-        if (alliance) {
-          return alliance.value() == frc::DriverStation::Alliance::kRed;
-        }
-        return false;
+        TankDriveVolts(m_leftFeedforward.Calculate(left),
+                       m_rightFeedforward.Calculate(right));
       },
-      this // Reference to this subsystem to set requirements
-  );
+      pathplanner::ReplanningConfig(),
+      []() {
+        return frc::DriverStation::GetAlliance().value() ==
+               frc::DriverStation::Alliance::kRed;
+      },
+      this);
 }
 
 void DriveSubsystem::visionUpdate() {
@@ -113,25 +103,6 @@ void DriveSubsystem::TankDriveVolts(units::volt_t left, units::volt_t right) {
   m_drive.Feed();
 }
 
-void DriveSubsystem::ResetEncoders() {
-  m_leftEncoder.SetPosition(0_tr);
-  m_rightEncoder.SetPosition(0_tr);
-}
-
-double DriveSubsystem::GetAverageEncoderDistance() {
-  return (m_leftEncoder.GetPosition().GetValueAsDouble() +
-          -m_rightEncoder.GetPosition().GetValueAsDouble()) /
-         2.0 / kRotationsPerMeter;
-}
-
-ctre::phoenix6::hardware::CANcoder &DriveSubsystem::GetLeftEncoder() {
-  return m_leftEncoder;
-}
-
-ctre::phoenix6::hardware::CANcoder &DriveSubsystem::GetRightEncoder() {
-  return m_rightEncoder;
-}
-
 ctre::phoenix6::hardware::Pigeon2 &DriveSubsystem::GetPigeon() {
   return m_gyro;
 }
@@ -139,12 +110,6 @@ ctre::phoenix6::hardware::Pigeon2 &DriveSubsystem::GetPigeon() {
 void DriveSubsystem::SetMaxOutput(double maxOutput) {
   m_drive.SetMaxOutput(maxOutput);
 }
-
-units::degree_t DriveSubsystem::GetHeading() const {
-  return m_gyro.GetRotation2d().Degrees();
-}
-
-double DriveSubsystem::GetTurnRate() { return -m_gyro.GetRate(); }
 
 frc::Pose2d DriveSubsystem::GetPose() { return m_odometry.GetPose(); }
 
@@ -157,17 +122,6 @@ frc::DifferentialDriveWheelSpeeds DriveSubsystem::GetWheelSpeeds() {
           kRotationsPerMeter}};
 }
 
-frc::ChassisSpeeds DriveSubsystem::GetChassisSpeeds() {
-  return m_kinematics.ToChassisSpeeds(GetWheelSpeeds());
-}
-
-void DriveSubsystem::DriveChassisSpeeds(frc::ChassisSpeeds speeds) {
-  auto [left, right] = m_kinematics.ToWheelSpeeds(speeds);
-
-  TankDriveVolts(m_leftFeedforward.Calculate(left),
-                 m_rightFeedforward.Calculate(right));
-}
-
 void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {
   m_odometry.ResetPosition(
       m_gyro.GetRotation2d(),
@@ -176,15 +130,4 @@ void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {
       units::meter_t{-m_rightEncoder.GetPosition().GetValueAsDouble() /
                      kRotationsPerMeter},
       pose);
-}
-frc::Pose2d DriveSubsystem::poseXY() { return m_odometry.GetPose(); }
-void DriveSubsystem::setPose(frc::Pose2d p) {
-  // frc::Pose2d p{1.32_m, 5.50_m, 0_deg};
-  m_odometry.ResetPosition(
-      p.Rotation(),
-      units::meter_t{m_leftEncoder.GetPosition().GetValueAsDouble() /
-                     1.91370942525},
-      units::meter_t{-m_rightEncoder.GetPosition().GetValueAsDouble() /
-                     1.91370942525},
-      p);
 }

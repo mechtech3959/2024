@@ -68,8 +68,8 @@ void RobotContainer::GetAutonomousPos() {
 
 frc2::CommandPtr RobotContainer::PutDashboardCommand() {
   return frc2::cmd::Run([this] {
-    frc::SmartDashboard::PutNumber("X", m_drive.poseXY().X().value());
-    frc::SmartDashboard::PutNumber("Y", m_drive.poseXY().Y().value());
+    frc::SmartDashboard::PutNumber("X", m_drive.GetPose().X().value());
+    frc::SmartDashboard::PutNumber("Y", m_drive.GetPose().Y().value());
     frc::SmartDashboard::PutNumber("Voltage", pdh.GetVoltage());
     frc::SmartDashboard::PutNumber("Temperature", pdh.GetTemperature());
     frc::SmartDashboard::PutNumber("Total Current", pdh.GetTotalCurrent());
