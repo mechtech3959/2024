@@ -11,5 +11,5 @@ jobs:
       with:
         clang-format-version: '16'
         check-path: 'src'
-        exclude: '^src/(main|include)/pathplanner'
+        exclude: '^src/main/(cpp|include)/pathplanner'
         # fallback-style: 'Mozilla' # optional
