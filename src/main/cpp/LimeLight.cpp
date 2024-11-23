@@ -84,8 +84,8 @@ units::inch_t LimeLight::GetReflectiveTargetRange(double targetHeight) {
   return 0_in;
 }
 
-units::inch_t LimeLight::Distance() {
-  // distance stuff
+units::inch_t LimeLight::Distance() {}
+/*  // distance stuff
   double targetOffsetAngle_Vertical = m_limelight->GetNumber("ty", 0.0);
 
   // how many degrees back is your limelight rotated from perfectly vertical?
@@ -108,9 +108,10 @@ units::inch_t LimeLight::Distance() {
       tan(angleToGoalRadians);
 
   double distanceFromLimelightToAmpInches =
-      (ampHeightInches - limelightLensHeightInches) / tan(angleToGoalRadians);
+      (ampHeightInches - limelightLensHeightInches) /
+      tan(angleToGoalRadians);
 }
-
+*/
 void LimeLight::SendData(std::string name, LoggingLevel verbose) {
   switch (verbose) {
   case LoggingLevel::Everything: // everything that is not in the cases below it
@@ -151,7 +152,7 @@ void LimeLight::updateTracking() {
   const double MAX_STEER = 0.5f;
 
   double tx = LimelightHelpers::getTX("limelight-greenie");
-  double ty = LimelightHelpers::getTY("limelight-greenie");
+  // double ty = LimelightHelpers::getTY("limelight-greenie");
   double ta = LimelightHelpers::getTA("limelight-greenie");
   double tv = LimelightHelpers::getTV("limelight-greenie");
   aprilTagID = LimelightHelpers::getFiducialID("limelight-greenie");
@@ -188,7 +189,7 @@ void LimeLight::updateBackTracking() {
   const double MAX_STEER = 0.5f;
 
   double tx = LimelightHelpers::getTX("limelight-bakshot");
-  double ty = LimelightHelpers::getTY("limelight-bakshot");
+  // double ty = LimelightHelpers::getTY("limelight-bakshot");
   double ta = LimelightHelpers::getTA("limelight-bakshot");
   double tv = LimelightHelpers::getTV("limelight-bakshot");
   Note = LimelightHelpers::getFiducialID("limelight-bakshot");
